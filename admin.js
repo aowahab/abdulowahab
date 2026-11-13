@@ -115,7 +115,10 @@ function showLogin(message) {
   var form = h('form', { class: 'login' },
     h('h1', null, 'Admin sign in'),
     h('p', { class: 'muted' }, 'Sign in to edit your website.'),
-    h('label', { for: 'pw' }, 'Password'), pw, h('p'), btn, err);
+    h('label', { for: 'pw' }, 'Password'), pw, h('p'), btn, err,
+    h('p', { class: 'muted', style: 'margin-top:1rem' },
+      h('a', { href: 'https://vercel.com/tickydo/abdulowahab/settings/environment-variables', target: '_blank', rel: 'noopener noreferrer' }, 'Reset admin password'),
+      ' — Update ADMIN_PASSWORD in Vercel, then redeploy. This is an owner-only reset; no reset email is sent.'));
   form.addEventListener('submit', function (ev) {
     ev.preventDefault();
     btn.disabled = true;
