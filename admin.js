@@ -208,27 +208,30 @@ function profilePanel() {
       photoNote.className = 'error';
       return;
     }
-    uploads++;
-    refreshSaveBar();
-    photoNote.textContent = 'Uploading photo…';
-    photoNote.className = 'muted';
-    Promise.all([shrinkImage(file), loadBlobClient()]).then(function (result) {
-      var uploadFile = result[0];
-      var safe = uploadFile.name.replace(/[^a-zA-Z0-9._-]+/g, '-').slice(-80) || 'profile.jpg';
-      return result[1].upload('uploads/profile-' + safe, uploadFile, {
-        access: 'public',
-        handleUploadUrl: '/api/upload'
-      });
-    }).then(function (blob) {
-      content.avatarUrl = blob.url;
-      markDirty();
-      preview.replaceChildren(h('img', { class: 'avatar-preview', src: blob.url, alt: 'New profile picture preview' }));
-      photoNote.textContent = 'Photo uploaded. Press Save changes to publish it.';
+    openSquareCropper(file, function (croppedFile) {
+      uploads++;
+      refreshSaveBar();
+      photoNote.textContent = 'Uploading cropped photo…';
       photoNote.className = 'muted';
-    }).catch(function (error) {
-      photoNote.textContent = 'Upload failed: ' + (error.message || 'Please try again.');
+      loadBlobClient().then(function (client) {
+        return client.upload('uploads/profile-' + Date.now() + '.jpg', croppedFile, {
+          access: 'public',
+          handleUploadUrl: '/api/upload'
+        });
+      }).then(function (blob) {
+        content.avatarUrl = blob.url;
+        markDirty();
+        preview.replaceChildren(h('img', { class: 'avatar-preview', src: blob.url, alt: 'Cropped profile picture preview' }));
+        photoNote.textContent = 'Square photo uploaded. Press Save changes to publish it.';
+        photoNote.className = 'muted';
+      }).catch(function (error) {
+        photoNote.textContent = 'Upload failed: ' + (error.message || 'Please try again.');
+        photoNote.className = 'error';
+      }).then(function () { uploads--; refreshSaveBar(); });
+    }, function (message) {
+      photoNote.textContent = message;
       photoNote.className = 'error';
-    }).then(function () { uploads--; refreshSaveBar(); });
+    });
   });
   var removePhoto = h('button', { type: 'button', class: 'btn ghost small', onclick: function () {
     content.avatarUrl = '';
@@ -268,6 +271,74 @@ function profilePanel() {
   [['facebook','Facebook'],['messenger','Messenger'],['instagram','Instagram']].forEach(function (pair) { socials.appendChild(field(pair[1] + ' URL', content.social[pair[0]] || '', function (v) { content.social[pair[0]] = v; }, { max: 400 })); });
   wrap.appendChild(socials);
   return wrap;
+}
+
+/* ---------- built-in square photo crop tool ---------- */
+function openSquareCropper(file, onCrop, onError) {
+  var image = new Image();
+  var objectUrl = URL.createObjectURL(file);
+  var modal = h('div', { class: 'crop-modal', role: 'dialog', 'aria-modal': 'true', 'aria-label': 'Crop your profile picture' });
+  var canvas = h('canvas', { width: '512', height: '512', class: 'crop-canvas', 'aria-label': 'Square crop preview. Drag to move the photo.' });
+  var ctx = canvas.getContext('2d');
+  var zoom = h('input', { type: 'range', min: '1', max: '3', step: '0.01', value: '1', 'aria-label': 'Photo zoom' });
+  var dx = 0, dy = 0, dragging = false, lastX = 0, lastY = 0, ready = false;
+  function dimensions() {
+    var scale = Math.max(512 / image.naturalWidth, 512 / image.naturalHeight) * Number(zoom.value);
+    return { w: image.naturalWidth * scale, h: image.naturalHeight * scale };
+  }
+  function paint() {
+    if (!ready) return;
+    var d = dimensions();
+    dx = Math.max(-(d.w - 512) / 2, Math.min((d.w - 512) / 2, dx));
+    dy = Math.max(-(d.h - 512) / 2, Math.min((d.h - 512) / 2, dy));
+    ctx.clearRect(0, 0, 512, 512);
+    ctx.drawImage(image, (512 - d.w) / 2 + dx, (512 - d.h) / 2 + dy, d.w, d.h);
+  }
+  function close() {
+    modal.remove();
+    document.removeEventListener('keydown', escape);
+    URL.revokeObjectURL(objectUrl);
+  }
+  function escape(e) { if (e.key === 'Escape') close(); }
+  canvas.addEventListener('pointerdown', function (e) {
+    dragging = true; lastX = e.clientX; lastY = e.clientY;
+    canvas.setPointerCapture(e.pointerId);
+  });
+  canvas.addEventListener('pointermove', function (e) {
+    if (!dragging) return;
+    var ratio = 512 / canvas.getBoundingClientRect().width;
+    dx += (e.clientX - lastX) * ratio;
+    dy += (e.clientY - lastY) * ratio;
+    lastX = e.clientX; lastY = e.clientY; paint();
+  });
+  canvas.addEventListener('pointerup', function () { dragging = false; });
+  canvas.addEventListener('pointercancel', function () { dragging = false; });
+  zoom.addEventListener('input', paint);
+  var apply = h('button', { class: 'btn', type: 'button', disabled: true, onclick: function () {
+    paint();
+    apply.disabled = true;
+    canvas.toBlob(function (blob) {
+      if (!blob) { apply.disabled = false; onError('Could not crop image. Please try again.'); return; }
+      var output = new File([blob], 'profile-cropped.jpg', { type: 'image/jpeg' });
+      close(); onCrop(output);
+    }, 'image/jpeg', 0.9);
+  } }, 'Crop & upload');
+  var body = h('div', { class: 'crop-dialog' },
+    h('h2', null, 'Crop profile picture'),
+    h('p', { class: 'muted' }, 'Drag the picture to reposition it. Use the slider to zoom. Your saved photo will be a 1:1 square.'),
+    canvas,
+    h('label', { class: 'crop-zoom-label' }, 'Zoom', zoom),
+    h('div', { class: 'bar crop-actions' },
+      h('button', { class: 'btn ghost', type: 'button', onclick: close }, 'Cancel'), apply));
+  modal.appendChild(body);
+  modal.addEventListener('click', function (e) { if (e.target === modal) close(); });
+  document.body.appendChild(modal);
+  document.addEventListener('keydown', escape);
+  image.onload = function () {
+    ready = true; paint(); apply.disabled = false;
+  };
+  image.onerror = function () { close(); onError('Unable to open that image. Try JPG or PNG.'); };
+  image.src = objectUrl;
 }
 
 /* ---------- sections ---------- */
