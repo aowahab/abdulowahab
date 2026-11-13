@@ -16,6 +16,22 @@ function fallback(q){
  return bn?'আব্দুল ওয়াহাবের অডিট অভিজ্ঞতা, পড়াশোনা, Tickydo উদ্যোগ, ওয়েবসাইটের ফিচার ও যোগাযোগের তথ্য সম্পর্কে জানতে পারেন। আপনি কোন বিষয়টি জানতে চান?':'I can help with Abdul Owahab’s audit experience, education, Tickydo projects, website features and contact details. What would you like to know?';
 }
 
+async function sendGmailNotification(subject, body) {
+ const {GOOGLE_CLIENT_ID,GOOGLE_CLIENT_SECRET,GOOGLE_REFRESH_TOKEN}=process.env;
+ if(!GOOGLE_CLIENT_ID||!GOOGLE_CLIENT_SECRET||!GOOGLE_REFRESH_TOKEN)throw Error('Gmail OAuth configuration missing');
+ const tokenRes=await fetch('https://oauth2.googleapis.com/token',{method:'POST',headers:{'Content-Type':'application/x-www-form-urlencoded'},body:new URLSearchParams({client_id:GOOGLE_CLIENT_ID,client_secret:GOOGLE_CLIENT_SECRET,refresh_token:GOOGLE_REFRESH_TOKEN,grant_type:'refresh_token'}),signal:AbortSignal.timeout(10000)});
+ if(!tokenRes.ok)throw Error('Gmail OAuth token HTTP '+tokenRes.status);
+ const token=await tokenRes.json();
+ if(!token.access_token)throw Error('Gmail OAuth access token missing');
+ const from=process.env.GMAIL_SENDER||'abdulowahab.jnu@gmail.com';
+ const to=process.env.LEAD_NOTIFY_EMAIL||'abdulowahab.jnu@gmail.com';
+ const encodeHeader=x=>x.replace(/[\\r\\n]/g,' ').slice(0,150);
+ const raw=['From: '+from,'To: '+to,'Subject: '+encodeHeader(subject),'MIME-Version: 1.0','Content-Type: text/plain; charset=UTF-8','Content-Transfer-Encoding: base64','',Buffer.from(body,'utf8').toString('base64')].join('\\r\\n');
+ const encoded=Buffer.from(raw,'utf8').toString('base64url');
+ const sent=await fetch('https://gmail.googleapis.com/gmail/v1/users/me/messages/send',{method:'POST',headers:{Authorization:'Bearer '+token.access_token,'Content-Type':'application/json'},body:JSON.stringify({raw:encoded}),signal:AbortSignal.timeout(10000)});
+ if(!sent.ok)throw Error('Gmail send HTTP '+sent.status);
+ return 'Gmail';
+}
 async function maybeNotify(messages,key){
  const last=messages.at(-1)?.content?.trim()||'';
  const previous=messages.at(-2);
@@ -34,6 +50,7 @@ async function maybeNotify(messages,key){
  if(process.env.WHATSAPP_ACCESS_TOKEN&&process.env.WHATSAPP_PHONE_NUMBER_ID){
   tasks.push((async()=>{const sent=await fetch('https://graph.facebook.com/v22.0/'+encodeURIComponent(process.env.WHATSAPP_PHONE_NUMBER_ID)+'/messages',{method:'POST',headers:{Authorization:'Bearer '+process.env.WHATSAPP_ACCESS_TOKEN,'Content-Type':'application/json'},body:JSON.stringify({messaging_product:'whatsapp',to,type:'text',text:{body,preview_url:false}}),signal:AbortSignal.timeout(10000)});if(!sent.ok)throw Error('WhatsApp HTTP '+sent.status);return 'WhatsApp'})());
  }
+ if(process.env.GOOGLE_CLIENT_ID&&process.env.GOOGLE_CLIENT_SECRET&&process.env.GOOGLE_REFRESH_TOKEN){tasks.push(sendGmailNotification('New portfolio '+type+' enquiry',body));}
  if(process.env.RESEND_API_KEY&&process.env.EMAIL_FROM){
   tasks.push((async()=>{const sent=await fetch('https://api.resend.com/emails',{method:'POST',headers:{Authorization:'Bearer '+process.env.RESEND_API_KEY,'Content-Type':'application/json'},body:JSON.stringify({from:process.env.EMAIL_FROM,to:[process.env.LEAD_NOTIFY_EMAIL||'abdulowahab.jnu@gmail.com'],subject:'New portfolio '+type+' enquiry',text:body}),signal:AbortSignal.timeout(10000)});if(!sent.ok)throw Error('Email HTTP '+sent.status);return 'Email'})());
  }
