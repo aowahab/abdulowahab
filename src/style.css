@@ -279,3 +279,14 @@ html[data-theme=light] .section-content .secondary{color:#142e4a}
 #updates .update .media>a{font-size:12px;min-width:0;overflow-wrap:anywhere}
 @media(max-width:900px){#updates .updates{grid-template-columns:1fr;gap:14px}#updates .update{padding:16px}}
 @media(max-width:580px){#updates .update{padding:14px;border-radius:12px}#updates .update .media{gap:7px}#updates .update h3{font-size:17px}#updates .update .media>img:only-child,#updates .update .media>video:only-child{max-width:100%}}
+
+/* Restore the original mobile quick-action toolbar while retaining the side drawer */
+@media(max-width:720px){
+ .mobile-bottom-nav{display:grid!important;grid-template-columns:repeat(4,minmax(0,1fr));align-items:center;justify-content:space-around;gap:2px;position:fixed;bottom:0;left:0;right:0;z-index:28;padding:9px 8px max(12px,env(safe-area-inset-bottom));background:#fff;border-top:1px solid #dce2e9;box-shadow:0 -5px 22px #102b491a}
+ .mobile-bottom-nav a{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;padding:4px 1px;text-decoration:none;color:#102b49;min-width:0;font-size:11px;font-weight:650;border-radius:8px}
+ .mobile-bottom-nav a:focus-visible,.mobile-bottom-nav a:hover{background:#eef5fb;color:#0c518c}
+ .mobile-bottom-nav .bottom-nav-icon{font-size:21px;line-height:1.1}
+ .mobile-bottom-nav a>span:last-child{font-size:10px;font-weight:650;white-space:nowrap}
+ .back-to-top{bottom:92px}
+ .footer-bottom{padding-bottom:100px}
+}
