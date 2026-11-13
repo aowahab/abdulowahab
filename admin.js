@@ -116,9 +116,7 @@ function showLogin(message) {
     h('h1', null, 'Admin sign in'),
     h('p', { class: 'muted' }, 'Sign in to edit your website.'),
     h('label', { for: 'pw' }, 'Password'), pw, h('p'), btn, err,
-    h('p', { class: 'muted', style: 'margin-top:1rem' },
-      h('a', { href: 'https://vercel.com/tickydo/abdulowahab/settings/environment-variables', target: '_blank', rel: 'noopener noreferrer' }, 'Reset admin password'),
-      ' — Update ADMIN_PASSWORD in Vercel, then redeploy. This is an owner-only reset; no reset email is sent.'));
+    h('p', { class: 'muted', style: 'margin-top:1rem' }, 'Forgot password? For security, password recovery requires verified ownership. Contact the site owner or sign in to the Vercel project to recover access.'));
   form.addEventListener('submit', function (ev) {
     ev.preventDefault();
     btn.disabled = true;
