@@ -139,6 +139,104 @@ function UpdateCard({post,featured=false,expanded=false}) {
   {!expanded&&media.length>1&&<span className="update-photo-count">+{media.length-1} more attachments</span>}
  </article>;
 }
+
+const workspaceGroups=[
+ {title:'Everyday toolkit',items:[
+  {name:'Word to PDF',url:'https://www.ilovepdf.com/word_to_pdf',detail:'Convert Word documents to PDF using an external service.'},
+  {name:'Image to PDF',url:'https://www.ilovepdf.com/jpg_to_pdf',detail:'Combine image files into a PDF using an external service.'},
+  {name:'Image Resizer',action:'resize',detail:'Resize an image locally in your browser; no upload required.'},
+  {name:'Age Calculator',action:'age',detail:'Calculate age from a date of birth.'}
+ ]},
+ {title:'Puzzles & exploration',items:[
+  {name:'Visited Districts Map',url:'https://en.wikipedia.org/wiki/Districts_of_Bangladesh',detail:'Explore the districts of Bangladesh (reference map).'}
+ ]},
+ {title:'Tax & revenue',items:[
+  {name:'National Board of Revenue',url:'https://nbr.gov.bd/'},
+  {name:'e-Return',url:'https://etaxnbr.gov.bd/'},
+  {name:'TIN Registration',url:'https://secure.incometax.gov.bd/TINHome'},
+  {name:'VAT Online Services',url:'https://vat.gov.bd/'},
+  {name:'NBR Customs',url:'https://customs.gov.bd/'}
+ ]},
+ {title:'Banking & markets',items:[
+  {name:'Bangladesh Bank',url:'https://www.bb.org.bd/'},
+  {name:'BSEC',url:'https://sec.gov.bd/'},
+  {name:'Dhaka Stock Exchange',url:'https://www.dsebd.org/'},
+  {name:'Chittagong Stock Exchange',url:'https://www.cse.com.bd/'}
+ ]},
+ {title:'Business & law',items:[
+  {name:'RJSC',url:'https://roc.gov.bd/'},
+  {name:'Ministry of Commerce',url:'https://mincom.gov.bd/'},
+  {name:'Ministry of Finance',url:'https://mof.gov.bd/'},
+  {name:'e-GP (Government Procurement)',url:'https://www.eprocure.gov.bd/'}
+ ]},
+ {title:'Accounting & learning',items:[
+  {name:'IFRS Foundation',url:'https://www.ifrs.org/'},
+  {name:'Financial Reporting Council',url:'https://frc.gov.bd/'},
+  {name:'ICAB',url:'https://www.icab.org.bd/'},
+  {name:'Microsoft Excel Help',url:'https://support.microsoft.com/excel'}
+ ]},
+ {title:'Citizen services',items:[
+  {name:'Bangladesh National Portal',url:'https://bangladesh.gov.bd/'},
+  {name:'NID Services',url:'https://services.nidw.gov.bd/'},
+  {name:'e-Passport',url:'https://www.epassport.gov.bd/'},
+  {name:'Birth and Death Registration',url:'https://bdris.gov.bd/'},
+  {name:'Police Clearance',url:'https://pcc.police.gov.bd/'},
+  {name:'BRTA',url:'https://brta.gov.bd/'},
+  {name:'Land Services (e-Porcha / e-Mutation)',url:'https://land.gov.bd/'}
+ ]},
+ {title:'Utilities & travel',items:[
+  {name:'DESCO',url:'https://desco.gov.bd/'},
+  {name:'DPDC',url:'https://dpdc.gov.bd/'},
+  {name:'Dhaka WASA',url:'https://dwasa.org.bd/'},
+  {name:'Titas Gas',url:'https://titasgas.gov.bd/'},
+  {name:'Bangladesh Railway e-ticket',url:'https://eticket.railway.gov.bd/'},
+  {name:'BTRC',url:'https://btrc.gov.bd/'}
+ ]}
+];
+function WorkspaceDirectory(){
+ const [search,setSearch]=useState('');
+ const [tool,setTool]=useState('');
+ const [birth,setBirth]=useState('');
+ const [imageFile,setImageFile]=useState(null);
+ const [width,setWidth]=useState('800');
+ const [result,setResult]=useState('');
+ const [toolError,setToolError]=useState('');
+ const today=new Date();
+ const birthDate=birth?new Date(birth+'T00:00:00'):null;
+ const validBirth=birthDate&&!Number.isNaN(birthDate.getTime())&&birthDate<=today;
+ let ageText='';
+ if(validBirth){let years=today.getFullYear()-birthDate.getFullYear(),months=today.getMonth()-birthDate.getMonth(),days=today.getDate()-birthDate.getDate();if(days<0){months--;days+=new Date(today.getFullYear(),today.getMonth(),0).getDate()}if(months<0){years--;months+=12}ageText=years+' years, '+months+' months, '+days+' days';}
+ const resize=async()=>{
+  if(!imageFile)return setToolError('Choose an image first.');
+  const w=Number(width);
+  if(!Number.isInteger(w)||w<32||w>5000)return setToolError('Enter a width between 32 and 5000 pixels.');
+  setToolError('');
+  try{
+   const bmp=await createImageBitmap(imageFile);
+   const h=Math.round(bmp.height*w/bmp.width);
+   if(h>10000)throw Error('Resulting image is too tall.');
+   const canvas=document.createElement('canvas');canvas.width=w;canvas.height=h;
+   canvas.getContext('2d').drawImage(bmp,0,0,w,h);bmp.close();
+   canvas.toBlob(blob=>{
+    if(!blob){setToolError('Could not create the image.');return;}
+    const url=URL.createObjectURL(blob),a=document.createElement('a');
+    a.href=url;a.download='resized-'+imageFile.name.replace(/\.[^.]+$/,'')+'.png';a.click();
+    setTimeout(()=>URL.revokeObjectURL(url),60000);
+    setResult('Resized image downloaded ('+w+' × '+h+' px).');
+   },'image/png');
+  }catch(e){setToolError(e.message||'Could not resize this image.')}
+ };
+ return <div className="workspace-directory">
+  <div className="workspace-directory-head"><div><span className="hub-kicker">EVERYDAY PROFESSIONAL WORK</span><h3>Workspace Essentials</h3><p>Useful tools, official portals and references for accounting, work and daily life.</p></div><label className="workspace-search">Search tools<input type="search" value={search} onChange={e=>setSearch(e.target.value)} placeholder="Search links and utilities…" /></label></div>
+  {workspaceGroups.map(group=>{
+   const items=group.items.filter(x=>(x.name+' '+group.title+' '+(x.detail||'')).toLowerCase().includes(search.trim().toLowerCase()));
+   return items.length>0&&<section className="workspace-category" key={group.title}><h4>{group.title}</h4><div className="workspace-tool-grid">{items.map(item=><article className="workspace-tool" key={item.name}><div><strong>{item.name}</strong>{item.detail&&<small>{item.detail}</small>}</div>{item.action?<button type="button" onClick={()=>{setTool(tool===item.action?'':item.action);setToolError('');setResult('')}}>{tool===item.action?'Close':'Open tool'} ↗</button>:<a href={item.url} target="_blank" rel="noopener noreferrer" aria-label={'Open '+item.name+' in a new tab'}>Visit ↗</a>}</article>)}</div></section>;
+  })}
+  {tool==='age'&&<div className="workspace-tool-panel"><h4>Age Calculator</h4><label>Date of birth <input type="date" max={today.toLocaleDateString('en-CA')} value={birth} onChange={e=>setBirth(e.target.value)}/></label>{validBirth&&<p className="workspace-result">Age: <strong>{ageText}</strong></p>}{birth&&!validBirth&&<p role="alert">Choose a valid past date.</p>}</div>}
+  {tool==='resize'&&<div className="workspace-tool-panel"><h4>Image Resizer</h4><p>Images are processed on your device; they are not uploaded to this portfolio.</p><label>Select image <input type="file" accept="image/*" onChange={e=>{setImageFile(e.target.files?.[0]||null);setToolError('');setResult('')}}/></label><label>Output width (pixels) <input type="number" min="32" max="5000" value={width} onChange={e=>setWidth(e.target.value)}/></label><button type="button" onClick={resize}>Resize & download PNG</button>{toolError&&<p role="alert">{toolError}</p>}{result&&<p className="workspace-result" role="status">{result}</p>}</div>}
+  <p className="workspace-disclaimer">External links open third-party websites. Check their privacy terms before uploading confidential documents. Portal addresses and availability may change.</p>
+ </div>;
+}
 function App(){
  const [content,setContent]=useState(fallback);
  const [menu,setMenu]=useState(false);
@@ -184,6 +282,7 @@ function App(){
    <article className="workstation-card"><span className="hub-kicker">VENTURE</span><h3>Tickydo Ticketing</h3><p>Digital passenger ticketing and smart bus-counter operations currently in pilot testing.</p><a href="https://tickydo.com" target="_blank" rel="noopener noreferrer" className="hub-link">Explore Tickydo ↗</a></article>
    <article className="workstation-card"><span className="hub-kicker">DEVELOPMENT</span><h3>Portfolio source</h3><p>React portfolio with content management and Vercel-backed features. Browse the public source repository.</p><a href="https://github.com/aowahab/abdulowahab" target="_blank" rel="noopener noreferrer" className="hub-link">View GitHub project ↗</a></article>
   </div>
+  <WorkspaceDirectory/>
  </Section>
  <Section id="appointment" eyebrow="05 / MEET" title="Appointment">
   <div className="hub-intro"><p>Prefer a scheduled conversation? Send your requested date, time and purpose for review.</p></div>
