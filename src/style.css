@@ -166,3 +166,13 @@ html[data-theme=light] .hero h1,html[data-theme=light] .section-heading h2,.subs
 .ai-lead-form label{display:flex;gap:8px;align-items:flex-start;font-size:11px;line-height:1.4}
 .ai-lead-form label input{flex-shrink:0}
 .ai-lead-form button:disabled{opacity:.55;cursor:not-allowed}
+
+/* Consistent midnight-blue sticky navigation and readable light-mode typography */
+.nav,html[data-theme=light] .nav,html[data-theme=contrast] .nav{background:#07152e!important;color:#f8fbff!important;border-bottom:1px solid #254368}
+.nav .brand,.nav-links a,html[data-theme=light] .nav-links a{color:#f1f6ff}
+.nav-links a:hover,html[data-theme=light] .nav-links a:hover{color:#7dd3fc}
+@media(max-width:580px){.nav-links,.nav-links.open{background:#07152e}.menu-button,html[data-theme=light] .menu-button{color:#f8fbff;border-color:#6583a9}}
+html[data-theme=light] .section-content .detail-list dt,html[data-theme=light] .project-card h3,html[data-theme=light] .update h3,html[data-theme=light] .section h2,html[data-theme=light] .section h3{color:#142e4a}
+html[data-theme=light] .project-card:first-child{background:#e8f2fb;color:#142e4a}
+html[data-theme=light] .project-card:first-child h3{color:#142e4a}
+html[data-theme=light] .section-content .secondary{color:#142e4a}
