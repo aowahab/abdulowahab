@@ -209,6 +209,10 @@ function profilePanel() {
     }
   }, 'Add detail'));
   wrap.appendChild(facts);
+  content.social = content.social || { facebook: '', messenger: '', instagram: '' };
+  var socials = h('div', { class: 'card' }, h('h2', null, 'Social media links'), h('p', { class: 'muted' }, 'Add your full https:// profile links. Empty links stay hidden on the website.'));
+  [['facebook','Facebook'],['messenger','Messenger'],['instagram','Instagram']].forEach(function (pair) { socials.appendChild(field(pair[1] + ' URL', content.social[pair[0]] || '', function (v) { content.social[pair[0]] = v; }, { max: 400 })); });
+  wrap.appendChild(socials);
   return wrap;
 }
 
