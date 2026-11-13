@@ -12,12 +12,11 @@ function fallback(q){
  if(/(education|university|icab|study|qualification|পড়াশোনা|শিক্ষা)/i.test(x))return 'Abdul studied Accounting & Information Systems at Jagannath University and is pursuing Chartered Accountancy at ICAB Professional Level. He is not presented as a qualified CA.';
  return 'I can help with Abdul Owahab’s audit experience, education, Tickydo projects, portfolio features and contact details. What would you like to know?';
 }
-export default async function handler(req,res){
- if(req.method!=='POST')return response({error:'Method not allowed'},405);
- const length=Number(req.headers?.['content-length']||0);
+export async function POST(request){
+ const length=Number(request.headers.get('content-length')||0);
  if(length>12000)return response({error:'Request too large'},413);
  let data;
- try{data=typeof req.body==='object'&&req.body!==null?req.body:JSON.parse(req.body||'{}')}catch{return response({error:'Invalid JSON'},400)}
+ try{data=await request.json()}catch{return response({error:'Invalid JSON'},400)}
  const messages=Array.isArray(data.messages)?data.messages.slice(-12):[];
  if(!messages.length||messages.some(m=>!['user','assistant'].includes(m.role)||typeof m.content!=='string'||m.content.length>1500))return response({error:'Invalid messages'},400);
  const question=messages.at(-1);
