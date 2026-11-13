@@ -252,3 +252,8 @@ html[data-theme=light] .section-content .secondary{color:#142e4a}
  .nav-links .nav-admin{display:inline-flex;align-items:center;align-self:auto;justify-content:initial;padding:0;margin:0;border:0;border-radius:0;background:transparent;color:#c7d8eb!important;font-size:13px;font-weight:600;line-height:inherit;box-shadow:none}
  .nav-links .nav-admin:hover,.nav-links .nav-admin:focus-visible{background:transparent;color:#38bdf8!important}
 }
+
+/* Admin-managed public profile picture */
+.hero-photo-wrap{width:clamp(128px,15vw,190px);height:clamp(128px,15vw,190px);border-radius:50%;padding:6px;background:linear-gradient(135deg,#dceeff,#62b5ed 48%,#1761a0);box-shadow:0 14px 48px #0005;margin-bottom:27px}
+.hero-profile-photo{width:100%;height:100%;display:block;object-fit:cover;border-radius:50%;border:3px solid #071a33;background:#133454}
+@media(max-width:720px){.hero-photo-wrap{width:132px;height:132px;margin-bottom:22px}}
