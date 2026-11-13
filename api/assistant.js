@@ -1,8 +1,8 @@
 import pg from 'pg';
 import { readContent } from '../lib/store.js';
-import { DEFAULT_CONTENT } from '../lib/content.js';
+import { DEFAULT_CONTENT, publicPortfolioContent } from '../lib/content.js';
 
-const profile = `Abdul Owahab is a Senior Associate in Audit & Assurance at Deloitte Bangladesh, promoted in December 2025, having started in December 2024. He holds a BBA in Accounting & Information Systems from Jagannath University, Dhaka, and studies Chartered Accountancy at ICAB Professional Level. Experience includes statutory and group audits, paints and coatings, agrochemicals, manufacturing, research/healthcare and services. Selected publicly named engagements: Asia Coatings, Asian Paints Bangladesh, Bayer CropScience, Child Health Research Foundation, LM Ericsson Bangladesh and Mitsubishi Corporation Dhaka Branch. Work areas include revenue, receivables, inventory, payroll, payables, equity and expenses. Tools include Advanced Excel, Deloitte Omnia and Levvia. He is a co-founder of Tickydo, a transport ticketing and bus-counter technology venture in pilot operations; operator onboarding is not yet confirmed. The website includes a portfolio, editable content administration, professional enquiry via email and a Tickydo ERP finance application. Contact: abdulowahab.jnu@gmail.com, +8801521577910, linkedin.com/in/abdulowahab. Do not claim he is an NBR-registered income tax practitioner, a CA-qualified accountant, or an independent provider of regulated professional services.`;
+const profile = `Abdul Owahab is a Senior Associate in Audit & Assurance at Deloitte Bangladesh. He works on statutory and group audit assignments across paints and coatings, agrochemicals and manufacturing, healthcare and nonprofit research, telecommunications, trading and services. Work areas include revenue, inventory, receivables, payroll, payables, grant income, financial reporting, reconciliations and analytical review. The identity of all audit clients and engagement-specific records is confidential and must not be provided. His education includes a BBA in Accounting & Information Systems from Jagannath University and current ICAB Professional Level studies. Tools include Advanced Excel, Deloitte Omnia and Levvia. He is a co-founder of the Tickydo transport technology venture, currently in pilot testing. The portfolio has Updates, Consultation, Workstation and Appointment sections. Contact: abdulowahab.jnu@gmail.com. Never claim he is a qualified CA or independent regulated audit or tax practitioner.`;
 const response=(obj,status=200)=>new Response(JSON.stringify(obj),{status,headers:{'Content-Type':'application/json; charset=utf-8','Cache-Control':'no-store','X-Content-Type-Options':'nosniff'}});
 function prefersBangla(q){return /[\u0980-\u09ff]/.test(q)||/\b(bangla|banglay|bengali|banglish|banglai|banglae|bolo|bolen|bolbe|koro|korbe|ki|kemon|amr|amar|tar|somproke|shomporke|niye|bistarito|oviggota|kaj|porashona|poralekha)\b/i.test(q)}
 function fallback(q){
@@ -40,7 +40,7 @@ function contextualFallback(messages) {
   return bn?'তাঁর কাজের টুলগুলোর মধ্যে Advanced Excel, Deloitte Omnia ও Levvia রয়েছে। তিনি audit documentation, financial statement testing ও data-driven analysis নিয়ে কাজ করেন। নির্দিষ্ট কোনো টুলের ব্যবহার জানতে চাইলে সেটি বলুন।':'His work tools include Advanced Excel, Deloitte Omnia and Levvia. His experience covers audit documentation, financial statement testing and data-driven analysis. Ask about a specific tool if you would like more detail.';
  }
  if(/(client|engagement|company|ক্লায়েন্ট|ক্লায়েন্ট|কোম্পানি|কোন কোন|kon kon)/i.test(context)&&/(audit|deloitte|work|experience|অডিট|কাজ|অভিজ্ঞতা)/i.test(context)){
-  return bn?'তাঁর প্রকাশ্যে উল্লেখ করা অডিট engagement-এর মধ্যে Asia Coatings, Asian Paints Bangladesh, Bayer CropScience, Child Health Research Foundation, LM Ericsson Bangladesh ও Mitsubishi Corporation Dhaka Branch রয়েছে। ক্লায়েন্টের গোপন তথ্য শেয়ার করতে পারি না।':'Publicly named audit engagements include Asia Coatings, Asian Paints Bangladesh, Bayer CropScience, Child Health Research Foundation, LM Ericsson Bangladesh and Mitsubishi Corporation Dhaka Branch. I cannot share confidential client information.';
+  return bn?'তিনি paints & coatings, manufacturing, agrochemicals, healthcare research, telecommunications এবং services খাতে audit কাজ করেছেন। ক্লায়েন্টের নাম ও engagement-specific তথ্য গোপন রাখা হয়।':'His audit experience spans paints and coatings, manufacturing, agrochemicals, healthcare research, telecommunications and services. Client names and engagement-specific information remain confidential.';
  }
  return fallback(context);
 }
@@ -130,7 +130,7 @@ export async function POST(request){
  const question=messages.at(-1);
  if(question.role!=='user'||!question.content.trim())return response({error:'Question required'},400);
  let content=DEFAULT_CONTENT;
- try{content=await readContent()}catch{}
+ try{content=publicPortfolioContent(await readContent())}catch{content=publicPortfolioContent(DEFAULT_CONTENT)}
  const publicContent=JSON.stringify({name:content.name,facts:content.facts,sections:content.sections?.map(s=>({title:s.title,body:s.body?.slice(0,1600)})),recentPosts:content.posts?.slice(-8).map(p=>({date:p.date,title:p.title,body:p.body?.slice(0,500)}))}).slice(0,14000);
  const prior=messages.slice(0,-1).filter(m=>m.role==='assistant').map(m=>m.content).join(' ');
  const allUser=messages.filter(m=>m.role==='user').map(m=>m.content).join('\n');
