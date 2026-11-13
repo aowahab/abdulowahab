@@ -82,3 +82,9 @@ html[data-theme=light] .project-card,html[data-theme=light] .training-card,html[
 .mobile-bottom-nav{display:none}
 .back-to-top{position:fixed;right:20px;bottom:22px;z-index:15;border-radius:50%;background:#fff;border:1px solid #dce2e9;color:#102b49;box-shadow:0 4px 16px #102b491b;width:48px;height:48px;display:grid;place-items:center;text-decoration:none;font-size:26px}
 @media(max-width:720px){.reference-stats{grid-template-columns:repeat(2,minmax(0,1fr))}.training-grid{grid-template-columns:1fr}.mobile-bottom-nav{display:flex;position:fixed;bottom:0;left:0;right:0;z-index:18;background:#fff;border-top:1px solid #dce2e9;justify-content:space-around;padding:10px 8px max(12px,env(safe-area-inset-bottom));box-shadow:0 -4px 20px #102b4910}.mobile-bottom-nav a{display:flex;flex-direction:column;align-items:center;gap:3px;text-decoration:none;color:#102b49;font-size:19px}.mobile-bottom-nav span{font-size:11px;font-weight:600}.back-to-top{bottom:92px}.footer{padding-bottom:100px!important}.reference-stats{padding:16px}.stat-card{padding:14px}.career-card{padding:18px}.site-preferences{padding:10px}}
+
+.enquiry-form{background:#fff;border:1px solid #dce2e9;border-radius:20px;padding:clamp(18px,4vw,32px);display:grid;gap:17px;color:#102b49}
+.enquiry-form label{display:grid;gap:8px;font-size:14px;font-weight:700}
+.enquiry-form input,.enquiry-form select,.enquiry-form textarea{font:inherit;color:#102b49;background:#fff;border:1px solid #cbd5df;border-radius:11px;padding:13px;width:100%;min-width:0;box-sizing:border-box}
+.enquiry-form input:focus,.enquiry-form select:focus,.enquiry-form textarea:focus{outline:2px solid #287b76;outline-offset:2px}
+.enquiry-form .button{border:0;cursor:pointer;justify-self:start}
