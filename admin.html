@@ -107,6 +107,21 @@ input[type=file]::file-selector-button{background:#e8f2fd;border:1px solid #b5ce
 .avatar-controls p{margin:0;font-size:13px}
 @media(max-width:580px){.wrap{padding:16px 14px 110px}.top{margin:-16px -14px 20px;padding:20px 14px}.top .actions{flex-wrap:wrap}.card{padding:18px}.tabs{gap:2px}.tab{min-width:90px;padding:11px 12px}.avatar-holder{width:118px;height:118px}.avatar-editor{gap:16px}}
 
+/* Fluid desktop workspace: make the editor fit the available viewport */
+@media(min-width:768px){
+ .wrap{width:100%;max-width:none;margin:0;padding:28px clamp(24px,3vw,64px) 110px}
+ .top{margin:-28px calc(-1 * clamp(24px,3vw,64px)) 26px;padding:23px clamp(24px,3vw,64px)}
+ .savebar .in{width:100%;max-width:none;padding:0 clamp(24px,3vw,64px)}
+ .tabs{width:100%}
+ .card{width:100%}
+ .row{grid-template-columns:minmax(180px,1fr) minmax(240px,2fr) auto}
+}
+@media(min-width:1200px){
+ .top{min-height:105px}
+ .tab{min-width:145px}
+ .profile-photo-card .avatar-editor{gap:35px}
+}
+
 </style>
 </head>
 <body>
