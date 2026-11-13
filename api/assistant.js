@@ -133,8 +133,8 @@ export async function POST(request){
  try{content=await readContent()}catch{}
  const publicContent=JSON.stringify({name:content.name,facts:content.facts,sections:content.sections?.map(s=>({title:s.title,body:s.body?.slice(0,1600)})),recentPosts:content.posts?.slice(-8).map(p=>({date:p.date,title:p.title,body:p.body?.slice(0,500)}))}).slice(0,14000);
  const prior=messages.slice(0,-1).filter(m=>m.role==='assistant').map(m=>m.content).join(' ');
- const allUser=messages.filter(m=>m.role==='user').map(m=>m.content).join('\\n');
- const hasFields=/(?:^|\\n)name\\s*:/im.test(allUser)&&/(?:^|\\n)contact\\s*:/im.test(allUser)&&/(?:^|\\n)details\\s*:/im.test(allUser);
+ const allUser=messages.filter(m=>m.role==='user').map(m=>m.content).join('\n');
+ const hasFields=/(?:^|\n)name\s*:/im.test(allUser)&&/(?:^|\n)contact\s*:/im.test(allUser)&&/(?:^|\n)details\s*:/im.test(allUser);
  if(hasFields&&!prior.includes('[LEAD_CONSENT_REQUEST]'))return response({answer:'May I save your enquiry to Abdul’s private portfolio inbox? Reply exactly Yes, send or হ্যাঁ, পাঠান. [LEAD_CONSENT_REQUEST]',mode:'basic'});
   const key=process.env.OPENAI_API_KEY;
  try{const notified=await maybeNotify(messages,key);if(notified)return response(notified)}catch(e){console.error('Lead notification failed',e?.message);return response({answer:'Unable to send the enquiry via WhatsApp. Please email Abdul directly.',mode:'basic'})}
