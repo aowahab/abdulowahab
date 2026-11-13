@@ -266,3 +266,16 @@ html[data-theme=light] .section-content .secondary{color:#142e4a}
 .nav .brand-monogram{border-radius:50%;overflow:hidden;width:42px;height:42px;flex-shrink:0}
 .nav .brand-avatar{border-radius:50%;width:100%;height:100%;object-fit:cover;object-position:center}
 @media(max-width:720px){.nav .brand-monogram{width:36px;height:36px}}
+
+/* Compact, responsive Updates feed with consistent 4:3 media thumbnails */
+#updates .updates{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px;align-items:start}
+#updates .update{min-width:0;margin:0;padding:18px;border:1px solid #ffffff24;border-radius:14px;background:#0b2544;overflow:hidden;box-shadow:0 6px 18px #00102618}
+#updates .update time{display:block;margin-bottom:6px;font-size:11px;line-height:1.4;color:#8fc9ed}
+#updates .update h3{font-size:clamp(16px,1.4vw,19px);line-height:1.4;margin:0 0 8px;font-weight:720;overflow-wrap:anywhere}
+#updates .update p{font-size:13px;line-height:1.6;margin:0 0 12px;overflow-wrap:anywhere}
+#updates .update .media{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin-top:12px;min-width:0}
+#updates .update .media img,#updates .update .media video{display:block;width:100%;max-width:100%;height:auto;aspect-ratio:4/3;object-fit:cover;border-radius:9px;background:#17385b}
+#updates .update .media>img:only-child,#updates .update .media>video:only-child{grid-column:1/-1;width:100%;max-width:440px;justify-self:center}
+#updates .update .media>a{font-size:12px;min-width:0;overflow-wrap:anywhere}
+@media(max-width:900px){#updates .updates{grid-template-columns:1fr;gap:14px}#updates .update{padding:16px}}
+@media(max-width:580px){#updates .update{padding:14px;border-radius:12px}#updates .update .media{gap:7px}#updates .update h3{font-size:17px}#updates .update .media>img:only-child,#updates .update .media>video:only-child{max-width:100%}}
