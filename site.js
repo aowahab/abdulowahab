@@ -192,6 +192,24 @@
       frag.appendChild(education.sheet);
     }
 
+    if (existingIds.indexOf('projects') === -1) {
+      var projects = sheet(String.fromCharCode(65 + (index % 26)), 'projects');
+      index++;
+      projects.body.appendChild(el('h2', null, 'Selected projects'));
+      renderText(projects.body,
+        '- Tickydo — digital ticketing: Co-founding a transport technology venture focused on passenger ticketing and practical bus-counter operations. Passenger and counter-facing websites are in testing; operator onboarding is in progress.\\n' +
+        '- Audit workflow and analytics: Applying advanced spreadsheets and structured audit documentation to financial statement testing, reconciliations and evidence review.\\n' +
+        '- Personal portfolio: A lightweight, editable website powered by Vercel Functions and Blob storage, with a private content editor.');
+      var projectLink = el('p');
+      var projectAnchor = el('a', null, 'Explore Tickydo');
+      projectAnchor.href = 'https://tickydo.com/';
+      projectAnchor.target = '_blank';
+      projectAnchor.rel = 'noopener noreferrer';
+      projectLink.appendChild(projectAnchor);
+      projects.body.appendChild(projectLink);
+      frag.appendChild(projects.sheet);
+    }
+
     if (c.posts && c.posts.length) {
       var u = sheet(String.fromCharCode(65 + (index % 26)), 'updates');
       u.body.appendChild(el('h2', null, 'Updates'));
@@ -219,7 +237,7 @@
       frag.appendChild(u.sheet);
     }
 
-    var connect = sheet(String.fromCharCode(65 + (index % 26)), 'connect');
+    var connect = sheet(String.fromCharCode(65 + ((index + (c.posts && c.posts.length ? 1 : 0)) % 26)), 'connect');
     connect.body.appendChild(el('h2', null, 'Connect'));
     connect.body.appendChild(el('p', null, 'Interested in audit, financial reporting, technology or entrepreneurship? Find me on LinkedIn or explore my work on GitHub.'));
     var links = el('p');
