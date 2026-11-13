@@ -159,7 +159,7 @@ function renderEditor() {
       h('button', { class: 'btn ghost small', type: 'button', onclick: signOut }, 'Sign out')));
 
   var tabs = h('div', { class: 'tabs', role: 'tablist' },
-    [['profile', 'Profile'], ['sections', 'Sections'], ['posts', 'Updates']].map(function (t) {
+    [['profile', 'Profile'], ['sections', 'Sections'], ['posts', 'Updates'], ['leads', 'Enquiries']].map(function (t) {
       return h('button', {
         class: 'tab', role: 'tab', type: 'button',
         'aria-selected': tab === t[0] ? 'true' : 'false',
@@ -171,6 +171,7 @@ function renderEditor() {
   if (tab === 'profile') panel.appendChild(profilePanel());
   if (tab === 'sections') panel.appendChild(sectionsPanel());
   if (tab === 'posts') panel.appendChild(postsPanel());
+  if (tab === 'leads') panel.appendChild(leadsPanel());
 
   statusEl = h('div', { id: 'status', 'aria-live': 'polite' });
   saveBtn = h('button', { class: 'btn', type: 'button', onclick: save }, 'Save changes');
@@ -180,6 +181,11 @@ function renderEditor() {
   refreshSaveBar();
   if (!dirty && uploads === 0) setStatus('');
   window.scrollTo(0, scroll);
+}
+
+function leadsPanel(){
+ var wrap=h('div');var info=h('p',{class:'muted'},'Loading enquiries…');wrap.appendChild(info);
+ api('/api/leads').then(function(d){info.textContent='Latest '+d.leads.length+' enquiries. Visitor details are visible only to signed-in admins.';d.leads.forEach(function(l){var card=h('div',{class:'card'},h('h2',null,l.name+' — '+l.kind),h('p',{class:'muted'},new Date(l.created_at).toLocaleString()),h('p',null,'Organization: '+(l.organization||'Not supplied')),h('p',null,'Contact: '+l.contact),h('p',null,l.details));var sel=h('select');['new','contacted','closed'].forEach(function(st){var o=h('option',{value:st},st);if(st===l.status)o.selected=true;sel.appendChild(o)});sel.addEventListener('change',function(){api('/api/leads',{method:'PATCH',body:JSON.stringify({id:Number(l.id),status:sel.value})}).catch(function(e){alert(e.message)})});card.appendChild(h('label',null,'Status ',sel));wrap.appendChild(card)})}).catch(function(e){info.textContent='Could not load enquiries: '+e.message});return wrap;
 }
 
 /* ---------- profile ---------- */
