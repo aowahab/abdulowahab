@@ -410,3 +410,13 @@ html[data-theme=light] .section-content .secondary{color:#142e4a}
  .nav-links>a.nav-destination{font-size:10px;padding-inline:3px}
  .nav .brand-name{font-size:clamp(20px,2vw,24px)}
 }
+
+/* Assistant: transparent response mode and actionable connection recovery */
+.ai-service-status{display:flex;align-items:center;gap:7px;padding:8px 14px;border-bottom:1px solid #ffffff1b;color:#cbdff1;background:#0b2543;font-size:11px;line-height:1.5}
+.ai-status-indicator{display:inline-block;width:7px;height:7px;flex:0 0 7px;border-radius:50%;background:#98adc0}
+.ai-status-indicator.ai,.ai-status-indicator.saved{background:#34d399}
+.ai-status-indicator.basic{background:#fbbf24}
+.ai-status-indicator.offline{background:#fb7185}
+.ai-retry{padding:10px 14px;border-top:1px solid #ffffff23;background:#153452}
+.ai-retry p{color:#e8f2ff;font-size:12px;line-height:1.5;margin:0 0 8px}
+.ai-retry button{border:1px solid #7bc3f3;border-radius:7px;padding:7px 12px;background:#e9f5ff;color:#0d3557;font:inherit;font-weight:650;font-size:12px;cursor:pointer}
