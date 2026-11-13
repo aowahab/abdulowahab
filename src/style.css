@@ -243,3 +243,12 @@ html[data-theme=light] .section-content .secondary{color:#142e4a}
 .nav .brand-name{font-size:20px;font-weight:800;letter-spacing:-.035em;line-height:1.2}
 @media(max-width:720px){.nav .brand-name{font-size:17px}}
 @media(max-width:390px){.nav .brand-name{font-size:16px;max-width:160px}}
+
+/* Desktop navigation hierarchy: prominent name, Admin aligned with all links */
+@media(min-width:721px){
+ .nav .brand-name{font-size:clamp(23px,2.15vw,30px);font-weight:850;letter-spacing:-.04em;line-height:1.1}
+ .nav-links{align-items:center;gap:clamp(12px,2vw,30px);margin-left:auto}
+ .nav-links>a{display:inline-flex;align-items:center;white-space:nowrap}
+ .nav-links .nav-admin{display:inline-flex;align-items:center;align-self:auto;justify-content:initial;padding:0;margin:0;border:0;border-radius:0;background:transparent;color:#c7d8eb!important;font-size:13px;font-weight:600;line-height:inherit;box-shadow:none}
+ .nav-links .nav-admin:hover,.nav-links .nav-admin:focus-visible{background:transparent;color:#38bdf8!important}
+}
