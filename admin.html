@@ -122,6 +122,18 @@ input[type=file]::file-selector-button{background:#e8f2fd;border:1px solid #b5ce
  .profile-photo-card .avatar-editor{gap:35px}
 }
 
+/* In-browser square crop editor */
+.crop-modal{position:fixed;inset:0;z-index:1000;background:rgba(6,18,35,.78);display:flex;align-items:center;justify-content:center;padding:18px;overflow-y:auto}
+.crop-dialog{width:min(100%,480px);max-height:calc(100dvh - 36px);overflow:auto;padding:24px;background:#fff;border-radius:20px;box-shadow:0 22px 80px #0006}
+.crop-dialog h2{font-size:22px;margin:0 0 8px;color:#102a50}
+.crop-dialog p{font-size:13px;margin:0 0 18px}
+.crop-canvas{display:block;width:min(100%,350px);height:auto;aspect-ratio:1/1;margin:0 auto;border-radius:12px;border:2px solid #bbd3ec;background:#dce7f3;cursor:grab;touch-action:none}
+.crop-canvas:active{cursor:grabbing}
+.crop-zoom-label{display:flex;align-items:center;gap:16px;margin:20px 0 0;font-weight:600;color:#12365a}
+.crop-zoom-label input{width:100%;flex:1;accent-color:#1769ad}
+.crop-actions{justify-content:flex-end;margin-top:20px}
+@media(max-width:580px){.crop-dialog{padding:18px}.crop-canvas{width:min(100%,290px)}}
+
 </style>
 </head>
 <body>
