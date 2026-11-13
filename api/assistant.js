@@ -17,6 +17,34 @@ function fallback(q){
  return bn?'আব্দুল ওয়াহাবের অডিট অভিজ্ঞতা, পড়াশোনা, Tickydo উদ্যোগ, ওয়েবসাইটের ফিচার ও যোগাযোগের তথ্য সম্পর্কে জানতে পারেন। আপনি কোন বিষয়টি জানতে চান?':'I can help with Abdul Owahab’s audit experience, education, Tickydo projects, website features and contact details. What would you like to know?';
 }
 
+
+function contextualFallback(messages) {
+ const q=messages.at(-1)?.content||'';
+ const previousUser=messages.slice(0,-1).filter(m=>m.role==='user').map(m=>m.content).slice(-3).join(' ');
+ const x=q.toLowerCase().trim();
+ const bn=prefersBangla(q)||prefersBangla(previousUser);
+ const personal=/(personal|private|family|relationship|married|wife|girlfriend|hobby|free time|life|lifestyle|ব্যক্তিগত|পরিবার|বিয়ে|বিয়ে|শখ|জীবন|প্রেম|পরিবারের|বউ|bou|biye|poribar|byaktigoto|personal life|nijer jibon|owahab er life|owahab er personal|owahaber personal)/i;
+ const identity=/(owahab|owahaber|owahab er|abdul|আব্দুল|ওয়াহাব|ওয়াহাব|তার|uni|he|him|his)/i;
+ const followup=/^(আরও|আরো|বিস্তারিত|কেন|কিভাবে|কীভাবে|কিছু|bolo|bolen|details|elaborate|explain|more|why|how|and|what about|আর|r |eta|oita|seta|tar|or |yes|হ্যাঁ|জি|ok)/i;
+ const context=(followup.test(x)||x.length<35)?previousUser+' '+q:q;
+ if(personal.test(context) && (identity.test(context)||/personal|ব্যক্তিগত|family|পরিবার|life/i.test(context))){
+  return bn?'আব্দুল ওয়াহাবের ব্যক্তিগত জীবন সম্পর্কে প্রকাশ্যে নিশ্চিত করা তথ্য খুব সীমিত। তিনি ঢাকায় কাজ করেন, জগন্নাথ বিশ্ববিদ্যালয়ে পড়েছেন, ICAB-তে পড়াশোনা করছেন এবং Tickydo উদ্যোগের সঙ্গে যুক্ত। তাঁর পরিবার, সম্পর্ক, বৈবাহিক অবস্থা বা ব্যক্তিগত দৈনন্দিন জীবন সম্পর্কে আমার কাছে যাচাইকৃত প্রকাশ্য তথ্য নেই—অনুমান করব না। আপনি তাঁর পড়াশোনা, ক্যারিয়ার নাকি উদ্যোক্তা জীবনের কথা জানতে চান?':'There is limited verified public information about Abdul Owahab’s private life. He works in Dhaka, studied at Jagannath University, is pursuing ICAB qualifications, and co-founded Tickydo. I do not have verified public details about his family, relationships, marital status or private daily life, so I will not guess. Would you like to know about his education, career or entrepreneurial journey?';
+ }
+ if(/(who|ke|কে|পরিচয়|intro|about|সম্পর্কে|somproke|know about|tell me about)/i.test(context)&&identity.test(context)){
+  return bn?'আব্দুল ওয়াহাব Deloitte Bangladesh-এর Audit & Assurance বিভাগের Senior Associate। তিনি জগন্নাথ বিশ্ববিদ্যালয় থেকে Accounting & Information Systems-এ BBA করেছেন এবং ICAB Professional Level-এ পড়ছেন। তিনি Tickydo-এর সহপ্রতিষ্ঠাতা; অডিট, ফিন্যান্স ও প্রযুক্তি নিয়ে কাজ করেন। তাঁর কোন দিকটি সম্পর্কে বিস্তারিত জানতে চান?':'Abdul Owahab is a Senior Associate in Audit & Assurance at Deloitte Bangladesh, a BBA graduate in Accounting & Information Systems from Jagannath University, an ICAB Professional Level student, and a co-founder of Tickydo. Which part of his work or background interests you?';
+ }
+ if(/(erp|accounting software|general ledger|financial software|হিসাব সফটওয়্যার|ইআরপি)/i.test(context)){
+  return bn?'Tickydo ERP হলো তাঁর Finance & Accounting application। এতে Chart of Accounts, Double-entry Journal, General Ledger, Trial Balance, Income Statement, Balance Sheet এবং Period Locking রয়েছে। অ্যাপ: /erp/। বর্তমানে এটি Finance module; পূর্ণাঙ্গ ERP-এর সব module এখনো তৈরি হয়নি।':'Tickydo ERP is a Finance & Accounting application with a chart of accounts, double-entry journals, general ledger, trial balance, income statement, balance sheet and period locking. Open /erp/. It is a finance module, not yet a complete enterprise-wide ERP.';
+ }
+ if(/(skills|tools|technology|দক্ষতা|স্কিল|টুলস|excel|levvia|omnia)/i.test(context)){
+  return bn?'তাঁর কাজের টুলগুলোর মধ্যে Advanced Excel, Deloitte Omnia ও Levvia রয়েছে। তিনি audit documentation, financial statement testing ও data-driven analysis নিয়ে কাজ করেন। নির্দিষ্ট কোনো টুলের ব্যবহার জানতে চাইলে সেটি বলুন।':'His work tools include Advanced Excel, Deloitte Omnia and Levvia. His experience covers audit documentation, financial statement testing and data-driven analysis. Ask about a specific tool if you would like more detail.';
+ }
+ if(/(client|engagement|company|ক্লায়েন্ট|ক্লায়েন্ট|কোম্পানি|কোন কোন|kon kon)/i.test(context)&&/(audit|deloitte|work|experience|অডিট|কাজ|অভিজ্ঞতা)/i.test(context)){
+  return bn?'তাঁর প্রকাশ্যে উল্লেখ করা অডিট engagement-এর মধ্যে Asia Coatings, Asian Paints Bangladesh, Bayer CropScience, Child Health Research Foundation, LM Ericsson Bangladesh ও Mitsubishi Corporation Dhaka Branch রয়েছে। ক্লায়েন্টের গোপন তথ্য শেয়ার করতে পারি না।':'Publicly named audit engagements include Asia Coatings, Asian Paints Bangladesh, Bayer CropScience, Child Health Research Foundation, LM Ericsson Bangladesh and Mitsubishi Corporation Dhaka Branch. I cannot share confidential client information.';
+ }
+ return fallback(context);
+}
+
 async function sendGmailNotification(subject, body) {
  const {GOOGLE_CLIENT_ID,GOOGLE_CLIENT_SECRET,GOOGLE_REFRESH_TOKEN}=process.env;
  if(!GOOGLE_CLIENT_ID||!GOOGLE_CLIENT_SECRET||!GOOGLE_REFRESH_TOKEN)throw Error('Gmail OAuth configuration missing');
@@ -77,7 +105,7 @@ export async function POST(request){
  if(hasFields&&!prior.includes('[LEAD_CONSENT_REQUEST]'))return response({answer:'May I save your enquiry to Abdul’s private portfolio inbox? Reply exactly Yes, send or হ্যাঁ, পাঠান. [LEAD_CONSENT_REQUEST]',mode:'basic'});
   const key=process.env.OPENAI_API_KEY;
  try{const notified=await maybeNotify(messages,key);if(notified)return response(notified)}catch(e){console.error('Lead notification failed',e?.message);return response({answer:'Unable to send the enquiry via WhatsApp. Please email Abdul directly.',mode:'basic'})}
- if(!key)return response({answer:/(recruit|hiring|hire|client|collaborat|partnership|নিয়োগ|চাকরি|সহযোগিতা)/i.test(question.content)?'Please share your enquiry here in chat using Name: ..., Contact: ..., Details: ... (Organization: ... optional). I will ask for your consent before saving it to Abdul’s private inbox.':fallback(question.content),mode:'basic'});
+ if(!key)return response({answer:/(recruit|hiring|hire|client|collaborat|partnership|নিয়োগ|চাকরি|সহযোগিতা)/i.test(question.content)?'Please share your enquiry here in chat using Name: ..., Contact: ..., Details: ... (Organization: ... optional). I will ask for your consent before saving it to Abdul’s private inbox.':contextualFallback(messages),mode:'basic'});
  try{
   const controller=new AbortController();const timeout=setTimeout(()=>controller.abort(),12000);
   let upstream;
@@ -86,5 +114,5 @@ export async function POST(request){
   const result=await upstream.json();const answer=result.choices?.[0]?.message?.content;
   if(typeof answer!=='string'||!answer.trim())throw Error('Empty AI response');
   return response({answer:answer.slice(0,2400),mode:'ai'});
- }catch(error){console.error('portfolio assistant request failed:',error?.message);return response({answer:fallback(question.content),mode:'basic'})}
+ }catch(error){console.error('portfolio assistant request failed:',error?.message);return response({answer:contextualFallback(messages),mode:'basic'})}
 }
