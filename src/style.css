@@ -322,3 +322,11 @@ html[data-theme=light] .section-content .secondary{color:#142e4a}
  #updates .updates-expanded{grid-template-columns:1fr;gap:12px}
  #updates .updates-see-more{width:100%;max-width:320px}
 }
+
+/* Five compact mobile quick-navigation destinations */
+@media(max-width:720px){
+ .mobile-bottom-nav{grid-template-columns:repeat(5,minmax(0,1fr));gap:0;padding:8px 5px max(10px,env(safe-area-inset-bottom))}
+ .mobile-bottom-nav a{gap:4px;padding:5px 1px;min-width:0}
+ .mobile-bottom-nav .bottom-nav-icon{font-size:20px}
+ .mobile-bottom-nav a>span:last-child{font-size:clamp(8px,2.2vw,10px);line-height:1.2;letter-spacing:-.025em;white-space:nowrap}
+}
