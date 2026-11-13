@@ -15,7 +15,7 @@ const experience = [
 ];
 const projects = [
  {title:'Tickydo',tag:'Co-founder · Pilot operations',body:'Digital ticketing and bus-counter technology. Passenger and counter-facing platforms are being tested; operator onboarding is in progress.',url:'https://tickydo.com',cta:'Explore Tickydo'},
- {title:'Tickydo ERP — Finance',tag:'GitHub project · Node.js · PostgreSQL / SQLite',body:'Finance module featuring a chart of accounts, balanced double-entry journal entries, reversal documents, period locking, trial balance, general ledger, income statement and balance sheet. Built with Node.js, SQLite for local development and PostgreSQL support for Vercel.',url:'https://github.com/aowahab/tickydo-erp',cta:'View GitHub repository'},
+ {title:'Tickydo ERP — Finance',tag:'GitHub project · Node.js · PostgreSQL / SQLite',body:'Finance module featuring a chart of accounts, balanced double-entry journal entries, reversal documents, period locking, trial balance, general ledger, income statement and balance sheet. Built with Node.js, SQLite for local development and PostgreSQL support for Vercel.',url:'https://tickydo-erp.vercel.app/',cta:'Open ERP website'},
  {title:'Audit workflows',tag:'Professional practice',body:'Evidence-based audit testing, reconciliations, financial reporting and structured documentation across diverse industries.'},
  {title:'Personal portfolio',tag:'React · Vercel',body:'A dynamic React portfolio with an editable content dashboard, serverless API and Vercel Blob storage.',url:'https://github.com/aowahab/abdulowahab',cta:'View source'}
 ];
