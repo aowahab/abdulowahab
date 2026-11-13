@@ -197,6 +197,24 @@
       frag.appendChild(u.sheet);
     }
 
+    var connect = sheet(String.fromCharCode(65 + (index % 26)), 'connect');
+    connect.body.appendChild(el('h2', null, 'Connect'));
+    connect.body.appendChild(el('p', null, 'Interested in audit, financial reporting, technology or entrepreneurship? Find me on LinkedIn or explore my work on GitHub.'));
+    var links = el('p');
+    var linkedin = el('a', null, 'LinkedIn profile');
+    linkedin.href = 'https://www.linkedin.com/in/abdulowahab/';
+    linkedin.target = '_blank';
+    linkedin.rel = 'noopener noreferrer';
+    var github = el('a', null, 'GitHub projects');
+    github.href = 'https://github.com/aowahab';
+    github.target = '_blank';
+    github.rel = 'noopener noreferrer';
+    links.appendChild(linkedin);
+    links.appendChild(document.createTextNode('  ·  '));
+    links.appendChild(github);
+    connect.body.appendChild(links);
+    frag.appendChild(connect.sheet);
+
     var footer = el('footer');
     footer.appendChild(el('span', null, '© ' + new Date().getFullYear() + ' ' + c.name));
     var admin = el('a', null, 'Admin');
