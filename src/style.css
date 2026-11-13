@@ -219,3 +219,22 @@ html[data-theme=light] .section-content .secondary{color:#142e4a}
 .footer-bottom a{color:#b9cde4;text-decoration:none}
 @media(max-width:900px){.footer-main{grid-template-columns:repeat(2,minmax(0,1fr));gap:35px 45px;padding:52px 0}.footer-intro{max-width:420px}}
 @media(max-width:580px){.footer-main{grid-template-columns:repeat(2,minmax(0,1fr));gap:35px 20px;padding:45px 0 36px}.footer-intro{grid-column:1/-1}.footer-column{gap:11px}.footer-bottom{padding:20px 0 90px;align-items:flex-start;flex-direction:column;gap:10px}.footer-identity{font-size:18px}}
+
+/* Mobile: one hamburger opens an accessible right-side navigation drawer */
+.drawer-heading,.nav-drawer-backdrop{display:none}
+@media(max-width:720px){
+ .mobile-bottom-nav{display:none!important}
+ .back-to-top{bottom:22px}
+ .footer-bottom{padding-bottom:28px}
+ .nav{z-index:31}
+ .menu-button{display:inline-flex;align-items:center;justify-content:center;margin-left:auto;min-width:43px;height:43px;padding:0;border:1px solid #6686b3;border-radius:10px;background:#17365f;color:#fff;font-size:24px;cursor:pointer}
+ .nav-drawer-backdrop{display:block;position:fixed;inset:0;z-index:29;background:rgba(3,12,27,.62);border:0;cursor:pointer}
+ .nav-links,.nav-links.open{display:flex;position:fixed;top:0;right:0;left:auto;bottom:0;width:min(310px,86vw);height:100dvh;z-index:32;box-sizing:border-box;background:#0c2347;box-shadow:-15px 0 45px #0005;padding:24px 23px max(28px,env(safe-area-inset-bottom));flex-direction:column;align-items:stretch;justify-content:flex-start;gap:0;overflow-y:auto;border:0;transform:translateX(105%);visibility:hidden;transition:transform .25s ease,visibility .25s}
+ .nav-links.open{transform:translateX(0);visibility:visible}
+ .nav-links>a{padding:15px 4px;border-bottom:1px solid #ffffff20;font-size:15px}
+ .nav-links .nav-admin{display:block;align-self:stretch;text-align:left;padding:15px 4px;margin-top:10px;border:1px solid #6485b3;border-radius:8px;background:#17365f}
+ .drawer-heading{display:flex;align-items:center;justify-content:space-between;margin:0 0 14px;color:#fff;font-size:16px;font-weight:750}
+ .drawer-heading button{border:0;background:transparent;color:#fff;font-size:28px;cursor:pointer}
+}
+@media(min-width:721px){.drawer-heading,.nav-drawer-backdrop{display:none!important}}
+@media(prefers-reduced-motion:reduce){.nav-links{transition:none!important}}
