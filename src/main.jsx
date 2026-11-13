@@ -90,10 +90,10 @@ function PortfolioAI(){
  const [mode,setMode]=useState('unknown');
  const [error,setError]=useState('');
  const [retryText,setRetryText]=useState('');
- const send=async(text)=>{
+ const send=async(text, history=messages)=>{
   const question=text.trim();
   if(!question||busy)return;
-  const next=[...messages,{role:'user',content:question}];
+  const next=[...history,{role:'user',content:question}];
   setMessages(next);setDraft('');setBusy(true);setError('');setRetryText('');
   try{
    const ctrl=new AbortController(),timeout=setTimeout(()=>ctrl.abort(),25000);
@@ -102,7 +102,7 @@ function PortfolioAI(){
    finally{clearTimeout(timeout)}
    const data=await res.json();
    if(!res.ok||typeof data.answer!=='string'||!data.answer.trim())throw Error(data.error||'Assistant could not return an answer.');
-   setMode(data.mode==='ai'?'ai':'basic');
+   setMode(data.mode==='ai'?'ai':data.mode==='saved'?'saved':'basic');
    setMessages(prev=>[...prev,{role:'assistant',content:data.answer}]);
   }catch(e){
    setMode('offline');
@@ -115,10 +115,10 @@ function PortfolioAI(){
   <button className="ai-launch" type="button" aria-expanded={open} aria-controls="portfolio-ai-panel" onClick={()=>setOpen(x=>!x)}>{open?'✕ Close':'✦ Ask AI'}</button>
   {open&&<section className="ai-panel" id="portfolio-ai-panel" aria-label="Portfolio AI chat">
    <header className="ai-header"><div><strong>Ask about Abdul</strong><small>Portfolio assistant · বাংলা / English</small></div><button type="button" aria-label="Close AI chat" onClick={()=>setOpen(false)}>×</button></header>
-   <div className="ai-service-status" role="status"><span className={'ai-status-indicator '+mode}/>{mode==='ai'?'AI-powered response':mode==='basic'?'Portfolio knowledge mode':mode==='offline'?'Connection issue':'Ask a question to begin'}</div>
+   <div className="ai-service-status" role="status"><span className={'ai-status-indicator '+mode}/>{mode==='ai'?'AI-powered response':mode==='saved'?'Enquiry submitted':mode==='basic'?'Portfolio knowledge mode':mode==='offline'?'Connection issue':'Ask a question to begin'}</div>
    <div className="ai-messages" role="log" aria-live="polite">{messages.map((m,i)=><div key={i} className={'ai-bubble '+m.role}>{m.content}</div>)}{busy&&<div className="ai-bubble assistant">Checking portfolio information…</div>}</div>
-   {messages.length===1&&<div className="ai-suggestions">{['What audit experience does he have?','Show latest updates','How can I request a consultation?'].map(x=><button type="button" key={x} onClick={()=>send(x)}>{x}</button>)}</div>}
-   {error&&<div className="ai-retry"><p role="alert">{error}</p><button type="button" disabled={busy} onClick={()=>{setMessages(prev=>prev.slice(0,-2));send(retryText)}}>Retry last question</button></div>}
+   {messages.length===1&&<div className="ai-suggestions">{['Tell me about Abdul in 30 seconds','I have a project to discuss','Can we arrange a meeting?'].map(x=><button type="button" key={x} onClick={()=>send(x)}>{x}</button>)}</div>}
+   {error&&<div className="ai-retry"><p role="alert">{error}</p><button type="button" disabled={busy} onClick={()=>send(retryText,messages.slice(0,-2))}>Retry last question</button></div>}
    <form className="ai-compose" onSubmit={e=>{e.preventDefault();send(draft)}}><input aria-label="Ask a question" value={draft} maxLength={700} onChange={e=>setDraft(e.target.value)} placeholder="Ask about audit, projects, updates…" /><button disabled={busy||!draft.trim()} type="submit" aria-label="Send message">➤</button></form>
    <p className="ai-disclaimer">AI can make mistakes. Answers use public portfolio information; professional enquiries and appointments require personal confirmation.</p>
   </section>}
