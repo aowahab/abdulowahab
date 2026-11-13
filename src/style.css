@@ -397,3 +397,16 @@ html[data-theme=light] .section-content .secondary{color:#142e4a}
  .nav-links>a{flex:0 0 auto;display:inline-flex;align-items:center;justify-content:center;white-space:nowrap;padding:8px 0;font-size:12px;line-height:1.35}
  .nav-links .nav-admin{font-size:12px;line-height:1.35;padding:8px 0}
 }
+
+/* Equal-width desktop navigation for the five destinations */
+@media(min-width:1061px){
+ .nav-links{display:grid;grid-template-columns:repeat(5,minmax(0,1fr)) auto;align-items:center;justify-content:end;gap:clamp(6px,.75vw,12px);width:min(100%,760px);margin-left:auto}
+ .nav-links>a.nav-destination{box-sizing:border-box;display:flex;align-items:center;justify-content:center;width:100%;min-width:0;min-height:42px;padding:10px 5px;border:1px solid #355778;border-radius:9px;background:#102b4b;color:#d4e6fa;font-size:clamp(10px,.85vw,12px);font-weight:650;line-height:1.2;text-align:center;white-space:nowrap}
+ .nav-links>a.nav-destination:hover,.nav-links>a.nav-destination:focus-visible{background:#1e4a70;border-color:#61aad8;color:#fff}
+ .nav-links>a.nav-admin{display:flex;justify-content:center;align-items:center;min-height:42px;padding:8px 3px;margin:0;color:#b3cbe6!important;font-size:12px;white-space:nowrap}
+}
+@media(min-width:1061px) and (max-width:1190px){
+ .nav-links{width:min(100%,665px);gap:6px}
+ .nav-links>a.nav-destination{font-size:10px;padding-inline:3px}
+ .nav .brand-name{font-size:clamp(20px,2vw,24px)}
+}
