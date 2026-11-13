@@ -155,7 +155,7 @@ function renderEditor() {
   var top = h('div', { class: 'top' },
     h('h1', null, 'Site editor'),
     h('div', { class: 'actions' },
-      h('a', { class: 'btn ghost small', href: '/', target: '_blank', rel: 'noopener' }, 'View site'),
+      h('a', { class: 'btn back-to-site', href: '/', title: 'Return to the public portfolio website' }, '← Back to Website'),
       h('a', { class: 'btn ghost small', href: 'https://vercel.com/tickydo/abdulowahab/settings/environment-variables', target: '_blank', rel: 'noopener noreferrer', title: 'Update ADMIN_PASSWORD in Vercel, then redeploy' }, 'Change password'),
       h('button', { class: 'btn ghost small', type: 'button', onclick: signOut }, 'Sign out')));
 
