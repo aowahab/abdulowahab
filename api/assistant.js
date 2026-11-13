@@ -99,25 +99,32 @@ async function maybeNotify(messages,key){
  const last=messages.at(-1)?.content?.trim()||'';
  const previous=messages.at(-2);
  if(previous?.role!=='assistant'||!previous.content.includes('[LEAD_CONSENT_REQUEST]')||!/^(yes,? send|yes,? share|send it|i consent|হ্যাঁ,? পাঠান|হ্যাঁ,? পাঠাও|জি,? পাঠান|ji send|ha send)$/i.test(last))return null;
- const userText=messages.slice(0,-1).filter(m=>m.role==='user').map(m=>m.content).join('\\n').slice(0,4000);
+ const userText=messages.slice(0,-1).filter(m=>m.role==='user').map(m=>m.content).join('\n').slice(0,4000);
+ const leadHints=userText.toLowerCase();
  let lead={};
  if(key){
   try{
-   const res=await fetch('https://api.openai.com/v1/chat/completions',{method:'POST',headers:{'Content-Type':'application/json',Authorization:'Bearer '+key},body:JSON.stringify({model:process.env.OPENAI_MODEL||'gpt-4o-mini',temperature:0,max_tokens:350,response_format:{type:'json_object'},messages:[{role:'system',content:'Extract lead data ONLY from visitor messages. Return JSON keys type, name, organization, contact, details. Never invent facts.'},{role:'user',content:userText}]}),signal:AbortSignal.timeout(10000)});
+   const res=await fetch('https://api.openai.com/v1/chat/completions',{method:'POST',headers:{'Content-Type':'application/json',Authorization:'Bearer '+key},body:JSON.stringify({model:process.env.OPENAI_MODEL||'gpt-4o-mini',temperature:0,max_tokens:350,response_format:{type:'json_object'},messages:[{role:'system',content:'Extract ONLY visitor-provided information from this conversation. Return a JSON object with type (recruiter, client, collaboration, appointment or other), name, organization, contact, details. Do not invent names or contact details.'},{role:'user',content:userText}]}),signal:AbortSignal.timeout(10000)});
    if(res.ok){const data=await res.json();lead=JSON.parse(data.choices?.[0]?.message?.content||'{}');}
   }catch(e){console.error('Lead extraction fallback:',e.message)}
  }
- const field=(label)=>userText.match(new RegExp('(?:^|\\\\n)'+label+'\\\\s*[:：-]\\\\s*(.+)','im'))?.[1]?.trim()||'';
+ const field=(label)=>{
+   const match=userText.match(new RegExp('(?:^|\\n)\\s*'+label+'\\s*[:：-]\\s*([^\\n]+)','im'));
+   return match?.[1]?.trim()||'';
+ };
  const clean=(v,n)=>typeof v==='string'?v.trim().slice(0,n).replace(/[<>]/g,''):'';
  const name=clean(lead.name||field('name'),120),contact=clean(lead.contact||field('contact'),200);
  const organization=clean(lead.organization||field('organization'),160);
  const details=clean(lead.details||field('details'),1500);
- const kind=lead.type==='recruiter'?'recruiter':'collaboration';
+ const typeFromMessage=/(recruit|recruiter|hiring|job offer|vacancy|interview|চাকরি|নিয়োগ|নিয়োগ)/i.test(leadHints)?'recruiter':
+  /(appointment|meeting|schedule|মিটিং|অ্যাপয়েন্টমেন্ট)/i.test(leadHints)?'appointment':
+  /(client|customer|service|business|quotation|proposal|গ্রাহক|ক্লায়েন্ট|ক্লায়েন্ট)/i.test(leadHints)?'client':'collaboration';
+ const kind=['recruiter','client','collaboration','appointment'].includes(lead.type)?lead.type:typeFromMessage;
  if(name.length<2||contact.length<5||details.length<10)return {answer:'Please share the details in chat as Name: ..., Contact: ..., Details: ... (Organization: ... optional). Then I can ask for your permission to save the enquiry.',mode:'basic'};
  try{
   await leadPool.query(`CREATE TABLE IF NOT EXISTS portfolio_leads (id BIGSERIAL PRIMARY KEY, created_at TIMESTAMPTZ NOT NULL DEFAULT now(), name TEXT NOT NULL, organization TEXT, contact TEXT NOT NULL, kind TEXT NOT NULL, details TEXT NOT NULL, status TEXT NOT NULL DEFAULT 'new')`);
   await leadPool.query('INSERT INTO portfolio_leads(name,organization,contact,kind,details) VALUES($1,$2,$3,$4,$5)',[name,organization,contact,kind,details]);
-  return {answer:'Thank you! Your enquiry has been saved to Abdul’s private portfolio inbox.',mode:'saved'};
+  return {answer:kind==='recruiter'?'Thank you! Your recruitment opportunity was saved to Abdul’s private Recruitment inbox. He can review and follow up.':kind==='client'?'Thank you! Your business enquiry was saved to Abdul’s private Client Leads inbox for follow-up.':'Thank you! Your enquiry was saved to Abdul’s private inbox for follow-up.',mode:'saved'};
  }catch(e){console.error('Portfolio inbox save failed:',e.message);return {answer:'Sorry, the enquiry could not be saved right now. Please try again later.',mode:'basic'}}
 }
 export async function POST(request){
