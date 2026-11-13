@@ -261,3 +261,8 @@ html[data-theme=light] .section-content .secondary{color:#142e4a}
 /* Uploaded profile photo also becomes the sticky navigation identity */
 .brand-monogram{overflow:hidden;padding:0}
 .brand-avatar{display:block;width:100%;height:100%;object-fit:cover;object-position:center;border-radius:inherit}
+
+/* Profile picture replaces AO as a true circular navigation avatar */
+.nav .brand-monogram{border-radius:50%;overflow:hidden;width:42px;height:42px;flex-shrink:0}
+.nav .brand-avatar{border-radius:50%;width:100%;height:100%;object-fit:cover;object-position:center}
+@media(max-width:720px){.nav .brand-monogram{width:36px;height:36px}}
