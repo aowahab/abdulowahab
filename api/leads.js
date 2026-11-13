@@ -1,4 +1,5 @@
 import pg from 'pg';
+import { notifyOwnerWhatsApp } from '../lib/whatsapp.js';
 import { isAdmin } from '../lib/auth.js';
 import { json, sameOrigin } from '../lib/http.js';
 const pool = new pg.Pool({ connectionString: process.env.DATABASE_URL || process.env.POSTGRES_URL, max: 2, connectionTimeoutMillis: 5000 });
@@ -12,7 +13,7 @@ export async function POST(request){
  if(d.consent!==true)return json({error:'Consent required'},400);
  const name=clean(d.name,120),contact=clean(d.contact,200),organization=clean(d.organization,160),details=clean(d.details,1500),kind=['recruiter','client','collaboration','other'].includes(d.kind)?d.kind:'other';
  if(!name||contact.length<5||details.length<10)return json({error:'Name, contact and enquiry details are required'},400);
- try{await setup();await pool.query('INSERT INTO portfolio_leads(name,organization,contact,kind,details) VALUES($1,$2,$3,$4,$5)',[name,organization,contact,kind,details]);return json({ok:true})}catch(e){console.error('Lead storage failed:',e.message);return json({error:'Could not save enquiry. Please email Abdul directly.'},503)}
+ try{await setup();const saved=await pool.query('INSERT INTO portfolio_leads(name,organization,contact,kind,details) VALUES($1,$2,$3,$4,$5) RETURNING id',[name,organization,contact,kind,details]);await notifyOwnerWhatsApp({id:saved.rows[0].id,kind});return json({ok:true})}catch(e){console.error('Lead storage failed:',e.message);return json({error:'Could not save enquiry. Please email Abdul directly.'},503)}
 }
 export async function GET(request){
  if(!isAdmin(request))return json({error:'Unauthorized'},401);
