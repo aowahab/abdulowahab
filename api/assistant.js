@@ -46,7 +46,8 @@ export async function POST(request){
  let content=DEFAULT_CONTENT;
  try{content=await readContent()}catch{}
  const publicContent=JSON.stringify({name:content.name,facts:content.facts,sections:content.sections?.map(s=>({title:s.title,body:s.body?.slice(0,1500)}))}).slice(0,10000);
- const key=process.env.OPENAI_API_KEY;\n try{const notified=await maybeNotify(messages,key);if(notified)return response(notified)}catch(e){console.error('Lead notification failed',e?.message);return response({answer:'Unable to send the enquiry via WhatsApp. Please email Abdul directly.',mode:'basic'})}
+ const key=process.env.OPENAI_API_KEY;
+ try{const notified=await maybeNotify(messages,key);if(notified)return response(notified)}catch(e){console.error('Lead notification failed',e?.message);return response({answer:'Unable to send the enquiry via WhatsApp. Please email Abdul directly.',mode:'basic'})}
  if(!key)return response({answer:fallback(question.content),mode:'basic'});
  try{
   const controller=new AbortController();const timeout=setTimeout(()=>controller.abort(),12000);
