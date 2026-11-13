@@ -330,3 +330,49 @@ html[data-theme=light] .section-content .secondary{color:#142e4a}
  .mobile-bottom-nav .bottom-nav-icon{font-size:20px}
  .mobile-bottom-nav a>span:last-child{font-size:clamp(8px,2.2vw,10px);line-height:1.2;letter-spacing:-.025em;white-space:nowrap}
 }
+
+/* Five purposeful portfolio destinations */
+#updates,#consultation,#workstation,#appointment{scroll-margin-top:95px}
+.hub-intro{display:flex;gap:18px;align-items:flex-start;justify-content:space-between;margin:0 0 20px;max-width:930px}
+.hub-intro p{color:#b7cde5;font-size:14px;line-height:1.75;margin:0}
+.hub-intro>span{flex-shrink:0;font-size:11px;letter-spacing:.04em;color:#91badb;border:1px solid #355477;border-radius:999px;padding:6px 11px}
+.hub-empty{background:#0d2848;border:1px solid #355477;border-radius:14px;padding:30px 22px;color:#b9cee5;font-size:14px;line-height:1.7}
+.hub-shell{display:grid;grid-template-columns:minmax(0,.85fr) minmax(0,1.15fr);gap:20px;align-items:start;max-width:1100px}
+.hub-detail,.quick-request,.workstation-card{border:1px solid #355477;border-radius:15px;background:#0c2543;padding:23px;min-width:0}
+.hub-kicker{display:inline-block;color:#82cfff;font-size:10px;font-weight:800;letter-spacing:.13em;margin-bottom:14px}
+.hub-detail h3,.workstation-card h3{color:#fff;font-size:clamp(19px,2vw,25px);line-height:1.25;margin:0 0 13px;font-weight:750;letter-spacing:-.025em}
+.hub-detail p,.workstation-card p{font-size:13px;line-height:1.8;color:#bfd1e5;margin:0 0 18px}
+.hub-detail .hub-caution{font-size:11px;color:#93b0ce;border-top:1px solid #315174;padding-top:18px;margin-top:23px;margin-bottom:0}
+.hub-tags{display:flex;flex-wrap:wrap;gap:8px}
+.hub-tags span{font-size:11px;color:#cce4fb;border:1px solid #3b5b7a;background:#123356;border-radius:999px;padding:7px 10px}
+.quick-request{background:#f8fbff;color:#18344e;border-color:#d4e2ef}
+.request-fields{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px 13px}
+.quick-request label:not(.request-consent){display:flex;flex-direction:column;gap:7px;color:#244767;font-size:12px;font-weight:700}
+.quick-request .request-wide{grid-column:1/-1}
+.quick-request input:not([type=checkbox]),.quick-request select,.quick-request textarea{min-width:0;width:100%;border:1px solid #c9d8e8;background:#fff;border-radius:9px;padding:11px 12px;color:#193a59;font:inherit;font-size:13px;outline-offset:2px}
+.quick-request textarea{resize:vertical;min-height:105px}
+.quick-request .lead-honeypot{position:absolute!important;opacity:0!important;pointer-events:none!important;width:1px!important;height:1px!important;left:-9999px!important}
+.quick-request .request-consent{display:flex;gap:9px;align-items:flex-start;margin-top:17px;color:#355575;font-size:12px;line-height:1.55}
+.quick-request .request-consent input{accent-color:#136ab5;margin-top:3px}
+.quick-request .request-submit{display:block;border:0;border-radius:9px;padding:13px 17px;margin-top:18px;background:#0c396c;color:#fff;font:inherit;font-weight:750;font-size:13px;cursor:pointer}
+.quick-request .request-submit:hover,.quick-request .request-submit:focus-visible{background:#155a9c}
+.quick-request .request-submit:disabled{opacity:.6;cursor:wait}
+.quick-request .request-status{font-size:12px;color:#173f6a;line-height:1.65;margin:12px 0 0}
+.quick-request .request-note{font-size:11px;color:#58708a;line-height:1.6;margin:12px 0 0}
+.workstation-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+.workstation-card{display:flex;flex-direction:column;align-items:flex-start;min-height:260px}
+.workstation-card h3{font-size:20px}
+.workstation-card p{font-size:12px;line-height:1.7}
+.workstation-card .hub-link{display:inline-flex;margin-top:auto;color:#99dcff;text-decoration:none;font-size:12px;font-weight:750}
+.workstation-card .hub-link:hover{text-decoration:underline}
+@media(max-width:1100px){.workstation-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:830px){.hub-shell{grid-template-columns:1fr}.workstation-grid{grid-template-columns:1fr 1fr}}
+@media(max-width:600px){
+ .hub-intro{display:block}.hub-intro>span{display:inline-flex;margin-top:10px}
+ .hub-shell{gap:13px}
+ .hub-detail,.quick-request,.workstation-card{padding:17px;border-radius:12px}
+ .workstation-grid{grid-template-columns:1fr;gap:11px}
+ .workstation-card{min-height:0}
+ .request-fields{gap:13px 10px}
+}
+@media(max-width:370px){.request-fields{grid-template-columns:1fr}.quick-request .request-wide{grid-column:auto}}
