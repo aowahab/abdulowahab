@@ -205,7 +205,7 @@
     frag.appendChild(footer);
 
     app.replaceChildren(frag);
-    document.title = c.name;
+    document.title = c.name + ' | Audit & Assurance · Deloitte Bangladesh';
   }
 
   fetch('/api/content')
