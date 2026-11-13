@@ -420,3 +420,27 @@ html[data-theme=light] .section-content .secondary{color:#142e4a}
 .ai-retry{padding:10px 14px;border-top:1px solid #ffffff23;background:#153452}
 .ai-retry p{color:#e8f2ff;font-size:12px;line-height:1.5;margin:0 0 8px}
 .ai-retry button{border:1px solid #7bc3f3;border-radius:7px;padding:7px 12px;background:#e9f5ff;color:#0d3557;font:inherit;font-weight:650;font-size:12px;cursor:pointer}
+
+/* Workstation directory — responsive and visually consistent with the portfolio */
+.workspace-directory{margin-top:30px;display:grid;gap:24px}
+.workspace-directory-head{display:flex;align-items:end;justify-content:space-between;gap:20px;padding:26px;border:1px solid var(--line,#dce5ed);border-radius:18px;background:var(--card,#f8fafc)}
+.workspace-directory-head h3{margin:8px 0;font-size:clamp(24px,3vw,34px);line-height:1.2}
+.workspace-directory-head p{margin:0;max-width:560px;line-height:1.6}
+.workspace-search{display:grid;gap:8px;min-width:240px;font-size:12px;font-weight:700}
+.workspace-search input,.workspace-tool-panel input{width:100%;min-height:43px;padding:10px 12px;border:1px solid #a9bdca;border-radius:9px;background:#fff;color:#112b46;font:inherit}
+.workspace-category{display:grid;gap:13px}
+.workspace-category h4{margin:0;font-size:clamp(20px,2.2vw,26px);font-weight:750}
+.workspace-tool-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.workspace-tool{display:flex;align-items:center;justify-content:space-between;gap:14px;min-width:0;padding:18px;border:1px solid #d7e0e7;border-radius:14px;background:#fff;box-shadow:0 3px 10px #09223d08;color:#142d46}
+.workspace-tool>div{min-width:0;display:grid;gap:6px}
+.workspace-tool strong{font-size:15px;line-height:1.35}
+.workspace-tool small{font-size:12px;color:#567083;line-height:1.5}
+.workspace-tool>a,.workspace-tool>button,.workspace-tool-panel>button{display:inline-flex;align-items:center;justify-content:center;flex-shrink:0;padding:9px 12px;border:1px solid #c1d9d9;border-radius:9px;background:#eaf4f3;color:#1a5756;font-size:12px;font-weight:700;text-decoration:none;cursor:pointer}
+.workspace-tool>a:hover,.workspace-tool>button:hover,.workspace-tool-panel>button:hover{background:#d6e9e7}
+.workspace-tool-panel{display:grid;justify-items:start;gap:14px;padding:22px;border:1px solid #d6e3e9;border-radius:14px;background:#f7fafc}
+.workspace-tool-panel h4{margin:0;font-size:21px}
+.workspace-tool-panel label{display:grid;gap:8px;width:min(100%,400px);font-weight:650}
+.workspace-tool-panel p{margin:0}
+.workspace-result{padding:12px 14px;border-radius:8px;background:#e8f5f1;color:#1a5756}
+.workspace-disclaimer{font-size:12px;line-height:1.6;opacity:.8}
+@media(max-width:760px){.workspace-directory-head{display:grid;padding:20px}.workspace-search{min-width:0;width:100%}.workspace-tool-grid{grid-template-columns:1fr}.workspace-tool{padding:15px}.workspace-tool strong{font-size:14px}.workspace-tool>a,.workspace-tool>button{font-size:12px}}
