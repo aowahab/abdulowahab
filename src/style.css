@@ -88,3 +88,27 @@ html[data-theme=light] .project-card,html[data-theme=light] .training-card,html[
 .enquiry-form input,.enquiry-form select,.enquiry-form textarea{font:inherit;color:#102b49;background:#fff;border:1px solid #cbd5df;border-radius:11px;padding:13px;width:100%;min-width:0;box-sizing:border-box}
 .enquiry-form input:focus,.enquiry-form select:focus,.enquiry-form textarea:focus{outline:2px solid #287b76;outline-offset:2px}
 .enquiry-form .button{border:0;cursor:pointer;justify-self:start}
+
+/* Admin sage green + midnight blue palette, applied consistently */
+html[data-theme=light]{--ref-ink:#10213b;--ref-teal:#527c69;--ref-paper:#e8f0e4;--ref-border:#afc5b0}
+html[data-theme=light] body,html[data-theme=light] .content-wrap{background:#e8f0e4;color:#10213b}
+html[data-theme=light] .nav{background:#10213b;color:#f1f7ef;border-bottom:1px solid #36516c}
+html[data-theme=light] .nav-links a{color:#e5f0e6}
+html[data-theme=light] .nav-links a:hover{color:#b9dfb8}
+html[data-theme=light] .hero{background:radial-gradient(ellipse at 80% 30%,#1d3b57 0%,transparent 55%),#10213b;color:#f3f8f1}
+html[data-theme=light] .hero h1,html[data-theme=light] .hero-subtitle{color:#f3f8f1}
+html[data-theme=light] .hero-subtitle{color:#d1e6d1}
+html[data-theme=light] .hero-bottom{color:#c1d4ca}
+html[data-theme=light] .reference-breadcrumb{color:#10213b;border-color:#afc5b0}
+html[data-theme=light] .stat-card,html[data-theme=light] .career-card,html[data-theme=light] .training-card,html[data-theme=light] .engagement-group,html[data-theme=light] .project-card,html[data-theme=light] .enquiry-form{background:#f6faf4;border-color:#afc5b0;color:#10213b}
+html[data-theme=light] .section-heading h2,html[data-theme=light] .stat-card strong,html[data-theme=light] .career-card h3{color:#10213b}
+html[data-theme=light] .career-timeline{border-color:#527c69}
+html[data-theme=light] .career-dot{border-color:#527c69}
+html[data-theme=light] .career-card>strong,html[data-theme=light] .training-card h3{color:#527c69}
+html[data-theme=light] .filter-pills button.selected{background:#10213b;color:#fff}
+html[data-theme=light] .mobile-bottom-nav{background:#10213b;border-color:#36516c}
+html[data-theme=light] .mobile-bottom-nav a{color:#f1f7ef}
+html[data-theme=light] .footer{background:#10213b;color:#d1e6d1}
+html[data-theme=light] .site-preferences{background:#162b47}
+html[data-accent=teal]{--portfolio-accent:#86bca4}
+html[data-theme=light] .enquiry-form input,html[data-theme=light] .enquiry-form textarea,html[data-theme=light] .enquiry-form select{background:#fff;color:#10213b;border-color:#afc5b0}
