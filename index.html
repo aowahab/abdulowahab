@@ -1,1 +1,195 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Abdul Owahab</title>
+<meta name="description" content="Abdul Owahab is a Senior Associate in Audit & Assurance at Deloitte Bangladesh, a Chartered Accountancy student and co-founder of Tickydo, based in Dhaka.">
+<meta name="theme-color" content="#dfeada">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Literata:ital,opsz,wght@0,7..72,400;0,7..72,600;1,7..72,400&display=swap" rel="stylesheet">
+<style>
+:root{
+  --paper:#dfeada;
+  --paper-deep:#cfdfc8;
+  --rule:#9db896;
+  --ink:#16243f;
+  --muted:#46584f;
+  --pencil:#c2352b;
+  --measure:62ch;
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{
+  margin:0;
+  background:var(--paper);
+  color:var(--ink);
+  font-family:"Literata",Georgia,"Times New Roman",serif;
+  font-size:1.0625rem;
+  line-height:1.7;
+  font-variant-numeric:tabular-nums;
+}
+.paper{max-width:64rem;margin:0 auto;padding:0 1.25rem 3rem}
 
+/* each section is a ruled working-paper sheet with a reference column */
+.sheet{
+  display:grid;
+  grid-template-columns:4.5rem minmax(0,1fr);
+  border-bottom:1px solid var(--rule);
+  padding:2.75rem 0;
+}
+.ref{
+  font-style:italic;
+  font-weight:600;
+  font-size:1.5rem;
+  line-height:1.2;
+  color:var(--pencil);
+  border-right:3px double var(--pencil);
+  padding-right:1rem;
+  margin-right:1.75rem;
+  text-align:right;
+}
+.body{min-width:0}
+.body > p{max-width:var(--measure);margin:0 0 1rem}
+.body > p:last-child{margin-bottom:0}
+
+h1{
+  font-weight:600;
+  font-size:clamp(2.9rem,10vw,6.75rem);
+  line-height:.95;
+  letter-spacing:-.025em;
+  margin:0 0 2.25rem;
+}
+h2{
+  font-weight:600;
+  font-size:1.65rem;
+  line-height:1.2;
+  letter-spacing:-.01em;
+  margin:0 0 1.1rem;
+}
+
+/* header block */
+.head{padding-top:4rem}
+.facts{list-style:none;margin:0;padding:0;max-width:40rem}
+.facts li{
+  display:grid;
+  grid-template-columns:1.75rem 7rem minmax(0,1fr);
+  align-items:baseline;
+  gap:0 .5rem;
+  padding:.55rem 0;
+  border-bottom:1px solid var(--rule);
+}
+.facts li:first-child{border-top:1px solid var(--rule)}
+.facts .k{color:var(--muted);font-size:.95rem}
+.tick{width:1.1rem;height:1.1rem;align-self:center;overflow:visible}
+.tick path{
+  fill:none;
+  stroke:var(--pencil);
+  stroke-width:2.6;
+  stroke-linecap:round;
+  stroke-linejoin:round;
+  stroke-dasharray:30;
+  stroke-dashoffset:30;
+  animation:draw .45s ease-out forwards;
+  animation-delay:calc(.5s + var(--i) * .4s);
+}
+@keyframes draw{to{stroke-dashoffset:0}}
+.legend{
+  display:flex;align-items:center;gap:.5rem;
+  margin:1.1rem 0 0;color:var(--muted);font-size:.9rem;
+}
+.legend .tick path{animation:none;stroke-dashoffset:0}
+
+/* practice areas */
+.areas{margin:0;max-width:44rem}
+.areas div{
+  display:grid;
+  grid-template-columns:13rem minmax(0,1fr);
+  gap:1.5rem;
+  padding:.9rem 0;
+  border-top:1px solid var(--rule);
+}
+.areas div:last-child{border-bottom:1px solid var(--rule)}
+.areas dt{font-weight:600}
+.areas dd{margin:0}
+
+footer{padding:1.75rem 0 0;color:var(--muted);font-size:.9rem}
+
+@media (max-width:40rem){
+  .sheet{grid-template-columns:1fr;padding:2rem 0}
+  .ref{
+    border-right:0;border-bottom:3px double var(--pencil);
+    margin:0 0 1rem;padding:0 0 .25rem;text-align:left;width:2.5rem;
+  }
+  .head{padding-top:2.5rem}
+  .head .ref{display:none}
+  .facts li{grid-template-columns:1.75rem minmax(0,1fr)}
+  .facts .k{grid-column:2}
+  .facts .v{grid-column:2}
+  .areas div{grid-template-columns:1fr;gap:.15rem}
+}
+@media (prefers-reduced-motion:reduce){
+  .tick path{animation:none;stroke-dashoffset:0}
+}
+</style>
+</head>
+<body>
+<main class="paper">
+
+  <header class="sheet head">
+    <span class="ref" aria-hidden="true"></span>
+    <div class="body">
+      <h1>Abdul Owahab</h1>
+      <ul class="facts">
+        <li style="--i:0"><svg class="tick" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 13l6 6L21 4"/></svg><span class="k">Role</span><span class="v">Senior Associate, Audit &amp; Assurance</span></li>
+        <li style="--i:1"><svg class="tick" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 13l6 6L21 4"/></svg><span class="k">Firm</span><span class="v">Deloitte Bangladesh</span></li>
+        <li style="--i:2"><svg class="tick" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 13l6 6L21 4"/></svg><span class="k">Based in</span><span class="v">Dhaka, Bangladesh</span></li>
+        <li style="--i:3"><svg class="tick" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 13l6 6L21 4"/></svg><span class="k">Studying</span><span class="v">Chartered Accountancy, ICAB Professional Level</span></li>
+      </ul>
+      <p class="legend"><svg class="tick" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 13l6 6L21 4"/></svg>Agreed to source</p>
+    </div>
+  </header>
+
+  <section class="sheet" id="about">
+    <span class="ref" aria-hidden="true">A</span>
+    <div class="body">
+      <h2>About</h2>
+      <p>I work in audit and assurance in Dhaka, where my days go to testing evidence, tying numbers back to source documents and writing up what the work shows.</p>
+      <p>Alongside the job I am working through the Chartered Accountancy qualification with ICAB, and I am a co-founder of a technology business. The common thread is a habit of checking that things add up.</p>
+    </div>
+  </section>
+
+  <section class="sheet" id="practice">
+    <span class="ref" aria-hidden="true">B</span>
+    <div class="body">
+      <h2>What I work on</h2>
+      <dl class="areas">
+        <div><dt>Audit &amp; assurance</dt><dd>Planning, fieldwork and reporting on audit engagements, with documentation another reviewer can follow.</dd></div>
+        <div><dt>Regulatory compliance</dt><dd>Compliance audits against Bangladeshi regulation, including foreign-donation and NGO rules.</dd></div>
+        <div><dt>Financial reporting</dt><dd>Applying accounting standards and company law to real balances and disclosures.</dd></div>
+        <div><dt>Data analytics and AI</dt><dd>Using data tools and AI to test more of a population and cut repetitive work.</dd></div>
+      </dl>
+    </div>
+  </section>
+
+  <section class="sheet" id="qualification">
+    <span class="ref" aria-hidden="true">C</span>
+    <div class="body">
+      <h2>Qualification</h2>
+      <p>Chartered Accountancy through the Institute of Chartered Accountants of Bangladesh (ICAB), currently at the Professional Level.</p>
+    </div>
+  </section>
+
+  <section class="sheet" id="venture">
+    <span class="ref" aria-hidden="true">D</span>
+    <div class="body">
+      <h2>Tickydo</h2>
+      <p>Tickydo is a digital ticketing and transportation technology business. I am a partner and co-founder, and I look after strategy, finance and operations.</p>
+    </div>
+  </section>
+
+  <footer>© 2026 Abdul Owahab, Dhaka</footer>
+</main>
+</body>
+</html>
