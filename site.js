@@ -170,6 +170,28 @@
       frag.appendChild(x.sheet);
     });
 
+    // Professional overview is additive: never overwrite the owner's saved Blob content.
+    var existingIds = (c.sections || []).map(function (section) { return section.id; });
+    if (existingIds.indexOf('experience') === -1) {
+      var experience = sheet(String.fromCharCode(65 + (index % 26)), 'experience');
+      index++;
+      experience.body.appendChild(el('h2', null, 'Professional experience'));
+      renderText(experience.body,
+        'Senior Associate in Audit & Assurance at Deloitte Bangladesh, working across statutory and group audit engagements. Experience spans manufacturing, paints and coatings, agrochemicals, research and healthcare, and services.\\n\\n' +
+        '- Audit execution: Financial statement testing, substantive procedures, documentation and engagement coordination.\\n' +
+        '- Financial statement areas: Revenue, receivables, inventory, payroll, payables, operating expenses and equity.\\n' +
+        '- Technology: Advanced Excel, audit workflow platforms and an interest in Python-assisted analytics.');
+      frag.appendChild(experience.sheet);
+    }
+    if (existingIds.indexOf('education') === -1) {
+      var education = sheet(String.fromCharCode(65 + (index % 26)), 'education');
+      index++;
+      education.body.appendChild(el('h2', null, 'Education & professional development'));
+      renderText(education.body,
+        'BBA in Accounting & Information Systems, Jagannath University, Dhaka. Currently pursuing Chartered Accountancy at the Professional Level of the Institute of Chartered Accountants of Bangladesh (ICAB).');
+      frag.appendChild(education.sheet);
+    }
+
     if (c.posts && c.posts.length) {
       var u = sheet(String.fromCharCode(65 + (index % 26)), 'updates');
       u.body.appendChild(el('h2', null, 'Updates'));
