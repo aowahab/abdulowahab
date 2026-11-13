@@ -376,3 +376,17 @@ html[data-theme=light] .section-content .secondary{color:#142e4a}
  .request-fields{gap:13px 10px}
 }
 @media(max-width:370px){.request-fields{grid-template-columns:1fr}.quick-request .request-wide{grid-column:auto}}
+
+/* The five destination links collapse to a side drawer on narrower desktops/tablets */
+@media(min-width:721px) and (max-width:1060px){
+ .nav .brand-name{font-size:clamp(21px,2.5vw,25px)}
+ .menu-button{display:inline-flex;align-items:center;justify-content:center;margin-left:auto;min-width:44px;height:44px;padding:0;border:1px solid #6686b3;border-radius:10px;background:#17365f;color:#fff;font-size:24px;cursor:pointer}
+ .nav-drawer-backdrop{display:block!important;position:fixed;inset:0;z-index:29;background:rgba(3,12,27,.62);border:0}
+ .nav-links,.nav-links.open{display:flex;position:fixed;top:0;right:0;bottom:0;left:auto;width:min(330px,82vw);height:100dvh;z-index:32;box-sizing:border-box;background:#0c2347;box-shadow:-15px 0 45px #0005;padding:24px;flex-direction:column;align-items:stretch;justify-content:flex-start;gap:0;overflow:auto;border:0;transform:translateX(105%);visibility:hidden;transition:transform .25s ease,visibility .25s}
+ .nav-links.open{transform:translateX(0);visibility:visible}
+ .nav-links>a{display:block;padding:15px 4px;border-bottom:1px solid #ffffff20;font-size:15px}
+ .nav-links .nav-admin{display:block;align-self:stretch;text-align:left;padding:15px 4px;margin-top:10px;border:1px solid #6485b3;border-radius:8px;background:#17365f;color:#fff!important;font-size:15px}
+ .drawer-heading{display:flex!important;align-items:center;justify-content:space-between;margin:0 0 14px;color:#fff;font-size:16px;font-weight:750}
+ .drawer-heading button{border:0;background:transparent;color:#fff;font-size:28px;cursor:pointer}
+}
+@media(min-width:1061px){.nav-links{gap:clamp(10px,1.5vw,25px)}.nav-links>a{font-size:12px}}
