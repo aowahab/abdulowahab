@@ -206,3 +206,16 @@ html[data-theme=light] .section-content .secondary{color:#142e4a}
 /* Admin is a menu item, not a separate header action */
 .nav-links .nav-admin{display:inline-flex;align-items:center;justify-content:center;align-self:center;padding:7px 12px}
 @media(max-width:580px){.nav-links .nav-admin{display:block;align-self:stretch;text-align:left;padding:11px 0;border:0;border-top:1px solid #355577;border-radius:0;background:transparent;color:#f8fbff!important}}
+
+/* Expanded professional footer */
+.footer{display:block;padding:0 max(5vw,24px);background:#071a33;color:#c4d5e9;border-top:1px solid #294767;font-size:13px}
+.footer-main{max-width:1440px;margin:0 auto;padding:70px 0 62px;display:grid;grid-template-columns:minmax(230px,1.8fr) repeat(3,minmax(130px,1fr));gap:clamp(25px,4vw,75px)}
+.footer-intro{max-width:370px}.footer-identity{display:inline-flex;align-items:center;gap:12px;color:#fff!important;text-decoration:none;font-size:20px;font-weight:800;letter-spacing:-.035em}
+.footer-mark{display:grid;place-items:center;width:44px;height:44px;border-radius:12px;background:#e9f3ff;color:#102a50;font-size:15px;font-weight:850;letter-spacing:-.04em}
+.footer-intro p{margin:20px 0 16px;color:#aec3dc;font-size:13px;line-height:1.85}.footer-location{color:#8fb4d9;font-size:12px}
+.footer-column{display:flex;flex-direction:column;align-items:flex-start;gap:13px}.footer-column h3{color:#fff;font-size:13px;font-weight:750;letter-spacing:.045em;margin:3px 0 10px}
+.footer-column a{color:#b9cde4;text-decoration:none;font-size:13px;line-height:1.5}.footer-column a:hover,.footer-bottom a:hover{color:#7dd3fc}
+.footer-bottom{max-width:1440px;margin:0 auto;padding:23px 0 28px;border-top:1px solid #294767;display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap;color:#91aac7;font-size:11px}
+.footer-bottom a{color:#b9cde4;text-decoration:none}
+@media(max-width:900px){.footer-main{grid-template-columns:repeat(2,minmax(0,1fr));gap:35px 45px;padding:52px 0}.footer-intro{max-width:420px}}
+@media(max-width:580px){.footer-main{grid-template-columns:repeat(2,minmax(0,1fr));gap:35px 20px;padding:45px 0 36px}.footer-intro{grid-column:1/-1}.footer-column{gap:11px}.footer-bottom{padding:20px 0 90px;align-items:flex-start;flex-direction:column;gap:10px}.footer-identity{font-size:18px}}
