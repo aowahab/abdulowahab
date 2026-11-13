@@ -82,7 +82,48 @@ function ContactRequest({mode='consultation'}) {
   <p className="request-note">{appointment?'Date and time are preferences only; no appointment is booked until confirmed.':'Enquiries are stored privately for follow-up. No professional service or fee is promised.'}</p>
  </form>;
 }
-function PortfolioAI(){const [open,setOpen]=useState(false);const [messages,setMessages]=useState([{role:'assistant',content:'Welcome! I’m Abdul Owahab’s portfolio assistant. Exploring his experience, recruiting for a role, or considering a collaboration? I can help you find relevant details and discuss next steps. বাংলা বা English—দুই ভাষাতেই কথা বলতে পারেন।'}]);const [draft,setDraft]=useState('');const [busy,setBusy]=useState(false);const send=async(text)=>{const question=text.trim();if(!question||busy)return;const next=[...messages,{role:'user',content:question}];setMessages(next);setDraft('');setBusy(true);try{const res=await fetch('/api/assistant',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({messages:next.slice(-12)})});const data=await res.json();if(!res.ok)throw Error(data.error||'Unable to answer right now');setMessages(prev=>[...prev,{role:'assistant',content:data.answer}])}catch(e){setMessages(prev=>[...prev,{role:'assistant',content:'Sorry, the assistant is temporarily unavailable. Please try again or contact Abdul by email.'}])}finally{setBusy(false)}};return <div className="portfolio-ai"><button className="ai-launch" type="button" aria-expanded={open} aria-controls="portfolio-ai-panel" onClick={()=>setOpen(v=>!v)}>{open?'✕ Close':'✦ Ask AI'}</button>{open&&<section className="ai-panel" id="portfolio-ai-panel" aria-label="Portfolio AI chat"><header className="ai-header"><div><strong>Ask about Abdul</strong><small>Portfolio assistant · বাংলা / English</small></div><button type="button" aria-label="Close AI chat" onClick={()=>setOpen(false)}>×</button></header><div className="ai-messages" role="log" aria-live="polite">{messages.map((m,i)=><div key={i} className={'ai-bubble '+m.role}>{m.content}</div>)}{busy&&<div className="ai-bubble assistant">Thinking…</div>}</div>{messages.length===1&&<div className="ai-suggestions">{['I’m a recruiter with an opportunity','I’d like to discuss a collaboration','What is his audit experience?'].map(x=><button key={x} onClick={()=>send(x)}>{x}</button>)}</div>}<form className="ai-compose" onSubmit={e=>{e.preventDefault();send(draft)}}><input aria-label="Ask a question" value={draft} maxLength={700} onChange={e=>setDraft(e.target.value)} placeholder="Ask anything about this portfolio…" /><button disabled={busy||!draft.trim()} type="submit" aria-label="Send message">➤</button></form><p className="ai-disclaimer">AI may make mistakes. Only public portfolio information is used.</p></section>}</div>}
+function PortfolioAI(){
+ const [open,setOpen]=useState(false);
+ const [messages,setMessages]=useState([{role:'assistant',content:'Welcome! I’m Abdul Owahab’s portfolio assistant. Ask me about his experience, professional projects, updates or collaboration opportunities. বাংলা ও English—দুই ভাষাতেই প্রশ্ন করতে পারেন।'}]);
+ const [draft,setDraft]=useState('');
+ const [busy,setBusy]=useState(false);
+ const [mode,setMode]=useState('unknown');
+ const [error,setError]=useState('');
+ const [retryText,setRetryText]=useState('');
+ const send=async(text)=>{
+  const question=text.trim();
+  if(!question||busy)return;
+  const next=[...messages,{role:'user',content:question}];
+  setMessages(next);setDraft('');setBusy(true);setError('');setRetryText('');
+  try{
+   const ctrl=new AbortController(),timeout=setTimeout(()=>ctrl.abort(),25000);
+   let res;
+   try{res=await fetch('/api/assistant',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({messages:next.slice(-12)}),signal:ctrl.signal})}
+   finally{clearTimeout(timeout)}
+   const data=await res.json();
+   if(!res.ok||typeof data.answer!=='string'||!data.answer.trim())throw Error(data.error||'Assistant could not return an answer.');
+   setMode(data.mode==='ai'?'ai':'basic');
+   setMessages(prev=>[...prev,{role:'assistant',content:data.answer}]);
+  }catch(e){
+   setMode('offline');
+   setRetryText(question);
+   setError(e.name==='AbortError'?'The assistant took too long to respond. Please try again.':'The assistant could not connect right now. You can retry your last question.');
+   setMessages(prev=>[...prev,{role:'assistant',content:'I could not retrieve an answer right now. Please use Retry below, or explore the portfolio sections.'}]);
+  }finally{setBusy(false)}
+ };
+ return <div className="portfolio-ai">
+  <button className="ai-launch" type="button" aria-expanded={open} aria-controls="portfolio-ai-panel" onClick={()=>setOpen(x=>!x)}>{open?'✕ Close':'✦ Ask AI'}</button>
+  {open&&<section className="ai-panel" id="portfolio-ai-panel" aria-label="Portfolio AI chat">
+   <header className="ai-header"><div><strong>Ask about Abdul</strong><small>Portfolio assistant · বাংলা / English</small></div><button type="button" aria-label="Close AI chat" onClick={()=>setOpen(false)}>×</button></header>
+   <div className="ai-service-status" role="status"><span className={'ai-status-indicator '+mode}/>{mode==='ai'?'AI-powered response':mode==='basic'?'Portfolio knowledge mode':mode==='offline'?'Connection issue':'Ask a question to begin'}</div>
+   <div className="ai-messages" role="log" aria-live="polite">{messages.map((m,i)=><div key={i} className={'ai-bubble '+m.role}>{m.content}</div>)}{busy&&<div className="ai-bubble assistant">Checking portfolio information…</div>}</div>
+   {messages.length===1&&<div className="ai-suggestions">{['What audit experience does he have?','Show latest updates','How can I request a consultation?'].map(x=><button type="button" key={x} onClick={()=>send(x)}>{x}</button>)}</div>}
+   {error&&<div className="ai-retry"><p role="alert">{error}</p><button type="button" disabled={busy} onClick={()=>{setMessages(prev=>prev.slice(0,-2));send(retryText)}}>Retry last question</button></div>}
+   <form className="ai-compose" onSubmit={e=>{e.preventDefault();send(draft)}}><input aria-label="Ask a question" value={draft} maxLength={700} onChange={e=>setDraft(e.target.value)} placeholder="Ask about audit, projects, updates…" /><button disabled={busy||!draft.trim()} type="submit" aria-label="Send message">➤</button></form>
+   <p className="ai-disclaimer">AI can make mistakes. Answers use public portfolio information; professional enquiries and appointments require personal confirmation.</p>
+  </section>}
+ </div>;
+}
 function UpdateCard({post,featured=false,expanded=false}) {
  const media=Array.isArray(post.media)?post.media:[];
  const visibleMedia=expanded?media:media.slice(0,1);
