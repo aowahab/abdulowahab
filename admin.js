@@ -193,6 +193,53 @@ function leadsPanel(){
 
 function profilePanel() {
   var wrap = h('div');
+  var photoPreview = content.avatarUrl
+    ? h('img', { class: 'avatar-preview', src: content.avatarUrl, alt: 'Current profile picture' })
+    : h('span', { class: 'avatar-placeholder' }, (content.name || 'AO').trim().split(/\s+/).map(function (x) { return x[0]; }).slice(0, 2).join('').toUpperCase());
+  var preview = h('div', { class: 'avatar-holder' }, photoPreview);
+  var photoNote = h('p', { class: 'muted', 'aria-live': 'polite' }, 'Upload a JPG, PNG or WebP photo (up to 10 MB), then save your changes.');
+  var photoInput = h('input', { type: 'file', accept: 'image/jpeg,image/png,image/webp', 'aria-label': 'Choose profile picture' });
+  photoInput.addEventListener('change', function () {
+    var file = photoInput.files && photoInput.files[0];
+    photoInput.value = '';
+    if (!file) return;
+    if (!/^image\/(jpeg|png|webp)$/.test(file.type) || file.size > 10 * 1024 * 1024) {
+      photoNote.textContent = 'Choose a JPG, PNG or WebP photo under 10 MB.';
+      photoNote.className = 'error';
+      return;
+    }
+    uploads++;
+    refreshSaveBar();
+    photoNote.textContent = 'Uploading photo…';
+    photoNote.className = 'muted';
+    Promise.all([shrinkImage(file), loadBlobClient()]).then(function (result) {
+      var uploadFile = result[0];
+      var safe = uploadFile.name.replace(/[^a-zA-Z0-9._-]+/g, '-').slice(-80) || 'profile.jpg';
+      return result[1].upload('uploads/profile-' + safe, uploadFile, {
+        access: 'public',
+        handleUploadUrl: '/api/upload'
+      });
+    }).then(function (blob) {
+      content.avatarUrl = blob.url;
+      markDirty();
+      preview.replaceChildren(h('img', { class: 'avatar-preview', src: blob.url, alt: 'New profile picture preview' }));
+      photoNote.textContent = 'Photo uploaded. Press Save changes to publish it.';
+      photoNote.className = 'muted';
+    }).catch(function (error) {
+      photoNote.textContent = 'Upload failed: ' + (error.message || 'Please try again.');
+      photoNote.className = 'error';
+    }).then(function () { uploads--; refreshSaveBar(); });
+  });
+  var removePhoto = h('button', { type: 'button', class: 'btn ghost small', onclick: function () {
+    content.avatarUrl = '';
+    markDirty();
+    preview.replaceChildren(h('span', { class: 'avatar-placeholder' }, 'AO'));
+    photoNote.textContent = 'Photo removed. Press Save changes to update the website.';
+  } }, 'Remove photo');
+  wrap.appendChild(h('div', { class: 'card profile-photo-card' },
+    h('div', null, h('h2', null, 'Profile picture'), h('p', { class: 'muted' }, 'Your photo appears on the public homepage. Change it here anytime.')),
+    h('div', { class: 'avatar-editor' }, preview, h('div', { class: 'avatar-controls' }, photoInput, removePhoto, photoNote))));
+
   wrap.appendChild(h('div', { class: 'card' },
     field('Your name', content.name, function (v) { content.name = v; }, { max: 120 })));
 
