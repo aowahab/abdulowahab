@@ -141,6 +141,13 @@ function UpdateCard({post,featured=false,expanded=false}) {
 }
 
 const workspaceGroups=[
+ {title:'Audit & assurance',items:[
+  {name:'Audit Materiality Calculator',action:'materiality',detail:'Calculate overall and performance materiality from a selected benchmark; illustrative only.'},
+  {name:'Audit Planning Checklist',detail:'Planned: risk assessment, team briefing and engagement planning.'},
+  {name:'Risk Assessment & Assertions Matrix',detail:'Planned: assertions and responses by financial statement area.'},
+  {name:'Audit Sampling Calculator',detail:'Planned: sample-size estimation and selection support.'},
+  {name:'Audit Completion Checklist',detail:'Planned: completion and reporting review.'}
+ ]},
  {title:'Everyday toolkit',items:[
   {name:'Word to PDF',url:'https://www.ilovepdf.com/word_to_pdf',detail:'Convert Word documents to PDF using an external service.'},
   {name:'Image to PDF',url:'https://www.ilovepdf.com/jpg_to_pdf',detail:'Combine image files into a PDF using an external service.'},
@@ -196,6 +203,7 @@ const workspaceGroups=[
 function WorkspaceDirectory(){
  const [search,setSearch]=useState('');
  const [tool,setTool]=useState('');
+ const [materiality,setMateriality]=useState({benchmark:'Profit before tax',amount:'',rate:'5',performance:'75'});
  const [birth,setBirth]=useState('');
  const [imageFile,setImageFile]=useState(null);
  const [width,setWidth]=useState('800');
@@ -232,6 +240,7 @@ function WorkspaceDirectory(){
    const items=group.items.filter(x=>(x.name+' '+group.title+' '+(x.detail||'')).toLowerCase().includes(search.trim().toLowerCase()));
    return items.length>0&&<section className="workspace-category" key={group.title}><h4>{group.title}</h4><div className="workspace-tool-grid">{items.map(item=><article className="workspace-tool" key={item.name}><div><strong>{item.name}</strong>{item.detail&&<small>{item.detail}</small>}</div>{item.action?<button type="button" onClick={()=>{setTool(tool===item.action?'':item.action);setToolError('');setResult('')}}>{tool===item.action?'Close':'Open tool'} ↗</button>:<a href={item.url} target="_blank" rel="noopener noreferrer" aria-label={'Open '+item.name+' in a new tab'}>Visit ↗</a>}</article>)}</div></section>;
   })}
+  {tool==='materiality'&&<div className="workspace-tool-panel" aria-label="Audit materiality calculator"><h4>Audit Materiality Calculator</h4><p>Illustrative planning aid only; actual benchmark and percentage require professional judgment and engagement methodology.</p><div className="workspace-materiality-fields"><label>Benchmark<select value={materiality.benchmark} onChange={e=>setMateriality(p=>({...p,benchmark:e.target.value}))}>{['Profit before tax','Revenue','Total assets','Total expenses','Equity','Other'].map(x=><option key={x}>{x}</option>)}</select></label><label>Benchmark amount (BDT)<input type="number" min="0" step="any" placeholder="e.g. 10000000" value={materiality.amount} onChange={e=>setMateriality(p=>({...p,amount:e.target.value}))}/></label><label>Overall materiality rate (%)<input type="number" min="0.01" max="100" step="0.01" value={materiality.rate} onChange={e=>setMateriality(p=>({...p,rate:e.target.value}))}/></label><label>Performance materiality (% of overall)<input type="number" min="1" max="100" step="1" value={materiality.performance} onChange={e=>setMateriality(p=>({...p,performance:e.target.value}))}/></label></div>{(()=>{const amount=Number(materiality.amount),rate=Number(materiality.rate),performance=Number(materiality.performance),valid=materiality.amount.trim()!==''&&Number.isFinite(amount)&&amount>=0&&Number.isFinite(rate)&&rate>0&&rate<=100&&Number.isFinite(performance)&&performance>0&&performance<=100;if(!valid)return <p role="status">Enter valid amounts and percentages to calculate materiality.</p>;const overall=amount*rate/100,pm=overall*performance/100;const fmt=n=>new Intl.NumberFormat('en-BD',{maximumFractionDigits:2}).format(n);return <div className="workspace-materiality-result" role="status"><div><span>Overall materiality</span><strong>BDT {fmt(overall)}</strong></div><div><span>Performance materiality</span><strong>BDT {fmt(pm)}</strong></div><small>Formula: benchmark × materiality rate; overall materiality × performance materiality percentage. No client data is stored or transmitted by this calculator.</small></div>})()}</div>}
   {tool==='age'&&<div className="workspace-tool-panel"><h4>Age Calculator</h4><label>Date of birth <input type="date" max={today.toLocaleDateString('en-CA')} value={birth} onChange={e=>setBirth(e.target.value)}/></label>{validBirth&&<p className="workspace-result">Age: <strong>{ageText}</strong></p>}{birth&&!validBirth&&<p role="alert">Choose a valid past date.</p>}</div>}
   {tool==='resize'&&<div className="workspace-tool-panel"><h4>Image Resizer</h4><p>Images are processed on your device; they are not uploaded to this portfolio.</p><label>Select image <input type="file" accept="image/*" onChange={e=>{setImageFile(e.target.files?.[0]||null);setToolError('');setResult('')}}/></label><label>Output width (pixels) <input type="number" min="32" max="5000" value={width} onChange={e=>setWidth(e.target.value)}/></label><button type="button" onClick={resize}>Resize & download PNG</button>{toolError&&<p role="alert">{toolError}</p>}{result&&<p className="workspace-result" role="status">{result}</p>}</div>}
   <p className="workspace-disclaimer">External links open third-party websites. Check their privacy terms before uploading confidential documents. Portal addresses and availability may change.</p>
