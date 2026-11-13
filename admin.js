@@ -160,7 +160,7 @@ function renderEditor() {
       h('button', { class: 'btn ghost small', type: 'button', onclick: signOut }, 'Sign out')));
 
   var tabs = h('div', { class: 'tabs', role: 'tablist' },
-    [['profile', 'Profile'], ['sections', 'Sections'], ['posts', 'Updates'], ['leads', 'Enquiries']].map(function (t) {
+    [['profile', 'Profile'], ['sections', 'Sections'], ['posts', 'Updates'], ['leads', 'Leads & Enquiries']].map(function (t) {
       return h('button', {
         class: 'tab', role: 'tab', type: 'button',
         'aria-selected': tab === t[0] ? 'true' : 'false',
@@ -185,8 +185,43 @@ function renderEditor() {
 }
 
 function leadsPanel(){
- var wrap=h('div');var info=h('p',{class:'muted'},'Loading enquiries…');wrap.appendChild(info);
- api('/api/leads').then(function(d){info.textContent='Latest '+d.leads.length+' enquiries. Visitor details are visible only to signed-in admins.';d.leads.forEach(function(l){var card=h('div',{class:'card'},h('h2',null,l.name+' — '+l.kind),h('p',{class:'muted'},new Date(l.created_at).toLocaleString()),h('p',null,'Organization: '+(l.organization||'Not supplied')),h('p',null,'Contact: '+l.contact),h('p',null,l.details));var sel=h('select');['new','contacted','closed'].forEach(function(st){var o=h('option',{value:st},st);if(st===l.status)o.selected=true;sel.appendChild(o)});sel.addEventListener('change',function(){api('/api/leads',{method:'PATCH',body:JSON.stringify({id:Number(l.id),status:sel.value})}).catch(function(e){alert(e.message)})});card.appendChild(h('label',null,'Status ',sel));wrap.appendChild(card)})}).catch(function(e){info.textContent='Could not load enquiries: '+e.message});return wrap;
+ var wrap=h('div');
+ var heading=h('div',{class:'card'},h('h2',null,'Private leads & enquiries'),h('p',{class:'muted'},'Messages are visible to signed-in admins only. Recruiters and potential customers are separated here.'));
+ var filters=h('div',{class:'lead-filters'});
+ var list=h('div');
+ var info=h('p',{class:'muted'},'Loading enquiries…');
+ wrap.append(heading,filters,info,list);
+ var active='all';
+ var rows=[];
+ var kinds=[['all','All'],['recruiter','Recruitment'],['client','Potential Customers'],['collaboration','Collaboration'],['appointment','Appointments'],['other','Other']];
+ function paint(){
+  filters.replaceChildren();
+  kinds.forEach(function(k){
+   var count=k[0]==='all'?rows.length:rows.filter(function(l){return (l.kind||'other')===k[0]}).length;
+   filters.appendChild(h('button',{class:'btn small '+(active===k[0]?'':'ghost'),type:'button',onclick:function(){active=k[0];paint()}},k[1]+' ('+count+')'));
+  });
+  list.replaceChildren();
+  var shown=active==='all'?rows:rows.filter(function(l){return (l.kind||'other')===active});
+  info.textContent=shown.length+' '+(shown.length===1?'enquiry':'enquiries')+' shown. Client and recruiter details are private.';
+  if(!shown.length)list.appendChild(h('p',{class:'muted'},'No enquiries in this category yet.'));
+  shown.forEach(function(l){
+   var label=l.kind==='recruiter'?'Recruitment':l.kind==='client'?'Potential Customer':l.kind==='appointment'?'Appointment':l.kind==='collaboration'?'Collaboration':'Other';
+   var card=h('div',{class:'card'},
+    h('h2',null,label+' — '+l.name),
+    h('p',{class:'muted'},new Date(l.created_at).toLocaleString()),
+    h('p',null,'Organization: '+(l.organization||'Not supplied')),
+    h('p',null,'Contact: '+l.contact),
+    h('p',null,l.details)
+   );
+   var sel=h('select');
+   ['new','contacted','closed'].forEach(function(st){var o=h('option',{value:st},st);if(st===l.status)o.selected=true;sel.appendChild(o)});
+   sel.addEventListener('change',function(){api('/api/leads',{method:'PATCH',body:JSON.stringify({id:Number(l.id),status:sel.value})}).catch(function(e){alert(e.message)})});
+   card.appendChild(h('label',null,'Status ',sel));
+   list.appendChild(card);
+  });
+ }
+ api('/api/leads').then(function(d){rows=Array.isArray(d.leads)?d.leads:[];paint()}).catch(function(e){info.textContent='Could not load enquiries: '+e.message});
+ return wrap;
 }
 
 /* ---------- profile ---------- */
