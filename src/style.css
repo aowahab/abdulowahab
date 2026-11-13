@@ -238,3 +238,8 @@ html[data-theme=light] .section-content .secondary{color:#142e4a}
 }
 @media(min-width:721px){.drawer-heading,.nav-drawer-backdrop{display:none!important}}
 @media(prefers-reduced-motion:reduce){.nav-links{transition:none!important}}
+
+/* Make the editable name more prominent in the fixed navigation */
+.nav .brand-name{font-size:20px;font-weight:800;letter-spacing:-.035em;line-height:1.2}
+@media(max-width:720px){.nav .brand-name{font-size:17px}}
+@media(max-width:390px){.nav .brand-name{font-size:16px;max-width:160px}}
