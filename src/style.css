@@ -19,3 +19,24 @@ html[data-layout=compact] .hero-inner{padding-top:45px;padding-bottom:35px}
 html[data-layout=compact] h1{font-size:clamp(3rem,7vw,7rem)}
 html[data-layout=compact] .section{padding-top:45px;padding-bottom:45px}
 @media(max-width:640px){.site-preferences{justify-content:center;gap:8px}}
+
+/* Font and accent preferences; no external font dependency */
+html[data-font=inter]{font-family:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif}
+html[data-font=serif]{font-family:Georgia,"Times New Roman",serif}
+html[data-font=system]{font-family:Arial,Helvetica,sans-serif}
+html[data-font=mono]{font-family:ui-monospace,SFMono-Regular,Consolas,monospace}
+html[data-font] body,html[data-font] button,html[data-font] select{font-family:inherit}
+html[data-accent=cyan]{--portfolio-accent:#38bdf8}
+html[data-accent=blue]{--portfolio-accent:#60a5fa}
+html[data-accent=teal]{--portfolio-accent:#2dd4bf}
+html[data-accent=gold]{--portfolio-accent:#fbbf24}
+html[data-accent] .brand span,html[data-accent] .hero-period{color:var(--portfolio-accent)}
+html[data-accent] .status-dot{background:var(--portfolio-accent);box-shadow:0 0 15px var(--portfolio-accent)}
+html[data-accent] .primary{background:var(--portfolio-accent)}
+html[data-accent] .overline,html[data-accent] .eyebrow,html[data-accent] .aside-label,html[data-accent] .project-number{color:var(--portfolio-accent)}
+html[data-accent] .site-preferences a{color:var(--portfolio-accent)}
+html[data-theme=light] .content-wrap,html[data-theme=light] .footer{background:#fff;color:#142e4a}
+html[data-theme=light] .section{border-color:#dce9f4}
+html[data-theme=light] .section-content,html[data-theme=light] .project-card p{color:#34536f}
+html[data-theme=light] .project-card{background:#f2f8fd;color:#142e4a;border-color:#dce9f4}
+html[data-theme=light] .contact-links a{color:#075d95}
