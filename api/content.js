@@ -1,5 +1,5 @@
 import { readContent } from '../lib/store.js';
-import { DEFAULT_CONTENT } from '../lib/content.js';
+import { DEFAULT_CONTENT, publicPortfolioContent } from '../lib/content.js';
 
 // Public: the website reads its content from here.
 export async function GET(request) {
@@ -11,7 +11,7 @@ export async function GET(request) {
     console.error('content read failed:', error);
     content = DEFAULT_CONTENT;
   }
-  return new Response(JSON.stringify(content), {
+  return new Response(JSON.stringify(publicPortfolioContent(content)), {
     headers: {
       'content-type': 'application/json; charset=utf-8',
       'cache-control': fresh
