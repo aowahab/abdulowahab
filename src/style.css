@@ -40,3 +40,45 @@ html[data-theme=light] .section{border-color:#dce9f4}
 html[data-theme=light] .section-content,html[data-theme=light] .project-card p{color:#34536f}
 html[data-theme=light] .project-card{background:#f2f8fd;color:#142e4a;border-color:#dce9f4}
 html[data-theme=light] .contact-links a{color:#075d95}
+
+/* Reference-inspired professional portfolio */
+html[data-theme=light]{--ref-ink:#102b49;--ref-teal:#287b76;--ref-paper:#faf9f6;--ref-border:#dce2e9}
+html[data-theme=light] body{background:var(--ref-paper);color:var(--ref-ink)}
+html[data-theme=light] .hero{min-height:unset;background:var(--ref-paper);border-bottom:0}
+html[data-theme=light] .hero-inner{padding-top:60px;padding-bottom:35px}
+html[data-theme=light] .hero h1{font-family:Georgia,"Times New Roman",serif;letter-spacing:-.055em;font-size:clamp(3rem,7vw,6.5rem)}
+html[data-theme=light] .section-heading h2{font-family:Georgia,"Times New Roman",serif;letter-spacing:-.04em}
+html[data-theme=light] .hero-subtitle{color:var(--ref-teal)}
+html[data-theme=light] .nav{background:#fff}
+html[data-theme=light] .content-wrap{background:var(--ref-paper)}
+html[data-theme=light] .project-card,html[data-theme=light] .training-card,html[data-theme=light] .career-card,html[data-theme=light] .stat-card,html[data-theme=light] .engagement-group{background:#fff;border:1px solid var(--ref-border);border-radius:18px;box-shadow:0 2px 5px #102b4908;color:var(--ref-ink)}
+.reference-breadcrumb{max-width:1200px;margin:0 auto;padding:18px 24px;border-bottom:1px solid #dce2e9;font-weight:700;color:#102b49;display:flex;gap:12px}
+.reference-breadcrumb a{text-decoration:none;color:inherit}
+.reference-stats{max-width:1200px;margin:0 auto;padding:24px;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.stat-card{padding:18px;display:flex;flex-direction:column;gap:5px}
+.stat-card strong{font-size:clamp(16px,2vw,25px);color:#102b49}
+.stat-card span{color:#5b6979;font-size:13px}
+.career-timeline{border-left:3px solid #287b76;margin-left:13px;padding-left:26px}
+.career-entry{position:relative}
+.career-dot{position:absolute;left:-37px;top:28px;border:5px solid #287b76;background:#fff;width:20px;height:20px;border-radius:50%}
+.career-card{padding:25px;margin-bottom:24px}
+.career-card h3{font-size:23px;margin:0 0 8px}
+.career-card>p,.career-role>p{color:#5b6979;line-height:1.7}
+.career-card>strong{color:#287b76}
+.career-role{border-left:2px solid #dce2e9;padding-left:20px;margin-top:22px}
+.career-role h4{font-size:17px;margin:0}
+.subsection-title{font-family:Georgia,serif;font-size:26px}
+.filter-pills{display:flex;gap:9px;flex-wrap:wrap;margin:18px 0}
+.filter-pills button{border:1px solid #ccd5df;border-radius:24px;padding:9px 14px;background:#fff;color:#102b49;cursor:pointer}
+.filter-pills button.selected{background:#102b49;color:#fff}
+.engagement-group{margin:10px 0;overflow:hidden}
+.engagement-toggle{background:transparent;color:inherit;border:0;width:100%;display:flex;justify-content:space-between;gap:12px;text-align:left;padding:18px;font-size:17px;font-weight:700;cursor:pointer}
+.engagement-group ul{margin:0;padding:0 28px 20px 40px;color:#526476;line-height:1.8}
+.muted-note{font-size:12px;color:#64748b}
+.training-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+.training-card{padding:20px}
+.training-card h3{color:#287b76;font-size:13px;letter-spacing:.12em;text-transform:uppercase}
+.training-card p{border-bottom:1px solid #e9edf1;padding-bottom:10px;font-weight:600}
+.mobile-bottom-nav{display:none}
+.back-to-top{position:fixed;right:20px;bottom:22px;z-index:15;border-radius:50%;background:#fff;border:1px solid #dce2e9;color:#102b49;box-shadow:0 4px 16px #102b491b;width:48px;height:48px;display:grid;place-items:center;text-decoration:none;font-size:26px}
+@media(max-width:720px){.reference-stats{grid-template-columns:repeat(2,minmax(0,1fr))}.training-grid{grid-template-columns:1fr}.mobile-bottom-nav{display:flex;position:fixed;bottom:0;left:0;right:0;z-index:18;background:#fff;border-top:1px solid #dce2e9;justify-content:space-around;padding:10px 8px max(12px,env(safe-area-inset-bottom));box-shadow:0 -4px 20px #102b4910}.mobile-bottom-nav a{display:flex;flex-direction:column;align-items:center;gap:3px;text-decoration:none;color:#102b49;font-size:19px}.mobile-bottom-nav span{font-size:11px;font-weight:600}.back-to-top{bottom:92px}.footer{padding-bottom:100px!important}.reference-stats{padding:16px}.stat-card{padding:14px}.career-card{padding:18px}.site-preferences{padding:10px}}
