@@ -43,7 +43,7 @@ function TrainingCards(){return <div className="training-grid">{[['Audit & Assur
 function Enquiry(){const [name,setName]=useState('');const [email,setEmail]=useState('');const [topic,setTopic]=useState('Professional enquiry');const [message,setMessage]=useState('');const send=e=>{e.preventDefault();const body='Name: '+name+'\nEmail: '+email+'\n\n'+message;window.location.href='mailto:abdulowahab.jnu@gmail.com?subject='+encodeURIComponent(topic)+'&body='+encodeURIComponent(body)};return <form className="enquiry-form" onSubmit={send}><p>Request a professional discussion or collaboration. Your email app will open to review and send the message.</p><label>Full name *<input required value={name} onChange={e=>setName(e.target.value)}/></label><label>Email *<input required type="email" value={email} onChange={e=>setEmail(e.target.value)}/></label><label>Topic<select value={topic} onChange={e=>setTopic(e.target.value)}><option>Professional enquiry</option><option>Audit and finance discussion</option><option>Technology collaboration</option><option>Tickydo partnership</option><option>Meeting request</option></select></label><label>Message *<textarea required rows="5" value={message} onChange={e=>setMessage(e.target.value)}/></label><button className="button primary" type="submit">Review and send enquiry</button><p className="muted-note">No booking is confirmed automatically. This form does not store your information.</p></form>}
 function ContactRequest({mode='consultation'}) {
  const appointment=mode==='appointment';
- const [v,setV]=useState({name:'',organization:'',contact:'',details:'',preferredDate:'',preferredTime:'',timezone:'Asia/Dhaka',consent:false,website:''});
+ const [v,setV]=useState({name:'',organization:'',contact:'',details:'',preferredDate:'',preferredTime:'',timezone:'Asia/Dhaka',leadType:'client',consent:false,website:''});
  const [status,setStatus]=useState('');
  const [busy,setBusy]=useState(false);
  const update=(k,val)=>setV(prev=>({...prev,[k]:val}));
@@ -54,12 +54,12 @@ function ContactRequest({mode='consultation'}) {
   const details=appointment?['Meeting request', 'Preferred: '+v.preferredDate+' '+v.preferredTime+' ('+v.timezone+')','Purpose: '+v.details].join('\\n'):v.details;
   try{
    const resp=await fetch('/api/leads',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({
-    name:v.name,organization:v.organization,contact:v.contact,kind:appointment?'appointment':'collaboration',details,consent:v.consent,website:v.website
+    name:v.name,organization:v.organization,contact:v.contact,kind:appointment?'appointment':v.leadType,details,consent:v.consent,website:v.website
    })});
    const data=await resp.json();
    if(!resp.ok)throw Error(data.error||'Unable to submit request');
    setStatus(appointment?'Appointment request received in the private inbox. This is not a confirmed booking; Abdul will follow up.':'Consultation enquiry received in the private inbox. Abdul can review and respond.');
-   setV({name:'',organization:'',contact:'',details:'',preferredDate:'',preferredTime:'',timezone:'Asia/Dhaka',consent:false,website:''});
+   setV({name:'',organization:'',contact:'',details:'',preferredDate:'',preferredTime:'',timezone:'Asia/Dhaka',leadType:'client',consent:false,website:''});
   }catch(err){setStatus((err.message||'Could not submit')+'. You can email abdulowahab.jnu@gmail.com instead.');}
   finally{setBusy(false);}
  };
@@ -68,6 +68,7 @@ function ContactRequest({mode='consultation'}) {
    <label>Full name *<input type="text" required maxLength={120} value={v.name} onChange={e=>update('name',e.target.value)} placeholder="Your name"/></label>
    <label>Email or phone *<input type="text" required minLength={5} maxLength={200} value={v.contact} onChange={e=>update('contact',e.target.value)} placeholder="How to reach you"/></label>
    <label className="request-wide">Company / organization (optional)<input type="text" maxLength={160} value={v.organization} onChange={e=>update('organization',e.target.value)} placeholder="Organization name"/></label>
+   {!appointment&&<label className="request-wide">Enquiry type<select value={v.leadType} onChange={e=>update('leadType',e.target.value)}><option value="client">Potential customer / business enquiry</option><option value="recruiter">Recruitment opportunity</option><option value="collaboration">Collaboration / professional discussion</option></select></label>}
    {appointment&&<>
     <label>Preferred date *<input type="date" required value={v.preferredDate} min={new Date().toISOString().slice(0,10)} onChange={e=>update('preferredDate',e.target.value)}/></label>
     <label>Preferred time *<input type="time" required value={v.preferredTime} onChange={e=>update('preferredTime',e.target.value)}/></label>
