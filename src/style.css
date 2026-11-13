@@ -192,3 +192,13 @@ html[data-theme=light] .section-content .secondary{color:#142e4a}
 .updates{gap:14px}
 .update{padding-bottom:14px}
 @media(max-width:580px){.project-card,.project-card:first-child{padding:16px}.detail-list>div{padding:11px 0;gap:5px;grid-template-columns:1fr}}
+
+/* Sticky portfolio identity: name is sourced from admin-editable content */
+.nav{display:flex;align-items:center;gap:18px}
+.nav .brand{display:inline-flex;align-items:center;gap:10px;min-width:0;text-decoration:none;color:#f8fbff!important;white-space:nowrap}
+.brand-monogram{display:grid;place-items:center;flex-shrink:0;width:37px;height:37px;border:1px solid #6ca4cf;border-radius:10px;background:#e9f3ff;color:#102a50!important;font-size:14px;font-weight:850;letter-spacing:-.04em}
+.brand-name{font-size:15px;font-weight:750;letter-spacing:-.025em;color:#f8fbff!important;overflow:hidden;text-overflow:ellipsis}
+.nav-admin{flex-shrink:0;border:1px solid #81a5d0;border-radius:9px;padding:8px 13px;color:#f8fbff!important;text-decoration:none;font-size:12px;font-weight:700;background:#17365f}
+.nav-admin:hover,.nav-admin:focus-visible{background:#27527f;color:#fff!important}
+@media(max-width:720px){.nav{gap:9px}.brand-name{font-size:13px}.nav-admin{padding:8px 10px}.nav .brand{gap:7px}.brand-monogram{width:32px;height:32px;font-size:12px}}
+@media(max-width:390px){.brand-name{max-width:105px}}
