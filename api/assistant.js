@@ -71,9 +71,13 @@ export async function POST(request){
  let content=DEFAULT_CONTENT;
  try{content=await readContent()}catch{}
  const publicContent=JSON.stringify({name:content.name,facts:content.facts,sections:content.sections?.map(s=>({title:s.title,body:s.body?.slice(0,1500)}))}).slice(0,10000);
- const key=process.env.OPENAI_API_KEY;
+ const prior=messages.slice(0,-1).filter(m=>m.role==='assistant').map(m=>m.content).join(' ');
+ const allUser=messages.filter(m=>m.role==='user').map(m=>m.content).join('\\n');
+ const hasFields=/(?:^|\\n)name\\s*:/im.test(allUser)&&/(?:^|\\n)contact\\s*:/im.test(allUser)&&/(?:^|\\n)details\\s*:/im.test(allUser);
+ if(hasFields&&!prior.includes('[LEAD_CONSENT_REQUEST]'))return response({answer:'May I save your enquiry to Abdul’s private portfolio inbox? Reply exactly Yes, send or হ্যাঁ, পাঠান. [LEAD_CONSENT_REQUEST]',mode:'basic'});
+  const key=process.env.OPENAI_API_KEY;
  try{const notified=await maybeNotify(messages,key);if(notified)return response(notified)}catch(e){console.error('Lead notification failed',e?.message);return response({answer:'Unable to send the enquiry via WhatsApp. Please email Abdul directly.',mode:'basic'})}
- if(!key)return response({answer:fallback(question.content),mode:'basic'});
+ if(!key)return response({answer:/(recruit|hiring|hire|client|collaborat|partnership|নিয়োগ|চাকরি|সহযোগিতা)/i.test(question.content)?'Please share your enquiry here in chat using Name: ..., Contact: ..., Details: ... (Organization: ... optional). I will ask for your consent before saving it to Abdul’s private inbox.':fallback(question.content),mode:'basic'});
  try{
   const controller=new AbortController();const timeout=setTimeout(()=>controller.abort(),12000);
   let upstream;
