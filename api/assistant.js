@@ -126,7 +126,8 @@ async function maybeNotify(messages,key){
   }catch(e){console.error('Lead extraction fallback:',e.message)}
  }
  const field=(label)=>{
-   const match=userText.match(new RegExp('(?:^|\\n)\\s*'+label+'\\s*[:：-]\\s*([^\\n]+)','im'));
+   // Accept labels at the beginning of a line or after conversational punctuation.
+   const match=userText.match(new RegExp('(?:^|[\\n;.])\\s*'+label+'\\s*[:：-]\\s*([^\\n;]+)','im'));
    return match?.[1]?.trim()||'';
  };
  const clean=(v,n)=>typeof v==='string'?v.trim().slice(0,n).replace(/[<>]/g,''):'';
