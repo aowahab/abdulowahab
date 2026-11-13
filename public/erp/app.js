@@ -841,7 +841,8 @@ function showLogin(mode, needUser) {
     err,
     user ? h('label', { class: 'field' }, 'Username', user) : null,
     h('label', { class: 'field' }, 'Password', pw),
-    h('button', { class: 'primary', type: 'submit' }, 'Sign in')
+    h('button', { class: 'primary', type: 'submit' }, 'Sign in'),
+    h('a', { href: 'https://vercel.com/tickydo/abdulowahab/settings/environment-variables', target: '_blank', rel: 'noopener noreferrer', style: 'display:block;margin-top:12px' }, 'Change password (Vercel settings)')
   );
   $('#app').replaceChildren(
     h('div', { class: 'login' }, h('div', { class: 'card' }, h('div', { class: 'logo' }, 'T'), h('h1', null, 'Tickydo ERP'), h('div', { class: 'muted' }, 'Finance module'), locked ? h('div', { class: 'callout warn', style: 'margin-top:16px' }, 'This server is locked. Set the APP_PASSWORD environment variable and redeploy to enable sign-in.') : form))
