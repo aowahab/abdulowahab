@@ -112,3 +112,24 @@ html[data-theme=light] .footer{background:#10213b;color:#d1e6d1}
 html[data-theme=light] .site-preferences{background:#162b47}
 html[data-accent=teal]{--portfolio-accent:#86bca4}
 html[data-theme=light] .enquiry-form input,html[data-theme=light] .enquiry-form textarea,html[data-theme=light] .enquiry-form select{background:#fff;color:#10213b;border-color:#afc5b0}
+
+/* Final fixed palette: admin sage first, restrained midnight blue */
+html[data-theme=light] .nav{background:#dfeada;color:#16243f;border-bottom:1px solid #9db896}
+html[data-theme=light] .brand,html[data-theme=light] .nav-links a{color:#16243f}
+html[data-theme=light] .nav-links a:hover{color:#527c69}
+html[data-theme=light] .hero{background:linear-gradient(135deg,#dfeada 0%,#eaf2e6 74%,#d2e1d0 100%);color:#16243f;border-bottom:1px solid #9db896}
+html[data-theme=light] .hero h1{color:#16243f}
+html[data-theme=light] .hero-subtitle{color:#46584f}
+html[data-theme=light] .hero-bottom{color:#46584f}
+html[data-theme=light] .hero .fact span{color:#46584f}
+html[data-theme=light] .hero .fact strong{color:#16243f}
+html[data-theme=light] .hero .primary{background:#16243f;color:#eef4ea}
+html[data-theme=light] .hero .secondary{border-color:#9db896;color:#16243f}
+html[data-theme=light] body,html[data-theme=light] .content-wrap{background:#dfeada}
+html[data-theme=light] .stat-card,html[data-theme=light] .career-card,html[data-theme=light] .training-card,html[data-theme=light] .engagement-group,html[data-theme=light] .project-card,html[data-theme=light] .enquiry-form{background:#eef4ea;border-color:#9db896}
+html[data-theme=light] .mobile-bottom-nav{background:#eef4ea;border-color:#9db896}
+html[data-theme=light] .mobile-bottom-nav a{color:#16243f}
+html[data-theme=light] .footer{background:#16243f;color:#eef4ea}
+html[data-theme=light] .back-to-top{background:#eef4ea;color:#16243f}
+html[data-theme=light] .overline,html[data-theme=light] .eyebrow,html[data-theme=light] .aside-label{color:#527c69}
+html[data-theme=light] .hero-period{color:#527c69}
