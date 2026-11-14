@@ -19,3 +19,20 @@ A phase is complete only when its implementation, tests, preview validation, and
 ## Current release
 
 Last verified production promotion prior to this register: Vercel deployment dpl_AemiLeWxFAZ8b73UqYRKNVeRKXVF, commit bb272aba86037a320a1e449c1347002fc4794295. This register identifies gaps and does not mark all seven phases complete.
+
+## Pre-deployment checklist (2026-11-14)
+
+- [x] Code saved to a dedicated integration branch; production remains unchanged.
+- [x] SEO metadata correctly describes Accounting and ICAB Professional Level.
+- [x] Traffic endpoint rejects invalid/oversized visitor payloads before touching database.
+- [x] Traffic counts are queried in one request; counter endpoint has no-store/noindex headers.
+- [ ] Latest integration branch CI must finish successfully after all commits.
+- [ ] Test the real visitor counter against connected Neon PostgreSQL and verify two-minute online expiry.
+- [ ] Verify AI assistant overlay does not cover counters on narrow phones and desktop using screenshots.
+- [ ] Test admin login, session expiration, uploads and permissions with real configured services.
+- [ ] Confirm WhatsApp contact and appointment notification delivery with consent.
+- [ ] Complete accounting tool calculations, error-handling, exports and accessibility review.
+- [ ] Conduct performance, accessibility, browser and privacy/security regression tests.
+- [ ] Production deployment only when user-authorized and Vercel daily quota allows, followed by smoke tests.
+
+**Important:** Automated static checks alone cannot establish that a phase is fully complete. No deploy should be attempted while the quota blocker persists.
