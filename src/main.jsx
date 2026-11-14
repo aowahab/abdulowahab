@@ -283,6 +283,14 @@ function App(){
  const mobilePages=['feed','profile','consultation','workstation','appointment'];
  const initialPage=()=>{const route=window.location.pathname.split('/').filter(Boolean)[0]?.toLowerCase();const page=({contact:'consultation',resources:'workstation','erp-preview':'workstation'})[route]||route;return mobilePages.includes(page)?page:'profile'};
  const [activePage,setActivePage]=useState(initialPage);
+ useEffect(()=>{
+  const nav=document.querySelector('header.nav');
+  if(!nav)return;
+  const measure=()=>document.documentElement.style.setProperty('--portfolio-nav-height',`${nav.getBoundingClientRect().height}px`);
+  measure();
+  const observer=new ResizeObserver(measure);observer.observe(nav);
+  return()=>observer.disconnect();
+ },[]);
  useEffect(()=>{const sync=()=>setActivePage(initialPage());window.addEventListener('popstate',sync);return ()=>window.removeEventListener('popstate',sync)},[]);
  useEffect(()=>{document.documentElement.dataset.activePage=activePage;window.scrollTo(0,0)},[activePage]);
  const mobileNavigate=(event,page)=>{event.preventDefault();if(activePage!==page){window.history.pushState({},'',page==='profile'?'/':'/'+page);setActivePage(page)}setMenu(false)};
