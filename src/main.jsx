@@ -262,6 +262,17 @@ function WorkspaceDirectory(){
   <p className="workspace-disclaimer">External links open third-party websites. Check their privacy terms before uploading confidential documents. Portal addresses and availability may change.</p>
  </div>;
 }
+function VisitorTraffic(){
+ const [stats,setStats]=useState(null);
+ useEffect(()=>{
+  let active=true;let id;
+  try{id=sessionStorage.getItem('portfolio_visitor_session');if(!id){const bytes=new Uint8Array(24);crypto.getRandomValues(bytes);id=Array.from(bytes,b=>b.toString(16).padStart(2,'0')).join('');sessionStorage.setItem('portfolio_visitor_session',id)}}catch{return}
+  const refresh=async()=>{if(document.visibilityState==='hidden')return;try{const response=await fetch('/api/traffic',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({visitorId:id}),cache:'no-store'});const data=await response.json();if(active)setStats(response.ok&&data.available?data:null)}catch{if(active)setStats(null)}};
+  refresh();const interval=setInterval(refresh,60000);document.addEventListener('visibilitychange',refresh);
+  return ()=>{active=false;clearInterval(interval);document.removeEventListener('visibilitychange',refresh)};
+ },[]);
+ return <div className="footer-traffic" aria-label="Website visitor statistics"><span><strong>{stats?.visitors?.toLocaleString('en-US')??'—'}</strong><small>Total visitors</small></span><span><i className="traffic-live-dot" aria-hidden="true"/><strong>{stats?.online?.toLocaleString('en-US')??'—'}</strong><small>Online now</small></span>{!stats&&<small className="traffic-unavailable">Visitor data unavailable</small>}</div>;
+}
 function App(){
  const mobilePages=['feed','profile','consultation','workstation','appointment'];
  const initialPage=()=>{const page=window.location.pathname.split('/').filter(Boolean)[0]?.toLowerCase();return mobilePages.includes(page)?page:'profile'};
@@ -329,7 +340,7 @@ function App(){
   <div className="footer-column"><h3>Projects</h3><a href="https://tickydo.com" target="_blank" rel="noopener noreferrer">Tickydo Ticketing ↗</a><a href="/erp/">Tickydo ERP ↗</a><a href="#projects">Other projects</a></div>
   <div className="footer-column"><h3>Connect</h3><a href="mailto:abdulowahab.jnu@gmail.com">Email me ↗</a><a href="https://www.linkedin.com/in/abdulowahab/" target="_blank" rel="noopener noreferrer">LinkedIn ↗</a><a href="https://github.com/aowahab" target="_blank" rel="noopener noreferrer">GitHub ↗</a><a href="#consultation">Consultation enquiry</a><a href="#appointment">Appointment request</a></div>
  </div>
- <div className="footer-bottom"><span>© {new Date().getFullYear()} {content.name||'Abdul Owahab'}. All rights reserved.</span><span>Designed for clarity · Built with React &amp; Vercel</span><a href="#top">Back to top ↑</a></div>
+ <div className="footer-bottom"><span>© {new Date().getFullYear()} {content.name||'Abdul Owahab'}. All rights reserved.</span><VisitorTraffic/></div>
  </footer></>
 }
 createRoot(document.getElementById('root')).render(<React.StrictMode><App/></React.StrictMode>);
