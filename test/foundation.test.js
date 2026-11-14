@@ -55,3 +55,24 @@ test('feed images have compact previews and full-size links',()=>{
  assert.match(css,/feed-media-count-3/);
  assert.match(css,/feed-photo-link img\{[\s\S]*?object-fit:contain/);
 });
+
+test('traffic API rejects malformed and oversized sessions before database access',async()=>{
+ const {POST}=await import('../api/traffic.js');
+ const malformed=await POST(new Request('https://example.com/api/traffic',{method:'POST',body:'{bad'}));
+ assert.equal(malformed.status,400);
+ const invalid=await POST(new Request('https://example.com/api/traffic',{method:'POST',body:JSON.stringify({visitorId:'short'})}));
+ assert.equal(invalid.status,400);
+ const oversized=await POST(new Request('https://example.com/api/traffic',{method:'POST',body:'x'.repeat(513)}));
+ assert.equal(oversized.status,413);
+});
+test('admin login blocks cross-origin requests',async()=>{
+ const {POST}=await import('../api/login.js');
+ const response=await POST(new Request('https://example.com/api/login',{method:'POST',headers:{origin:'https://attacker.example'},body:JSON.stringify({password:'guess'})}));
+ assert.equal(response.status,403);
+});
+test('enquiry API requires explicit consent before notification',async()=>{
+ const {POST}=await import('../api/lead.js');
+ const response=await POST(new Request('https://example.com/api/lead',{method:'POST',body:JSON.stringify({type:'recruiter',name:'Test Person',contact:'test@example.com',details:'A legitimate recruiting enquiry'})}));
+ assert.equal(response.status,400);
+ assert.match((await response.json()).error,/Consent/);
+});
