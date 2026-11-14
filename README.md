@@ -58,3 +58,11 @@ Documents are processed in browser memory. The tools route disables the portfoli
 OCR accuracy must be reviewed. The first OCR use downloads its local engine and language assets. Large-file/page limits protect browser memory. This suite does not claim full Adobe Acrobat feature parity.
 
 Validation: unit tests, production build, real browser exports using synthetic PDFs/XLSX/forms, independent PDF text/encryption inspection, desktop/mobile layout, and request/storage monitoring under the route CSP.
+
+## Audit workpapers
+
+TickyTools includes 22 browser-only audit workpapers: planning, materiality, risk/assertions, binomial attribute sampling, TB mapping, lead schedules, analytical review and financial ratios, bank reconciliation, ageing, two-source ledger reconciliation, journal screening, cut-off, inventory/NRV, depreciation, payroll, monthly loan schedules, fixed-payment lease liability/ROU schedules, confirmations, local evidence metadata/SHA-256 indexing, misstatements, starter disclosures and completion/review tracking.
+
+Editable tables support mapped CSV/XLSX import and XLSX workpaper export with inputs, parameters, results, summary and method notes. Formula cells use cached results only; missing cached results are rejected. Source hyperlinks/macros are not executed. Work stays in memory, with unsaved-work prompts; no audit data is uploaded or persisted in browser storage. Checklists are configurable starters, and calculators state their methods and scope. Currency conversion, full statutory payroll/tax determination, variable/modified lease modelling and automatic audit conclusions are not provided.
+
+Standalone PDF tool cards are removed from the directory. PDF Studio is the single PDF entry and retains all integrated PDF tools.
