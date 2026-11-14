@@ -101,3 +101,27 @@ test('enquiry does not claim WhatsApp delivery when credentials are missing',asy
   if(priorPhone===undefined)delete process.env.WHATSAPP_PHONE_NUMBER_ID;else process.env.WHATSAPP_PHONE_NUMBER_ID=priorPhone;
  }
 });
+
+test('admin login rejects malformed, non-object and oversized requests before authentication',async()=>{
+ const {POST}=await import('../api/login.js');
+ const url='https://example.com/api/login';
+ for(const payload of ['null','[]','{broken']){
+  const res=await POST(new Request(url,{method:'POST',body:payload}));
+  assert.equal(res.status,400);
+ }
+ const oversized=await POST(new Request(url,{method:'POST',body:JSON.stringify({password:'x'.repeat(1200)})}));
+ assert.equal(oversized.status,413);
+});
+test('visitor counter does not fabricate analytics when database is unconfigured',async()=>{
+ const {GET}=await import('../api/traffic.js');
+ const beforePostgres=process.env.POSTGRES_URL,beforeDatabase=process.env.DATABASE_URL;
+ try{
+  delete process.env.POSTGRES_URL;delete process.env.DATABASE_URL;
+  const res=await GET();
+  assert.equal(res.status,503);
+  assert.equal((await res.json()).available,false);
+ }finally{
+  if(beforePostgres===undefined)delete process.env.POSTGRES_URL;else process.env.POSTGRES_URL=beforePostgres;
+  if(beforeDatabase===undefined)delete process.env.DATABASE_URL;else process.env.DATABASE_URL=beforeDatabase;
+ }
+});
