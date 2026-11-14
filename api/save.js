@@ -1,6 +1,6 @@
 import { isAdmin } from '../lib/auth.js';
 import { json, sameOrigin } from '../lib/http.js';
-import { normalizeContent } from '../lib/content.js';
+import { normalizeContent } from '../lib/portfolio-content.js';
 import { writeContent } from '../lib/store.js';
 
 const MAX_BYTES = 1_500_000;
