@@ -684,7 +684,11 @@ html[data-theme=light] .footer .footer-bottom{color:#d3e2f2}
 @media(min-width:901px){
  html[data-active-page] .content-wrap{width:100%;max-width:1440px;margin-inline:auto;padding-inline:clamp(28px,4vw,72px)}
  html[data-active-page] .content-wrap>.section{width:100%;max-width:1160px;margin-inline:auto}
- html[data-active-page] .content-wrap>.section:has(.section-heading){
+ html[data-active-page="profile"] .content-wrap>.section:not(#updates):not(#consultation):not(#workstation):not(#appointment):has(.section-heading),
+ html[data-active-page="feed"] #updates:has(.section-heading),
+ html[data-active-page="consultation"] #consultation:has(.section-heading),
+ html[data-active-page="workstation"] #workstation:has(.section-heading),
+ html[data-active-page="appointment"] #appointment:has(.section-heading){
   display:grid!important;
   grid-template-columns:minmax(220px,0.34fr) minmax(0,1fr);
   gap:clamp(32px,4vw,70px);
@@ -696,5 +700,9 @@ html[data-theme=light] .footer .footer-bottom{color:#d3e2f2}
  html[data-active-page="feed"] #updates .section-heading{align-self:start}
 }
 @media(min-width:901px) and (max-width:1190px){
- html[data-active-page] .content-wrap>.section:has(.section-heading){grid-template-columns:minmax(190px,.3fr) minmax(0,1fr);gap:30px}
+ html[data-active-page="profile"] .content-wrap>.section:not(#updates):not(#consultation):not(#workstation):not(#appointment):has(.section-heading),
+ html[data-active-page="feed"] #updates:has(.section-heading),
+ html[data-active-page="consultation"] #consultation:has(.section-heading),
+ html[data-active-page="workstation"] #workstation:has(.section-heading),
+ html[data-active-page="appointment"] #appointment:has(.section-heading){grid-template-columns:minmax(190px,.3fr) minmax(0,1fr);gap:30px}
 }
