@@ -597,3 +597,12 @@ html[data-theme=light] .footer .footer-bottom{color:#d3e2f2}
  html[data-active-page] .footer-bottom{padding-bottom:calc(110px + env(safe-area-inset-bottom))}
  html[data-active-page] #main{padding-bottom:20px}
 }
+
+/* Make the five fixed mobile destinations unmistakably interactive. */
+@media(max-width:767px){
+ .mobile-bottom-nav{background:#e8f0f7!important;border-top:1px solid #a7bdd2;box-shadow:0 -5px 22px #071a3324}
+ .mobile-bottom-nav a{background:#ffffff;border:1px solid #b5c9dc;border-radius:12px;color:#173a5d!important;min-height:58px;box-shadow:0 2px 5px #102b4914;transition:background .15s,color .15s,border-color .15s}
+ .mobile-bottom-nav a.is-active{background:#145b87!important;border-color:#145b87;color:#fff!important;box-shadow:0 3px 9px #145b873b}
+ .mobile-bottom-nav a:focus-visible{outline:3px solid #58b6ee;outline-offset:2px}
+ .mobile-bottom-nav a .bottom-nav-icon{color:inherit}
+}
