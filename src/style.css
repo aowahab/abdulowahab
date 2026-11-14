@@ -556,3 +556,16 @@ html[data-active-page] .section-heading{padding-top:18px}
  html[data-active-page="feed"] #updates .updates{grid-template-columns:minmax(0,1fr)}
  html[data-active-page] #main{padding-bottom:85px}
 }
+
+/* Compact page headers and remove excess whitespace below navigation on every route. */
+html[data-active-page] .content-wrap>.section{padding-top:24px;padding-bottom:48px}
+html[data-active-page] .section-heading{position:static;top:auto;padding-top:0}
+html[data-active-page] .section-heading h2{font-size:clamp(26px,3vw,38px);line-height:1.15;letter-spacing:-.035em;margin-top:10px;margin-bottom:12px}
+html[data-active-page] .section-heading .eyebrow{font-size:10px}
+@media(max-width:767px){
+ html[data-active-page] .content-wrap{padding-top:0}
+ html[data-active-page] .content-wrap>.section{padding-top:16px;padding-bottom:30px}
+ html[data-active-page] .section-heading h2{font-size:clamp(25px,6.8vw,30px);line-height:1.16;margin-top:8px;margin-bottom:10px}
+ html[data-active-page] .section-heading{margin-top:0;margin-bottom:12px}
+ html[data-active-page] .hub-intro{margin-top:0}
+}
