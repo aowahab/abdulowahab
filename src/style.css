@@ -706,3 +706,12 @@ html[data-theme=light] .footer .footer-bottom{color:#d3e2f2}
  html[data-active-page="workstation"] #workstation:has(.section-heading),
  html[data-active-page="appointment"] #appointment:has(.section-heading){grid-template-columns:minmax(190px,.3fr) minmax(0,1fr);gap:30px}
 }
+
+/* Live, server-backed footer metrics; no fabricated values. */
+.footer-traffic{display:flex;align-items:center;gap:clamp(14px,3vw,32px);flex-wrap:wrap}
+.footer-traffic>span{display:flex;align-items:center;gap:7px}
+.footer-traffic strong{font-size:16px;font-weight:800;color:#eaf8ff;font-variant-numeric:tabular-nums}
+.footer-traffic small{font-size:11px;color:#aac5dc}
+.footer-traffic .traffic-live-dot{display:inline-block;width:7px;height:7px;flex:0 0 7px;border-radius:50%;background:#45d49b;box-shadow:0 0 0 3px #45d49b26}
+.footer-traffic .traffic-unavailable{font-size:10px;color:#aac5dc}
+@media(max-width:600px){.footer-traffic{width:100%;gap:16px}.footer-traffic>span{flex-wrap:wrap}}
