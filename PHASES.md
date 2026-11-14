@@ -43,3 +43,11 @@ Production was updated on 2026-11-14 to deployment dpl_93gWuy7KFkuSXfg7TTbUBosz3
 - Added executable tests for malformed enquiries and unavailable WhatsApp credentials (HTTP 503; no false delivery confirmation).
 - Branch commits: `31f1e5c` and `4703722`; CI must be checked for the latest head before release.
 - **Still not verified:** real WhatsApp delivery, live Neon presence expiry, admin session/upload integration, AI provider failure handling, browser/mobile visual checks and tool numerical correctness. No production deployment is authorized solely on the basis of these tests.
+
+## Admin and analytics regression follow-up (2026-11-14)
+
+- Admin login now rejects JSON null/arrays/malformed bodies (HTTP 400), and oversized payloads (HTTP 413), before credential comparison. Tests cover these boundaries.
+- Visitor counter regression confirms that without configured PostgreSQL it returns HTTP 503 with `available:false`, rather than inventing visitor metrics.
+- Source commits: `73dd58f`, `4a7ea5b`. Verify CI for the latest head before release.
+- These tests do not replace a real authenticated admin session/upload test, live Neon expiry check, browser screenshots, AI provider/prompt-injection test, appointment delivery or numerical Workstation review.
+- **Deployment gate remains closed** until the above external/integration checks are completed and Vercel accepts production deployments. Do not claim Phase 1–7 complete.
