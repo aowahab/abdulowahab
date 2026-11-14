@@ -679,3 +679,22 @@ html[data-theme=light] .footer .footer-bottom{color:#d3e2f2}
  #updates .updates-social-feed .feed-post-media img,
  #updates .updates-social-feed .feed-post-media video{max-height:75vh}
 }
+
+/* Desktop page balance: center the routed content, rather than leaving an empty right rail. */
+@media(min-width:901px){
+ html[data-active-page] .content-wrap{width:100%;max-width:1440px;margin-inline:auto;padding-inline:clamp(28px,4vw,72px)}
+ html[data-active-page] .content-wrap>.section{width:100%;max-width:1160px;margin-inline:auto}
+ html[data-active-page] .content-wrap>.section:has(.section-heading){
+  display:grid!important;
+  grid-template-columns:minmax(220px,0.34fr) minmax(0,1fr);
+  gap:clamp(32px,4vw,70px);
+  align-items:start;
+ }
+ html[data-active-page] .content-wrap>.section .section-content{width:100%;max-width:none;min-width:0}
+ html[data-active-page="feed"] #updates .updates-social-feed{max-width:820px;margin-inline:auto}
+ html[data-active-page="feed"] #updates .hub-intro{max-width:820px;margin-inline:auto;margin-bottom:22px}
+ html[data-active-page="feed"] #updates .section-heading{align-self:start}
+}
+@media(min-width:901px) and (max-width:1190px){
+ html[data-active-page] .content-wrap>.section:has(.section-heading){grid-template-columns:minmax(190px,.3fr) minmax(0,1fr);gap:30px}
+}
