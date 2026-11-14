@@ -76,3 +76,28 @@ test('enquiry API requires explicit consent before notification',async()=>{
  assert.equal(response.status,400);
  assert.match((await response.json()).error,/Consent/);
 });
+
+test('enquiry rejects null JSON and oversized body without crashing',async()=>{
+ const {POST}=await import('../api/lead.js');
+ const base='https://example.com/api/lead';
+ const nullBody=await POST(new Request(base,{method:'POST',body:'null'}));
+ assert.equal(nullBody.status,400);
+ const arrayBody=await POST(new Request(base,{method:'POST',body:'[]'}));
+ assert.equal(arrayBody.status,400);
+ const oversized=await POST(new Request(base,{method:'POST',body:JSON.stringify({details:'x'.repeat(4100)})}));
+ assert.equal(oversized.status,413);
+});
+test('enquiry does not claim WhatsApp delivery when credentials are missing',async()=>{
+ const {POST}=await import('../api/lead.js');
+ const priorToken=process.env.WHATSAPP_ACCESS_TOKEN,priorPhone=process.env.WHATSAPP_PHONE_NUMBER_ID;
+ try{
+  delete process.env.WHATSAPP_ACCESS_TOKEN;
+  delete process.env.WHATSAPP_PHONE_NUMBER_ID;
+  const response=await POST(new Request('https://example.com/api/lead',{method:'POST',body:JSON.stringify({consent:true,type:'recruiter',name:'Test Recruiter',contact:'test@example.com',details:'Discussing a legitimate accounting role'})}));
+  assert.equal(response.status,503);
+  assert.match((await response.json()).error,/not configured/i);
+ }finally{
+  if(priorToken===undefined)delete process.env.WHATSAPP_ACCESS_TOKEN;else process.env.WHATSAPP_ACCESS_TOKEN=priorToken;
+  if(priorPhone===undefined)delete process.env.WHATSAPP_PHONE_NUMBER_ID;else process.env.WHATSAPP_PHONE_NUMBER_ID=priorPhone;
+ }
+});
