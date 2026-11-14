@@ -46,3 +46,12 @@ test('social feed renders all posts chronologically without truncation',()=>{
  assert.match(css,/#updates \.updates-social-feed\{display:flex;flex-direction:column/);
  assert.match(css,/feed-post-media img,[\s\S]*?object-fit:contain/);
 });
+
+test('feed images have compact previews and full-size links',()=>{
+ assert.match(main,/className="feed-photo-link"/);
+ assert.match(main,/Open full photo:/);
+ assert.match(main,/feed-media-count-/);
+ assert.match(css,/feed-media-count-2/);
+ assert.match(css,/feed-media-count-3/);
+ assert.match(css,/feed-photo-link img\{[\s\S]*?object-fit:contain/);
+});
