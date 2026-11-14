@@ -36,3 +36,10 @@ Production was updated on 2026-11-14 to deployment dpl_93gWuy7KFkuSXfg7TTbUBosz3
 - [ ] Production deployment only when user-authorized and Vercel daily quota allows, followed by smoke tests.
 
 **Important:** Automated static checks alone cannot establish that a phase is fully complete. Production deployment succeeded after the earlier quota issue; do not redeploy untested commits. Added direct API tests for malformed visitor sessions, cross-origin admin login and missing enquiry consent. Browser visual, configured-service and notification delivery checks remain outstanding.
+
+## Additional API regression (2026-11-14)
+
+- Enquiry endpoint now rejects JSON `null`, arrays and request bodies over 4,000 characters without a trusted Content-Length header. Previously `null` could trigger an unhandled property access; the fix returns HTTP 400.
+- Added executable tests for malformed enquiries and unavailable WhatsApp credentials (HTTP 503; no false delivery confirmation).
+- Branch commits: `31f1e5c` and `4703722`; CI must be checked for the latest head before release.
+- **Still not verified:** real WhatsApp delivery, live Neon presence expiry, admin session/upload integration, AI provider failure handling, browser/mobile visual checks and tool numerical correctness. No production deployment is authorized solely on the basis of these tests.
