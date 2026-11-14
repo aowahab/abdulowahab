@@ -125,18 +125,19 @@ function PortfolioAI(){
   </section>}
  </div>;
 }
-function UpdateCard({post,featured=false,expanded=false}) {
+function UpdateCard({post,featured=false,expanded=true,authorName='Abdul Owahab',avatarUrl=''}) {
  const media=Array.isArray(post.media)?post.media:[];
- const visibleMedia=expanded?media:media.slice(0,1);
  const text=post.body||'';
- const summary=!expanded&&!featured&&text.length>165?text.slice(0,162).trimEnd()+'…':text;
- return <article className={'update'+(featured?' update-featured':' update-preview')}>
-  {featured&&<span className="update-featured-label">LATEST UPDATE</span>}
-  <time dateTime={post.date}>{post.date?new Date(post.date).toLocaleDateString('en-GB',{year:'numeric',month:'short',day:'numeric'}):''}</time>
+ const date=post.date&& !Number.isNaN(Date.parse(post.date))?new Date(post.date).toLocaleDateString('en-GB',{year:'numeric',month:'short',day:'numeric'}):'';
+ return <article className="update feed-post">
+  <header className="feed-post-header">
+   <div className="feed-post-avatar" aria-hidden="true">{avatarUrl?<img src={avatarUrl} alt="" loading="lazy"/>:<span>AO</span>}</div>
+   <div className="feed-post-author"><strong>{authorName}</strong>{date&&<time dateTime={post.date}>{date}</time>}</div>
+   {featured&&<span className="feed-post-latest">Latest</span>}
+  </header>
   {post.title&&<h3>{post.title}</h3>}
-  {summary&&<RichText body={summary}/>}
-  {visibleMedia.length>0&&<div className="media">{visibleMedia.map((m,j)=>m.type?.startsWith('image/')?<img key={j} loading="lazy" src={m.url} alt={m.name||post.title||'Update photo'}/>:m.type?.startsWith('video/')?<video key={j} controls preload="metadata" src={m.url}/>:<a key={j} href={m.url} target="_blank" rel="noopener noreferrer">{m.name||'View attachment'}</a>)}</div>}
-  {!expanded&&media.length>1&&<span className="update-photo-count">+{media.length-1} more attachments</span>}
+  {text&&<div className="feed-post-body"><RichText body={text}/></div>}
+  {media.length>0&&<div className="media feed-post-media">{media.map((m,j)=>m.type?.startsWith('image/')?<img key={j} loading="lazy" src={m.url} alt={m.name||post.title||'Update photo'}/>:m.type?.startsWith('video/')?<video key={j} controls preload="metadata" src={m.url}/>:<a key={j} href={m.url} target="_blank" rel="noopener noreferrer">{m.name||'View attachment'}</a>)}</div>}
  </article>;
 }
 
@@ -272,7 +273,6 @@ function App(){
  const mobileDestinations=[['Updates/Feed','feed'],['Profile','profile'],['Consultation','consultation'],['Workstation','workstation'],['Appointment','appointment']];
  const [content,setContent]=useState(fallback);
  const [menu,setMenu]=useState(false);
- const [showAllUpdates,setShowAllUpdates]=useState(false);
  useEffect(()=>{document.documentElement.dataset.theme='light';document.documentElement.dataset.layout='editorial';document.documentElement.dataset.font='inter';document.documentElement.dataset.accent='teal';},[]);
  useEffect(()=>{const controller=new AbortController();fetch('/api/content',{signal:controller.signal}).then(r=>{if(!r.ok)throw Error('Content unavailable');return r.json()}).then(data=>{if(data&&Array.isArray(data.sections))setContent(data)}).catch(()=>{});return ()=>controller.abort()},[]);
  useEffect(()=>{document.title=(content.name||'Abdul Owahab')+' | Audit & Assurance · Deloitte Bangladesh'},[content.name]);
@@ -294,11 +294,9 @@ function App(){
  {!ids.has('education')&&<Section id="education" eyebrow="BACKGROUND" title="Education & development"><p>BBA in Accounting & Information Systems from Jagannath University, Dhaka. Pursuing Chartered Accountancy at ICAB Professional Level.</p></Section>}
  <Section id="updates" eyebrow="01 / FEED" title="Updates & Feed">
   <div className="hub-intro"><p>Posts, photos and milestones from my work, professional learning and technology projects.</p><span>{sortedUpdates.length} {sortedUpdates.length===1?'update':'updates'}</span></div>
-  {sortedUpdates.length>0?<><div className={showAllUpdates?'updates updates-expanded':'updates updates-preview-layout'}>
-   {(showAllUpdates||activePage==='feed'?sortedUpdates:sortedUpdates.slice(0,3)).map((p,i)=><UpdateCard key={p.id||i} post={p} featured={!showAllUpdates&&i===0} expanded={showAllUpdates}/>)}
-  </div>
-  {sortedUpdates.length>1&&activePage!=='feed'&&<div className="updates-actions"><button className="updates-see-more" type="button" aria-expanded={showAllUpdates} onClick={()=>setShowAllUpdates(!showAllUpdates)}>{showAllUpdates?'Show Less ↑':'See More Updates ('+sortedUpdates.length+') →'}</button></div>}</>
-  :<div className="hub-empty">No public updates yet. New posts and photos published from the Admin Panel will appear here.</div>}
+  {sortedUpdates.length>0?<div className="updates updates-social-feed" aria-label="Latest updates, newest first">
+   {sortedUpdates.map((p,i)=><UpdateCard key={p.id||i} post={p} featured={i===0} authorName={content.name||'Abdul Owahab'} avatarUrl={content.avatarUrl||''}/>)}
+  </div>:<div className="hub-empty">No public updates yet. New posts and photos published from the Admin Panel will appear here.</div>}
  </Section>
  <Section id="consultation" eyebrow="03 / DISCUSS" title="Consultation">
   <div className="hub-intro"><p>For professional conversations, recruitment opportunities, knowledge exchange and technology collaboration.</p></div>
