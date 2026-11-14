@@ -281,6 +281,24 @@ function profilePanel() {
   wrap.appendChild(h('div', { class: 'card' },
     field('Your name', content.name, function (v) { content.name = v; }, { max: 120 })));
 
+  content.profile = content.profile || {};
+  var introduction = h('div', { class: 'card' }, h('h2', null, 'Homepage introduction'));
+  [['headline','Professional headline',160],['intro','Short introduction',600],['location','Location',100],['cvUrl','CV PDF URL (uploaded Blob URL)',400],['cvUpdated','CV updated label',60]].forEach(function (item) {
+    introduction.appendChild(field(item[1], content.profile[item[0]] || '', function (v) { content.profile[item[0]] = v; }, { max: item[2] }));
+  });
+  introduction.appendChild(h('p', { class: 'muted' }, 'The CV button stays hidden until you add an approved PDF URL. Upload an updated PDF and paste its URL when your experience changes.'));
+  wrap.appendChild(introduction);
+  var projects = h('div', { class: 'card' }, h('h2', null, 'Selected project case studies'));
+  (content.projects || []).forEach(function (project) {
+    var card = h('fieldset', null, h('legend', null, project.title));
+    [['title','Title',120],['tag','Status / category',120],['problem','Purpose',600],['contribution','Your contribution',600],['result','Current state',800],['link','Project URL',400],['cta','Link label',80]].forEach(function (item) {
+      card.appendChild(field(item[1], project[item[0]] || '', function (v) { project[item[0]] = v; }, { max: item[2] }));
+    });
+    projects.appendChild(card);
+  });
+  wrap.appendChild(projects);
+
+
   var facts = h('div', { class: 'card' },
     h('h2', null, 'Details under your name'),
     h('p', { class: 'muted' }, 'Short facts shown with a tick, like role, firm and location.'));

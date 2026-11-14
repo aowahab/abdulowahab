@@ -1,0 +1,16 @@
+import {useState,useRef,useEffect} from 'react';
+import {renderablePdf,pageCanvas,releasePdf} from './pdfRender.js';
+import {usePdfToolOutput} from './usePdfToolOutput.js';
+import {parsePageRange,validateFile} from './toolFiles.js';
+export default function PdfOcr({initialFile=null,onResult,onBusyChange}={}){
+ const [file,setFile]=useState(initialFile),[lang,setLang]=useState('eng'),[range,setRange]=useState('1'),[busy,setBusy]=useState(false),[status,setStatus]=useState(''),[text,setText]=useState('');
+ const downloadFile=usePdfToolOutput(onResult,busy,onBusyChange);
+ const alive=useRef(true),workerRef=useRef(null);
+ useEffect(()=>{alive.current=true;return()=>{alive.current=false;workerRef.current?.terminate()}},[]);
+ async function run(){setBusy(true);setText('');setStatus('Loading local recognition engine…');let pdf,worker;
+ try{if(!file)throw Error('Choose a PDF scan.');validateFile(file,'.pdf');pdf=await renderablePdf(file);const pages=parsePageRange(range,pdf.numPages);if(pages.length>3)throw Error('Recognise up to 3 pages at a time.');const {createWorker}=await import('tesseract.js');if(!alive.current)return;
+ worker=await createWorker(lang,1,{workerPath:'/vendor/ocr/worker.min.js',corePath:'/vendor/ocr/core',langPath:'/vendor/ocr/lang',cacheMethod:'none',workerBlobURL:false,logger:m=>{if(alive.current)setStatus(`${m.status} ${Math.round((m.progress||0)*100)}%`)}});workerRef.current=worker;
+ let result='';for(const index of pages){if(!alive.current)return;const canvas=await pageCanvas(pdf,index+1,2);const output=await worker.recognize(canvas);result+=`Page ${index+1}\n${output.data.text}\n`;canvas.width=canvas.height=0;}if(alive.current){setText(result);setStatus('Recognition complete. Check the text before using it.');}
+ }catch(error){if(alive.current)setStatus(error.message)}finally{await worker?.terminate();workerRef.current=null;await releasePdf(pdf);if(alive.current)setBusy(false)}}
+ return <div className="workspace-tool-panel"><h3>Scan to Text (OCR)</h3><p>English and Bangla recognition runs in this browser. No file upload or saved recognition cache. Accuracy depends on the scan; review every result.</p><label>PDF scan<input type="file" accept="application/pdf,.pdf" disabled={busy} onChange={e=>setFile(e.target.files[0]||null)}/></label><label>Language<select value={lang} disabled={busy} onChange={e=>setLang(e.target.value)}><option value="eng">English</option><option value="ben">Bangla</option><option value="eng+ben">English + Bangla</option></select></label><label>Pages (maximum 3)<input value={range} disabled={busy} onChange={e=>setRange(e.target.value)}/></label><button disabled={busy||!file} onClick={run}>{busy?'Recognising…':'Recognise text'}</button><p role="status">{status}</p>{text&&<><textarea aria-label="Recognised text" rows="12" value={text} onChange={e=>setText(e.target.value)}/><button onClick={()=>downloadFile(text,'recognised-text.txt','text/plain;charset=utf-8')}>Download text</button></>}</div>
+}

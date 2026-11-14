@@ -6,8 +6,40 @@
       "destination": "/api/erp?route=:route*"
     },
     {
-      "source": "/:page(feed|profile|consultation|workstation|appointment)",
-      "destination": "/index.html"
+      "source": "/feed",
+      "destination": "/"
+    },
+    {
+      "source": "/profile",
+      "destination": "/"
+    },
+    {
+      "source": "/consultation",
+      "destination": "/"
+    },
+    {
+      "source": "/workstation",
+      "destination": "/"
+    },
+    {
+      "source": "/appointment",
+      "destination": "/"
+    },
+    {
+      "source": "/contact",
+      "destination": "/"
+    },
+    {
+      "source": "/resources",
+      "destination": "/"
+    },
+    {
+      "source": "/erp-preview",
+      "destination": "/"
+    },
+    {
+      "source": "/tickytools",
+      "destination": "/"
     }
   ],
   "headers": [
@@ -55,6 +87,87 @@
         {
           "key": "Cache-Control",
           "value": "no-store"
+        }
+      ]
+    },
+    {
+      "source": "/api/traffic",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "no-store"
+        },
+        {
+          "key": "X-Robots-Tag",
+          "value": "noindex, nofollow"
+        }
+      ]
+    },
+    {
+      "source": "/tickytools",
+      "headers": [
+        {
+          "key": "Content-Security-Policy",
+          "value": "default-src 'self'; script-src 'self' 'wasm-unsafe-eval'; worker-src 'self' blob:; connect-src 'self' blob: data:; img-src 'self' data: blob:; font-src 'self' data: blob:; style-src 'self' 'unsafe-inline'; object-src 'none'; frame-src 'none'; frame-ancestors 'none'; form-action 'none'; base-uri 'self'"
+        },
+        {
+          "key": "Cache-Control",
+          "value": "no-store"
+        },
+        {
+          "key": "Referrer-Policy",
+          "value": "no-referrer"
+        }
+      ]
+    },
+    {
+      "source": "/workstation",
+      "headers": [
+        {
+          "key": "Content-Security-Policy",
+          "value": "default-src 'self'; script-src 'self' 'wasm-unsafe-eval'; worker-src 'self' blob:; connect-src 'self' blob: data:; img-src 'self' data: blob:; font-src 'self' data: blob:; style-src 'self' 'unsafe-inline'; object-src 'none'; frame-src 'none'; frame-ancestors 'none'; form-action 'none'; base-uri 'self'"
+        },
+        {
+          "key": "Cache-Control",
+          "value": "no-store"
+        },
+        {
+          "key": "Referrer-Policy",
+          "value": "no-referrer"
+        }
+      ]
+    },
+    {
+      "source": "/resources",
+      "headers": [
+        {
+          "key": "Content-Security-Policy",
+          "value": "default-src 'self'; script-src 'self' 'wasm-unsafe-eval'; worker-src 'self' blob:; connect-src 'self' blob: data:; img-src 'self' data: blob:; font-src 'self' data: blob:; style-src 'self' 'unsafe-inline'; object-src 'none'; frame-src 'none'; frame-ancestors 'none'; form-action 'none'; base-uri 'self'"
+        },
+        {
+          "key": "Cache-Control",
+          "value": "no-store"
+        },
+        {
+          "key": "Referrer-Policy",
+          "value": "no-referrer"
+        }
+      ]
+    },
+    {
+      "source": "/erp-preview",
+      "headers": [
+        {
+          "key": "Content-Security-Policy",
+          "value": "default-src 'self'; script-src 'self' 'wasm-unsafe-eval'; worker-src 'self' blob:; connect-src 'self' blob: data:; img-src 'self' data: blob:; font-src 'self' data: blob:; style-src 'self' 'unsafe-inline'; object-src 'none'; frame-src 'none'; frame-ancestors 'none'; form-action 'none'; base-uri 'self'"
+        },
+        {
+          "key": "Cache-Control",
+          "value": "no-store"
+        },
+        {
+          "key": "Referrer-Policy",
+          "value": "no-referrer"
         }
       ]
     }

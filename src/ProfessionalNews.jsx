@@ -1,0 +1,22 @@
+import {useEffect,useState} from 'react';
+const topics=['All','Audit','Accounting','Tax','VAT'];
+const official=[['NBR','https://nbr.gov.bd/'],['ICAB','https://www.icab.org.bd/'],['IFRS Foundation','https://www.ifrs.org/']];
+export default function ProfessionalNews(){
+ const [items,setItems]=useState([]),[topic,setTopic]=useState('All'),[state,setState]=useState('loading'),[updated,setUpdated]=useState(''),[paused,setPaused]=useState(false),[retry,setRetry]=useState(0);
+ useEffect(()=>{const controller=new AbortController();let busy=false;
+  const read=async()=>{if(busy||document.visibilityState==='hidden')return;busy=true;try{const r=await fetch('/api/news',{signal:controller.signal});const d=await r.json();if(!r.ok)throw Error();setItems(Array.isArray(d.items)?d.items:[]);setUpdated(d.updatedAt||'');setState(d.stale?'stale':d.partial?'partial':'ready')}catch(e){if(e.name!=='AbortError')setState('error')}finally{busy=false}};
+  read();const timer=setInterval(read,15*60*1000);document.addEventListener('visibilitychange',read);return()=>{controller.abort();clearInterval(timer);document.removeEventListener('visibilitychange',read)};
+ },[retry]);
+ const filtered=topic==='All'?items:items.filter(item=>item.topics.includes(topic));
+ const date=value=>new Date(value).toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric'});
+ return <section className="professional-news" aria-labelledby="professional-news-title">
+  <header className="news-box-heading"><div><span className="hub-kicker">PROFESSIONAL NEWS</span><h3 id="professional-news-title">Audit, Accounting, Tax & VAT</h3><p>Bangladesh updates and international accounting headlines.</p></div><button type="button" onClick={()=>{setState('loading');setRetry(n=>n+1)}} disabled={state==='loading'}>Refresh</button></header>
+  {filtered.length>0&&<div className="news-ticker"><span className="news-ticker-label">HEADLINES</span><div className="news-ticker-window"><div className={'news-ticker-track'+(paused?' is-paused':'')}><div className="news-ticker-group">{filtered.slice(0,12).map(item=><a key={item.url} href={item.url} target="_blank" rel="noopener noreferrer">{item.title}<span> · {item.source}</span></a>)}</div><div className="news-ticker-group" aria-hidden="true">{filtered.slice(0,12).map(item=><a key={item.url} tabIndex={-1} href={item.url} target="_blank" rel="noopener noreferrer">{item.title}<span> · {item.source}</span></a>)}</div></div></div><button type="button" aria-pressed={paused} onClick={()=>setPaused(v=>!v)}>{paused?'Play':'Pause'}</button></div>}
+  <div className="news-filters" aria-label="Filter professional news">{topics.map(name=><button key={name} type="button" aria-pressed={topic===name} onClick={()=>setTopic(name)}>{name}</button>)}</div>
+  {state==='loading'&&<p role="status" className="news-status">Loading publisher headlines…</p>}
+  {state==='error'&&<p role="status" className="news-status">Could not refresh the news. {items.length?'Previously loaded headlines are shown below.':'Use Refresh to try again.'}</p>}
+  {(state==='partial'||state==='stale')&&<p role="status" className="news-status">{state==='stale'?'Showing previously fetched headlines while publishers are unavailable.':'Some publishers are unavailable; available headlines are shown.'}</p>}
+  {filtered.length>0?<div className="news-list" tabIndex={0} role="region" aria-label="Scrollable professional headlines"><ul>{filtered.map(item=><li key={item.url}><div className="news-item-meta"><span>{item.topics.join(' · ')}</span><time dateTime={item.publishedAt}>{date(item.publishedAt)}</time></div><a className="news-headline" href={item.url} target="_blank" rel="noopener noreferrer">{item.title} ↗</a><p>{item.source} · {item.region}</p></li>)}</ul></div>:state!=='loading'&&state!=='error'&&<p className="news-status">No recent {topic==='All'?'relevant':topic} headlines are available from these publishers.</p>}
+  <footer className="news-box-footer">{updated&&<p>Last checked: {new Date(updated).toLocaleString('en-GB',{timeZone:'Asia/Dhaka'})} (Bangladesh time). Refreshes every 15 minutes.</p>}<p>Headlines link to publisher articles. Coverage depends on their feeds; consult original notices for applicable Bangladesh rules.</p><div className="official-news-links">{official.map(([name,url])=><a key={name} href={url} target="_blank" rel="noopener noreferrer">{name} ↗</a>)}</div></footer>
+ </section>;
+}
