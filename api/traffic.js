@@ -13,7 +13,7 @@ const setup=async db=>db.query('CREATE TABLE IF NOT EXISTS portfolio_visitor_pre
 export async function POST(request){
  if(Number(request.headers.get('content-length')||0)>512)return json({error:'Request too large'},413);
  let body;
- try{body=await request.json()}catch{return json({error:'Invalid request'},400)}
+ try{const raw=await request.text();if(raw.length>512)return json({error:'Request too large'},413);body=JSON.parse(raw)}catch{return json({error:'Invalid request'},400)}
  const token=body?.visitorId;
  if(typeof token!=='string'||!/^[a-zA-Z0-9_-]{20,100}$/.test(token))return json({error:'Invalid visitor session'},400);
  const db=database();
