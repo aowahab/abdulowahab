@@ -169,9 +169,14 @@ export async function POST(request){
  const length=Number(request.headers.get('content-length')||0);
  if(length>12000)return response({error:'Request too large'},413);
  let data;
- try{data=await request.json()}catch{return response({error:'Invalid JSON'},400)}
+ try{
+  const raw=await request.text();
+  if(raw.length>12000)return response({error:'Request too large'},413);
+  data=JSON.parse(raw);
+ }catch{return response({error:'Invalid JSON'},400)}
+ if(!data||typeof data!=='object'||Array.isArray(data))return response({error:'Invalid messages'},400);
  const messages=Array.isArray(data.messages)?data.messages.slice(-12):[];
- if(!messages.length||messages.some(m=>!['user','assistant'].includes(m.role)||typeof m.content!=='string'||m.content.length>1500))return response({error:'Invalid messages'},400);
+ if(!messages.length||messages.some(m=>!m||typeof m!=='object'||!['user','assistant'].includes(m.role)||typeof m.content!=='string'||m.content.length>1500))return response({error:'Invalid messages'},400);
  const question=messages.at(-1);
  if(question.role!=='user'||!question.content.trim())return response({error:'Question required'},400);
  let content=DEFAULT_CONTENT;
