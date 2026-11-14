@@ -1,4 +1,5 @@
 import {useEffect,useRef,useState} from 'react';
+import {validatePdfFiles,mergePdfFiles} from './pdfMerge.js';
 const imageTypes=new Set(['image/jpeg','image/png','image/webp']);
 const megabytes=n=>`${(n/1024/1024).toFixed(1)} MB`;
 function saveBlob(blob,name){const url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download=name;a.click();setTimeout(()=>URL.revokeObjectURL(url),60000)}
@@ -27,20 +28,25 @@ export function ImageToPdf(){
  <label>Page orientation<select value={orientation} disabled={busy} onChange={e=>setOrientation(e.target.value)}><option value="portrait">Portrait</option><option value="landscape">Landscape</option></select></label><button type="button" disabled={busy||!files.length} onClick={convert}>{busy?'Creating PDF…':'Create & download PDF'}</button><small>Up to 20 images · 20 MB each · 60 MB total. High-resolution images are resized for a manageable PDF.</small>{error&&<p role="alert">{error}</p>}{status&&<p role="status">{status}</p>}</div>;
 }
 
-export function WordToPdf(){
- const [file,setFile]=useState(null),[html,setHtml]=useState(''),[busy,setBusy]=useState(false),[error,setError]=useState(''),[warnings,setWarnings]=useState(false);
- const alive=useRef(true);useEffect(()=>{alive.current=true;return()=>{alive.current=false}},[]);
- const preview=async()=>{if(!file)return;setBusy(true);setError('');setHtml('');setWarnings(false);
-  try{const [{default:mammoth},{default:DOMPurify}]=await Promise.all([import('mammoth/mammoth.browser.js'),import('dompurify')]);const result=await mammoth.convertToHtml({arrayBuffer:await file.arrayBuffer()},{externalFileAccess:false});
-   const safe=DOMPurify.sanitize(result.value,{USE_PROFILES:{html:true},FORBID_TAGS:['style','iframe','form','input','button','video','audio','source'],FORBID_ATTR:['style','srcset']});
-   const doc=new DOMParser().parseFromString(safe,'text/html');for(const img of doc.querySelectorAll('img')){if(!/^data:image\/(png|jpeg|gif|webp);base64,/i.test(img.getAttribute('src')||''))img.remove()}
-   for(const a of doc.querySelectorAll('a')){const href=a.getAttribute('href')||'';if(!/^(https?:|mailto:|#)/i.test(href))a.removeAttribute('href');a.setAttribute('target','_blank');a.setAttribute('rel','noopener noreferrer')}
-   if(!doc.body.textContent.trim()&&!doc.querySelector('img'))throw Error('This document has no readable content.');
-   if(alive.current){setHtml(doc.body.innerHTML);setWarnings(result.messages.length>0)}
-  }catch(e){if(alive.current)setError('Could not read this DOCX file. Use an unencrypted .docx document and try again.')}finally{if(alive.current)setBusy(false)}
+export function PdfMerger(){
+ const [files,setFiles]=useState([]),[busy,setBusy]=useState(false),[error,setError]=useState(''),[status,setStatus]=useState('');
+ const controller=useRef(null),alive=useRef(true);
+ useEffect(()=>{alive.current=true;return()=>{alive.current=false;controller.current?.abort()}},[]);
+ const changeFiles=next=>{setFiles(next);setError('');setStatus('')};
+ const select=event=>{const picked=[...event.target.files];event.target.value='';setError('');setStatus('');
+  try{const next=[...files,...picked];validatePdfFiles(next);if(alive.current)setFiles(next)}catch(e){if(alive.current)setError(e.message)}
  };
- const print=()=>{const win=window.open('','_blank');if(!win){setError('Allow a new window to open the print preview.');return}win.opener=null;
-  win.document.write('<!doctype html><html><head><meta charset="UTF-8"><title>TickyTools document</title><style>@page{size:A4;margin:18mm}body{font-family:Arial,"Noto Sans Bengali",sans-serif;font-size:11pt;line-height:1.5;color:#111;margin:24px auto;max-width:174mm}img{max-width:100%;height:auto}table{border-collapse:collapse;width:100%}td,th{border:1px solid #aaa;padding:6px}h1,h2,h3{break-after:avoid}tr,img{break-inside:avoid}.print-controls{padding:16px;background:#eef3f6;margin-bottom:24px}.print-controls button{padding:10px 18px;cursor:pointer}@media print{.print-controls{display:none}body{margin:0;max-width:none}}</style></head><body><div class="print-controls"><p>Choose “Save as PDF” as the printer destination. Review the pages before saving.</p><button id="print-document" type="button">Print / Save as PDF</button></div><main>'+html+'</main></body></html>');win.document.close();win.document.title=(file?.name||'document').replace(/\.docx$/i,'')+' — TickyTools';win.document.getElementById('print-document').addEventListener('click',()=>win.print());
+ const move=(index,direction)=>{const next=[...files],target=index+direction;[next[index],next[target]]=[next[target],next[index]];changeFiles(next)};
+ const merge=async()=>{setBusy(true);setError('');setStatus('Preparing PDFs…');controller.current=new AbortController();
+  try{const result=await mergePdfFiles(files,{signal:controller.current.signal,onProgress:(index,total)=>{if(alive.current)setStatus(`Reading PDF ${index} of ${total}…`)}});
+   if(alive.current){saveBlob(new Blob([result.bytes],{type:'application/pdf'}),'tickytools-merged.pdf');setStatus(`Merged PDF downloaded: ${files.length} files, ${result.pages} pages.`)}
+  }catch(e){if(alive.current&&e.name!=='AbortError'){setStatus('');setError(e.message||'Could not merge these PDFs. Try smaller files.')}}finally{if(alive.current)setBusy(false)}
  };
- return <div className="workspace-tool-panel pdf-tool"><h4>Word to PDF</h4><p>Open a DOCX locally, review its contents, then use your browser’s Save as PDF option. Nothing is uploaded.</p><label>Choose a Word document (.docx)<input type="file" accept=".docx,application/vnd.openxmlformats-officedocument.wordprocessingml.document" disabled={busy} onChange={e=>{const selected=e.target.files?.[0];setHtml('');setError('');setFile(null);if(!selected)return;if(!/\.docx$/i.test(selected.name)||selected.size>10*1024*1024){setError('Choose a .docx file up to 10 MB. Older .doc files are not supported.');return}setFile(selected)}}/></label><button type="button" disabled={!file||busy} onClick={preview}>{busy?'Reading document…':'Prepare document preview'}</button><small>Text, lists, tables and embedded images are supported. Complex page layouts, headers, fonts and pagination may differ from Microsoft Word.</small>{error&&<p role="alert">{error}</p>}{warnings&&<p className="workspace-disclaimer">Some document features could not be preserved. Please review the preview before saving.</p>}{html&&<><div className="word-document-preview" aria-label="Converted Word document preview" dangerouslySetInnerHTML={{__html:html}}/><button type="button" onClick={print}>Open Print / Save as PDF</button></>}</div>;
+ return <div className="workspace-tool-panel pdf-tool"><h4>PDF Merger</h4><p>Combine multiple PDFs into one file. Reorder the files below; all pages from each PDF are included in that order. Files stay on your device.</p>
+  <label>Choose PDF files<input type="file" accept="application/pdf,.pdf" multiple disabled={busy} onChange={select}/></label>
+  {files.length>0&&<><ol className="pdf-file-list">{files.map((file,index)=><li key={file.name+'-'+index}><span>{index+1}. {file.name}<small>{megabytes(file.size)}</small></span><div><button type="button" aria-label={'Move '+file.name+' up'} disabled={busy||index===0} onClick={()=>move(index,-1)}>↑</button><button type="button" aria-label={'Move '+file.name+' down'} disabled={busy||index===files.length-1} onClick={()=>move(index,1)}>↓</button><button type="button" aria-label={'Remove '+file.name} disabled={busy} onClick={()=>changeFiles(files.filter((_,i)=>i!==index))}>Remove</button></div></li>)}</ol><button type="button" disabled={busy} onClick={()=>changeFiles([])}>Clear all</button></>}
+  <button type="button" disabled={busy||files.length<2} onClick={merge}>{busy?'Merging PDFs…':'Merge & download PDF'}</button>
+  <small>Choose 2–20 PDFs · 25 MB per file · 100 MB total · up to 1,000 pages. Unlock password-protected PDFs first. Select more files to add them to the list.</small>
+  {error&&<p role="alert">{error}</p>}{status&&<p role="status">{status}</p>}
+ </div>;
 }

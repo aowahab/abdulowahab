@@ -44,9 +44,14 @@ The scrolling headline strip supports pause, hover/focus pause and reduced-motio
 
 ## TickyTools
 
-Workstation tools open directly beneath their own cards, one panel at a time. Existing calculators and checklists remain available. PDF libraries load only when the relevant tools are opened or used.
+Dedicated `/tickytools` workspace with category and tool dropdowns. Heavy libraries load only when selected. Existing audit calculators and checklists remain available.
 
-- **Image to PDF:** local JPG/PNG/WebP input, up to 20 files (20 MB each, 60 MB total), reorder/remove controls, portrait/landscape A4, one fitted image per page and direct PDF download. Images are resized to a maximum dimension of 2400 pixels for manageable output.
-- **Word to PDF:** local, unencrypted DOCX input up to 10 MB. Mammoth extracts document content; DOMPurify removes unsafe markup and remote images. Visitors review the document, open its print window, then select Save as PDF. Legacy DOC files and exact Word page-layout reproduction are not supported.
+- PDF: image conversion, merger, PDF to PNG/JPEG, reorder/rotate/delete, extract/split, crop, watermark, page numbers, password protection/unlock with a known password, form fill/flatten, selectable text extraction, scanned-PDF compression, and English/Bangla scan OCR.
+- Editor: add text, highlights, shapes and visual signatures. Permanent redaction rebuilds raster pages without underlying selectable text. This removes forms, links and text selection. Existing text is not rewritten; visual signatures are not certified digital signatures.
+- Excel: merge XLSX files into separate sheets or stack matching headers. Values, saved formula results, dates and number formats are retained; macros, charts and layout are not copied.
 
-File contents stay in the browser; neither conversion uploads documents. Official government, financial and reference services remain separate external links.
+Documents are processed in browser memory. The tools route disables the portfolio AI, visitor tracking and content API; route CSP blocks off-site connections and form submissions. PDF workers, fonts, OCR engine and language models are served locally. OCR caching is disabled. Documents are not sent to an API or retained in browser storage. Downloads are saved only at the user's request. This is not a guarantee against compromised browsers/devices.
+
+OCR accuracy must be reviewed. The first OCR use downloads its local engine and language assets. Large-file/page limits protect browser memory. This suite does not claim full Adobe Acrobat feature parity.
+
+Validation: unit tests, production build, real browser exports using synthetic PDFs/XLSX/forms, independent PDF text/encryption inspection, desktop/mobile layout, and request/storage monitoring under the route CSP.

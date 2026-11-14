@@ -2,8 +2,7 @@ import React, { useEffect, useState, lazy, Suspense } from 'react';
 import { createRoot } from 'react-dom/client';
 import './style.css';
 import ProfessionalNews from './ProfessionalNews.jsx';
-const ImageToPdf=lazy(()=>import('./PdfTools.jsx').then(module=>({default:module.ImageToPdf})));
-const WordToPdf=lazy(()=>import('./PdfTools.jsx').then(module=>({default:module.WordToPdf})));
+const TickyTools=lazy(()=>import('./TickyTools.jsx'));
 import { PROFILE } from '../shared/profile.js';
 import { PROJECTS } from '../shared/projects.js';
 import { publicContentOnly } from '../shared/public-content.js';
@@ -147,136 +146,6 @@ function UpdateCard({post,featured=false,expanded=true,authorName='Abdul Owahab'
  </article>;
 }
 
-const workspaceGroups=[
- {title:'Audit & assurance',items:[
-  {name:'Audit Materiality Calculator',action:'materiality',detail:'Calculate overall and performance materiality from a selected benchmark; illustrative only.'},
-  {name:'Audit Planning Checklist',action:'audit-planning',detail:'Interactive engagement planning checklist with exportable progress; no client details required.'},
-  {name:'Risk Assessment & Assertions Matrix',action:'risk-matrix',detail:'Reference assertions by financial statement area; no client data collected.'},
-  {name:'Audit Sampling Calculator',action:'sampling',detail:'Illustrative random index selection, not a statistical audit sample-size determination.'},
-  {name:'Audit Completion Checklist',action:'completion',detail:'Interactive generic completion checklist with downloadable progress.'}
- ]},
- {title:'Everyday toolkit',items:[
-  {name:'Word to PDF',action:'word-pdf',detail:'Preview a DOCX locally, then Save as PDF in your browser.'},
-  {name:'Image to PDF',action:'image-pdf',detail:'Combine JPG, PNG or WebP images into a downloadable PDF on your device.'},
-  {name:'Image Resizer',action:'resize',detail:'Resize an image locally in your browser; no upload required.'},
-  {name:'Age Calculator',action:'age',detail:'Calculate age from a date of birth.'}
- ]},
- {title:'Puzzles & exploration',items:[
-  {name:'Visited Districts Map',url:'https://en.wikipedia.org/wiki/Districts_of_Bangladesh',detail:'Explore the districts of Bangladesh (reference map).'}
- ]},
- {title:'Tax & revenue',items:[
-  {name:'National Board of Revenue',url:'https://nbr.gov.bd/'},
-  {name:'e-Return',url:'https://etaxnbr.gov.bd/'},
-  {name:'TIN Registration',url:'https://secure.incometax.gov.bd/TINHome'},
-  {name:'VAT Online Services',url:'https://vat.gov.bd/'},
-  {name:'NBR Customs',url:'https://customs.gov.bd/'}
- ]},
- {title:'Banking & markets',items:[
-  {name:'Bangladesh Bank',url:'https://www.bb.org.bd/'},
-  {name:'BSEC',url:'https://sec.gov.bd/'},
-  {name:'Dhaka Stock Exchange',url:'https://www.dsebd.org/'},
-  {name:'Chittagong Stock Exchange',url:'https://www.cse.com.bd/'}
- ]},
- {title:'Business & law',items:[
-  {name:'RJSC',url:'https://roc.gov.bd/'},
-  {name:'Ministry of Commerce',url:'https://mincom.gov.bd/'},
-  {name:'Ministry of Finance',url:'https://mof.gov.bd/'},
-  {name:'e-GP (Government Procurement)',url:'https://www.eprocure.gov.bd/'}
- ]},
- {title:'Accounting & learning',items:[
-  {name:'IFRS Foundation',url:'https://www.ifrs.org/'},
-  {name:'Financial Reporting Council',url:'https://frc.gov.bd/'},
-  {name:'ICAB',url:'https://www.icab.org.bd/'},
-  {name:'Microsoft Excel Help',url:'https://support.microsoft.com/excel'}
- ]},
- {title:'Citizen services',items:[
-  {name:'Bangladesh National Portal',url:'https://bangladesh.gov.bd/'},
-  {name:'NID Services',url:'https://services.nidw.gov.bd/'},
-  {name:'e-Passport',url:'https://www.epassport.gov.bd/'},
-  {name:'Birth and Death Registration',url:'https://bdris.gov.bd/'},
-  {name:'Police Clearance',url:'https://pcc.police.gov.bd/'},
-  {name:'BRTA',url:'https://brta.gov.bd/'},
-  {name:'Land Services (e-Porcha / e-Mutation)',url:'https://land.gov.bd/'}
- ]},
- {title:'Utilities & travel',items:[
-  {name:'DESCO',url:'https://desco.gov.bd/'},
-  {name:'DPDC',url:'https://dpdc.gov.bd/'},
-  {name:'Dhaka WASA',url:'https://dwasa.org.bd/'},
-  {name:'Titas Gas',url:'https://titasgas.gov.bd/'},
-  {name:'Bangladesh Railway e-ticket',url:'https://eticket.railway.gov.bd/'},
-  {name:'BTRC',url:'https://btrc.gov.bd/'}
- ]}
-];
-const auditPlanningSteps=[
- {phase:'Acceptance & ethics',items:['Engagement acceptance or continuance assessed','Independence and ethical requirements considered','Engagement terms and scope agreed']},
- {phase:'Understand the entity',items:['Industry and business model understood','Applicable financial reporting framework identified','Relevant laws and regulations considered','Processes and internal control environment understood']},
- {phase:'Risk assessment',items:['Fraud brainstorming and team discussion completed','Material classes of transactions and balances identified','Risks of material misstatement assessed','Significant risks and related controls identified']},
- {phase:'Audit strategy',items:['Overall materiality and performance materiality documented','Audit approach and nature, timing and extent planned','Team responsibilities and specialist needs considered','Planned procedures responsive to assessed risks prepared']},
- {phase:'Documentation & review',items:['Planning documentation reviewed','Outstanding planning matters resolved']}
-];
-function WorkspaceDirectory(){
- const [search,setSearch]=useState('');
- const [planningChecks,setPlanningChecks]=useState({});
- const [completionChecks,setCompletionChecks]=useState({});
- const [sampling,setSampling]=useState({population:'',count:''});
- const [sampleResult,setSampleResult]=useState([]);
- const [tool,setTool]=useState('');
- const [materiality,setMateriality]=useState({benchmark:'Profit before tax',amount:'',rate:'5',performance:'75'});
- const [birth,setBirth]=useState('');
- const [imageFile,setImageFile]=useState(null);
- const [width,setWidth]=useState('800');
- const [result,setResult]=useState('');
- const [toolError,setToolError]=useState('');
- const today=new Date();
- const birthDate=birth?new Date(birth+'T00:00:00'):null;
- const validBirth=birthDate&&!Number.isNaN(birthDate.getTime())&&birthDate<=today;
- let ageText='';
- if(validBirth){let years=today.getFullYear()-birthDate.getFullYear(),months=today.getMonth()-birthDate.getMonth(),days=today.getDate()-birthDate.getDate();if(days<0){months--;days+=new Date(today.getFullYear(),today.getMonth(),0).getDate()}if(months<0){years--;months+=12}ageText=years+' years, '+months+' months, '+days+' days';}
- const resize=async()=>{
-  if(!imageFile)return setToolError('Choose an image first.');
-  const w=Number(width);
-  if(!Number.isInteger(w)||w<32||w>5000)return setToolError('Enter a width between 32 and 5000 pixels.');
-  setToolError('');
-  try{
-   const bmp=await createImageBitmap(imageFile);
-   const h=Math.round(bmp.height*w/bmp.width);
-   if(h>10000)throw Error('Resulting image is too tall.');
-   const canvas=document.createElement('canvas');canvas.width=w;canvas.height=h;
-   canvas.getContext('2d').drawImage(bmp,0,0,w,h);bmp.close();
-   canvas.toBlob(blob=>{
-    if(!blob){setToolError('Could not create the image.');return;}
-    const url=URL.createObjectURL(blob),a=document.createElement('a');
-    a.href=url;a.download='resized-'+imageFile.name.replace(/\.[^.]+$/,'')+'.png';a.click();
-    setTimeout(()=>URL.revokeObjectURL(url),60000);
-    setResult('Resized image downloaded ('+w+' × '+h+' px).');
-   },'image/png');
-  }catch(e){setToolError(e.message||'Could not resize this image.')}
- };
- const toolPanel=<>
-  <Suspense fallback={<div className="workspace-tool-panel" role="status">Loading TickyTools…</div>}>{tool==='image-pdf'&&<ImageToPdf/>}{tool==='word-pdf'&&<WordToPdf/>}</Suspense>
-  {tool==='audit-planning'&&<div className="workspace-tool-panel workspace-audit-planning"><h4>Audit Planning Checklist</h4><p>Generic educational planning checklist. It is not a substitute for engagement-specific methodology, professional judgment or review. Do not enter client information.</p><div className="workspace-planning-progress"><strong>{Object.values(planningChecks).filter(Boolean).length} / {auditPlanningSteps.reduce((n,p)=>n+p.items.length,0)} completed</strong><button type="button" onClick={()=>setPlanningChecks({})}>Reset checklist</button></div>{auditPlanningSteps.map((phase,i)=><fieldset key={phase.phase} className="workspace-planning-group"><legend>{i+1}. {phase.phase}</legend>{phase.items.map((item,j)=>{const id=i+'-'+j;return <label key={id}><input type="checkbox" checked={!!planningChecks[id]} onChange={e=>setPlanningChecks(prev=>({...prev,[id]:e.target.checked}))}/><span>{item}</span></label>})}</fieldset>)}<button type="button" onClick={()=>{const lines=['AUDIT PLANNING CHECKLIST','Generic reference only — do not include confidential information','',...auditPlanningSteps.flatMap((phase,i)=>[phase.phase,...phase.items.map((item,j)=>(planningChecks[i+'-'+j]?'[x] ':'[ ] ')+item),''])];const blob=new Blob([lines.join('\n')],{type:'text/plain;charset=utf-8'});const url=URL.createObjectURL(blob);const a=document.createElement('a');a.href=url;a.download='audit-planning-checklist.txt';a.click();setTimeout(()=>URL.revokeObjectURL(url),60000)}}>Download checklist (.txt)</button><p className="workspace-disclaimer">Checklist progress is held in this page only and resets when reloaded. No information is sent to the server.</p></div>}
-  {tool==='risk-matrix'&&<div className="workspace-tool-panel"><h4>Risk Assessment & Assertions Matrix</h4><p>General reference only. Select an area to view commonly relevant assertions; actual risks and procedures require engagement-specific judgment.</p><div className="workspace-reference-grid">{[['Revenue','Occurrence, completeness, accuracy, cut-off, classification'],['Receivables','Existence, rights, valuation, completeness, presentation'],['Inventory','Existence, completeness, rights, valuation, presentation'],['Payables','Completeness, existence, obligations, accuracy, cut-off'],['Cash','Existence, rights, completeness, accuracy'],['Expenses','Occurrence, completeness, accuracy, cut-off, classification']].map(([area,assertions])=><article key={area}><strong>{area}</strong><p>{assertions}</p></article>)}</div><p className="workspace-disclaimer">No confidential client information should be entered here.</p></div>}
-  {tool==='completion'&&<div className="workspace-tool-panel workspace-audit-planning"><h4>Audit Completion Checklist</h4><p>Generic educational checklist; follow your firm's methodology and reviewer requirements.</p><div className="workspace-planning-progress"><strong>{Object.values(completionChecks).filter(Boolean).length} / 8 completed</strong><button type="button" onClick={()=>setCompletionChecks({})}>Reset checklist</button></div><fieldset className="workspace-planning-group"><legend>Completion and reporting</legend>{['Evaluate uncorrected misstatements','Complete subsequent events procedures','Evaluate going concern','Obtain required written representations','Review financial statement disclosures','Resolve outstanding review notes','Assess overall evidence and conclusions','Complete reporting and final documentation'].map((item,i)=><label key={item}><input type="checkbox" checked={!!completionChecks[i]} onChange={e=>setCompletionChecks(p=>({...p,[i]:e.target.checked}))}/><span>{item}</span></label>)}</fieldset><button type="button" onClick={()=>{const items=['AUDIT COMPLETION CHECKLIST','Generic reference only','',...['Evaluate uncorrected misstatements','Complete subsequent events procedures','Evaluate going concern','Obtain required written representations','Review financial statement disclosures','Resolve outstanding review notes','Assess overall evidence and conclusions','Complete reporting and final documentation'].map((x,i)=>(completionChecks[i]?'[x] ':'[ ] ')+x)];const a=document.createElement('a'),url=URL.createObjectURL(new Blob([items.join('\n')],{type:'text/plain'}));a.href=url;a.download='audit-completion-checklist.txt';a.click();setTimeout(()=>URL.revokeObjectURL(url),10000)}}>Download checklist (.txt)</button></div>}
-  {tool==='sampling'&&<div className="workspace-tool-panel"><h4>Random Index Selector</h4><p>Generate unique random item numbers for a numbered population. This does not calculate an appropriate audit sample size or guarantee representativeness.</p><div className="workspace-materiality-fields"><label>Population size<input type="number" min="1" max="1000000" step="1" value={sampling.population} onChange={e=>setSampling(p=>({...p,population:e.target.value}))}/></label><label>Number to select<input type="number" min="1" max="500" step="1" value={sampling.count} onChange={e=>setSampling(p=>({...p,count:e.target.value}))}/></label></div><button type="button" onClick={()=>{const n=Number(sampling.population),k=Number(sampling.count);if(!Number.isSafeInteger(n)||n<1||n>1000000||!Number.isSafeInteger(k)||k<1||k>500||k>n){setToolError('Enter a population of 1–1,000,000 and a selection count of 1–500 not exceeding the population.');setSampleResult([]);return}const selected=new Set();const random=new Uint32Array(1);while(selected.size<k){crypto.getRandomValues(random);const limit=Math.floor(4294967296/n)*n;if(random[0]<limit)selected.add(random[0]%n+1)}setSampleResult([...selected].sort((a,b)=>a-b));setToolError('')}}>Generate indices</button>{toolError&&<p role="alert">{toolError}</p>}{sampleResult.length>0&&<div className="workspace-result" role="status"><strong>Selected indices ({sampleResult.length}):</strong><p>{sampleResult.join(', ')}</p><button type="button" onClick={()=>{const a=document.createElement('a'),url=URL.createObjectURL(new Blob([sampleResult.join('\n')],{type:'text/plain'}));a.href=url;a.download='random-indices.txt';a.click();setTimeout(()=>URL.revokeObjectURL(url),10000)}}>Download indices</button></div>}</div>}
-  {tool==='materiality'&&<div className="workspace-tool-panel" aria-label="Audit materiality calculator"><h4>Audit Materiality Calculator</h4><p>Illustrative planning aid only; actual benchmark and percentage require professional judgment and engagement methodology.</p><div className="workspace-materiality-fields"><label>Benchmark<select value={materiality.benchmark} onChange={e=>setMateriality(p=>({...p,benchmark:e.target.value}))}>{['Profit before tax','Revenue','Total assets','Total expenses','Equity','Other'].map(x=><option key={x}>{x}</option>)}</select></label><label>Benchmark amount (BDT)<input type="number" min="0" step="any" placeholder="e.g. 10000000" value={materiality.amount} onChange={e=>setMateriality(p=>({...p,amount:e.target.value}))}/></label><label>Overall materiality rate (%)<input type="number" min="0.01" max="100" step="0.01" value={materiality.rate} onChange={e=>setMateriality(p=>({...p,rate:e.target.value}))}/></label><label>Performance materiality (% of overall)<input type="number" min="1" max="100" step="1" value={materiality.performance} onChange={e=>setMateriality(p=>({...p,performance:e.target.value}))}/></label></div>{(()=>{const amount=Number(materiality.amount),rate=Number(materiality.rate),performance=Number(materiality.performance),valid=materiality.amount.trim()!==''&&Number.isFinite(amount)&&amount>=0&&Number.isFinite(rate)&&rate>0&&rate<=100&&Number.isFinite(performance)&&performance>0&&performance<=100;if(!valid)return <p role="status">Enter valid amounts and percentages to calculate materiality.</p>;const overall=amount*rate/100,pm=overall*performance/100;const fmt=n=>new Intl.NumberFormat('en-BD',{maximumFractionDigits:2}).format(n);return <div className="workspace-materiality-result" role="status"><div><span>Overall materiality</span><strong>BDT {fmt(overall)}</strong></div><div><span>Performance materiality</span><strong>BDT {fmt(pm)}</strong></div><small>Formula: benchmark × materiality rate; overall materiality × performance materiality percentage. No client data is stored or transmitted by this calculator.</small></div>})()}</div>}
-  {tool==='age'&&<div className="workspace-tool-panel"><h4>Age Calculator</h4><label>Date of birth <input type="date" max={today.toLocaleDateString('en-CA')} value={birth} onChange={e=>setBirth(e.target.value)}/></label>{validBirth&&<p className="workspace-result">Age: <strong>{ageText}</strong></p>}{birth&&!validBirth&&<p role="alert">Choose a valid past date.</p>}</div>}
-  {tool==='resize'&&<div className="workspace-tool-panel"><h4>Image Resizer</h4><p>Images are processed on your device; they are not uploaded to this portfolio.</p><label>Select image <input type="file" accept="image/*" onChange={e=>{setImageFile(e.target.files?.[0]||null);setToolError('');setResult('')}}/></label><label>Output width (pixels) <input type="number" min="32" max="5000" value={width} onChange={e=>setWidth(e.target.value)}/></label><button type="button" onClick={resize}>Resize & download PNG</button>{toolError&&<p role="alert">{toolError}</p>}{result&&<p className="workspace-result" role="status">{result}</p>}</div>}
- </>;
- return <div className="workspace-directory">
-  <div className="workspace-directory-head"><div><span className="hub-kicker">EVERYDAY PROFESSIONAL WORK</span><h3>TickyTools</h3><p>Open practical tools right here. Official portals and reference sites are listed separately.</p></div><label className="workspace-search">Search tools<input type="search" value={search} onChange={e=>setSearch(e.target.value)} placeholder="Search links and utilities…" /></label></div>
-  {workspaceGroups.map(group=>{
-   const items=group.items.filter(x=>(x.name+' '+group.title+' '+(x.detail||'')).toLowerCase().includes(search.trim().toLowerCase()));
-   return items.length>0&&<section className="workspace-category" key={group.title}><h4>{group.title}</h4><div className="workspace-tool-grid">{items.map(item=>{
-    const expanded=!!item.action&&tool===item.action;
-    return <div className={'workspace-tool-item'+(expanded?' is-expanded':'')} key={item.name}>
-     <article className="workspace-tool"><div><strong>{item.name}</strong>{item.detail&&<small>{item.detail}</small>}</div>{item.action?<button type="button" aria-expanded={expanded} aria-controls={'tickytool-'+item.action} onClick={()=>{setTool(expanded?'':item.action);setToolError('');setResult('')}}>{expanded?'Close':'Open tool'} {expanded?'−':'+'}</button>:item.url?<a href={item.url} target="_blank" rel="noopener noreferrer" aria-label={'Open '+item.name+' in a new tab'}>Official site ↗</a>:<span className="workspace-coming-soon">Planned</span>}</article>
-     {expanded&&<div id={'tickytool-'+item.action} className="workspace-inline-panel" role="region" aria-label={item.name}>{toolPanel}</div>}
-    </div>;
-   })}</div></section>;
-  })}
-  <p className="workspace-disclaimer">External links open third-party websites. Check their privacy terms before uploading confidential documents. Portal addresses and availability may change.</p>
- </div>;
-}
 function VisitorTraffic(){
  const [stats,setStats]=useState(null);
  useEffect(()=>{
@@ -294,7 +163,7 @@ function SelectedProjects({cases=PROJECTS}){
 }
 function App(){
  const mobilePages=['feed','profile','consultation','workstation'];
- const initialPage=()=>{const route=window.location.pathname.split('/').filter(Boolean)[0]?.toLowerCase();const page=({contact:'consultation',appointment:'consultation',resources:'workstation','erp-preview':'workstation'})[route]||route;return mobilePages.includes(page)?page:'profile'};
+ const initialPage=()=>{const route=window.location.pathname.split('/').filter(Boolean)[0]?.toLowerCase();const page=({contact:'consultation',appointment:'consultation',tickytools:'workstation',resources:'workstation','erp-preview':'workstation'})[route]||route;return mobilePages.includes(page)?page:'profile'};
  const [activePage,setActivePage]=useState(initialPage);
  useEffect(()=>{
   const nav=document.querySelector('header.nav');
@@ -306,20 +175,20 @@ function App(){
  },[]);
  useEffect(()=>{const sync=()=>setActivePage(initialPage());window.addEventListener('popstate',sync);return ()=>window.removeEventListener('popstate',sync)},[]);
  useEffect(()=>{document.documentElement.dataset.activePage=activePage;window.scrollTo(0,0)},[activePage]);
- const mobileNavigate=(event,page)=>{event.preventDefault();if(activePage!==page){window.history.pushState({},'',page==='profile'?'/':'/'+page);setActivePage(page)}setMenu(false)};
- useEffect(()=>{const onHashClick=event=>{const link=event.target.closest?.('a[href^="#"]');if(!link)return;const requestedTarget=link.getAttribute('href');const target=requestedTarget==='#appointment'?'#consultation':requestedTarget;if(!target||target==='#')return;const page=target==='#updates'?'feed':target==='#workstation'?'workstation':target==='#consultation'?'consultation':'profile';if(activePage!==page){event.preventDefault();window.history.pushState({},'',(page==='profile'?'/':'/'+page)+target);setActivePage(page);requestAnimationFrame(()=>document.querySelector(target)?.scrollIntoView())}};document.addEventListener('click',onHashClick);return ()=>document.removeEventListener('click',onHashClick)},[activePage]);
- const mobileDestinations=[['Profile','profile'],['News Feed','feed'],['Workstation','workstation'],['Appointment','consultation']];
+ const mobileNavigate=(event,page)=>{if(event.metaKey||event.ctrlKey||event.shiftKey||event.altKey)return;if(activePage==='workstation'||page==='workstation')return;event.preventDefault();if(activePage!==page){window.history.pushState({},'',page==='profile'?'/':page==='workstation'?'/tickytools':'/'+page);setActivePage(page)}setMenu(false)};
+ useEffect(()=>{const onHashClick=event=>{const link=event.target.closest?.('a[href^="#"]');if(!link)return;const requestedTarget=link.getAttribute('href');const target=requestedTarget==='#appointment'?'#consultation':requestedTarget;if(!target||target==='#')return;const page=target==='#updates'?'feed':target==='#workstation'?'workstation':target==='#consultation'?'consultation':'profile';if(activePage!==page){event.preventDefault();const destination=(page==='profile'?'/':page==='workstation'?'/tickytools':'/'+page)+target;if(activePage==='workstation'||page==='workstation'){window.location.assign(destination);return}window.history.pushState({},'',destination);setActivePage(page);requestAnimationFrame(()=>document.querySelector(target)?.scrollIntoView())}};document.addEventListener('click',onHashClick);return ()=>document.removeEventListener('click',onHashClick)},[activePage]);
+ const mobileDestinations=[['Profile','profile'],['News Feed','feed'],['TickyTools','workstation'],['Appointment','consultation']];
  const [content,setContent]=useState(fallback);
  const profile={...PROFILE,...content.profile};
  const [menu,setMenu]=useState(false);
  useEffect(()=>{document.documentElement.dataset.theme='light';document.documentElement.dataset.layout='editorial';document.documentElement.dataset.font='inter';document.documentElement.dataset.accent='teal';},[]);
- useEffect(()=>{const controller=new AbortController();fetch('/api/content',{signal:controller.signal}).then(r=>{if(!r.ok)throw Error('Content unavailable');return r.json()}).then(data=>{if(data&&Array.isArray(data.sections))setContent(publicContentOnly(data))}).catch(()=>{});return ()=>controller.abort()},[]);
- useEffect(()=>{document.title=(content.name||'Abdul Owahab')+' | Audit & Assurance · Deloitte Bangladesh'},[content.name]);
+ useEffect(()=>{if(activePage==='workstation')return;const controller=new AbortController();fetch('/api/content',{signal:controller.signal}).then(r=>{if(!r.ok)throw Error('Content unavailable');return r.json()}).then(data=>{if(data&&Array.isArray(data.sections))setContent(publicContentOnly(data))}).catch(()=>{});return ()=>controller.abort()},[activePage]);
+ useEffect(()=>{document.title=activePage==='workstation'?'TickyTools | Private browser tools':(content.name||'Abdul Owahab')+' | Audit & Assurance · Deloitte Bangladesh'},[content.name,activePage]);
  const ids=new Set((content.sections||[]).map(x=>x.id));
  const sortedUpdates=[...(content.posts||[])].sort((a,b)=>(b.date||'').localeCompare(a.date||''));
  return <>
  <a className="skip" href="#main">Skip to content</a>
- {menu&&<button type="button" className="nav-drawer-backdrop" aria-label="Close navigation" onClick={()=>setMenu(false)}/>}<header className="nav"><a className="brand" href="/" onClick={e=>mobileNavigate(e,'profile')} aria-label="Portfolio home"><span className="brand-monogram">{content.avatarUrl?<img className="brand-avatar" src={content.avatarUrl} alt="" loading="eager" />:(content.name||"Abdul Owahab").trim().split(/\s+/).map(x=>x[0]).slice(0,2).join("").toUpperCase()}</span><span className="brand-name">{content.name||"Abdul Owahab"}</span></a><button className="menu-button" type="button" aria-expanded={menu} aria-controls="navigation" onClick={()=>setMenu(!menu)} aria-label={menu?"Close navigation":"Open navigation"}><span aria-hidden="true">{menu?"×":"☰"}</span></button><nav id="navigation" className={menu?'nav-links open':'nav-links'} aria-label="Main navigation"><div className="drawer-heading">Navigation <button type="button" aria-label="Close menu" onClick={()=>setMenu(false)}>×</button></div>{mobileDestinations.map(([label,page])=><a key={page} className={'nav-destination'+(activePage===page?' is-active':'')} aria-current={activePage===page?'page':undefined} href={page==='profile'?'/':'/'+page} onClick={e=>{mobileNavigate(e,page);setMenu(false)}}>{label}</a>)}<a className="nav-admin" href="/admin" onClick={()=>setMenu(false)}>Admin</a></nav></header>
+ {menu&&<button type="button" className="nav-drawer-backdrop" aria-label="Close navigation" onClick={()=>setMenu(false)}/>}<header className="nav"><a className="brand" href="/" onClick={e=>mobileNavigate(e,'profile')} aria-label="Portfolio home"><span className="brand-monogram">{content.avatarUrl?<img className="brand-avatar" src={content.avatarUrl} alt="" loading="eager" />:(content.name||"Abdul Owahab").trim().split(/\s+/).map(x=>x[0]).slice(0,2).join("").toUpperCase()}</span><span className="brand-name">{content.name||"Abdul Owahab"}</span></a><button className="menu-button" type="button" aria-expanded={menu} aria-controls="navigation" onClick={()=>setMenu(!menu)} aria-label={menu?"Close navigation":"Open navigation"}><span aria-hidden="true">{menu?"×":"☰"}</span></button><nav id="navigation" className={menu?'nav-links open':'nav-links'} aria-label="Main navigation"><div className="drawer-heading">Navigation <button type="button" aria-label="Close menu" onClick={()=>setMenu(false)}>×</button></div>{mobileDestinations.map(([label,page])=><a key={page} className={'nav-destination'+(activePage===page?' is-active':'')} aria-current={activePage===page?'page':undefined} href={page==='profile'?'/':page==='workstation'?'/tickytools':'/'+page} onClick={e=>{mobileNavigate(e,page);setMenu(false)}}>{label}</a>)}<a className="nav-admin" href="/admin" onClick={()=>setMenu(false)}>Admin</a></nav></header>
  <main id="main">
  <section className="hero" id="top"><div className="hero-inner"><div className="hero-copy">{content.avatarUrl&&<div className="hero-photo-wrap"><img className="hero-profile-photo" src={content.avatarUrl} alt={`${content.name||"Abdul Owahab"} profile photo`} loading="eager" /></div>}<p className="overline"><span className="status-dot"/> 02 / PROFILE · ACCOUNTING · AUDIT · TECHNOLOGY</p><h1>{content.name||'Abdul Owahab'}<span className="hero-period">.</span></h1><h2 className="profile-headline">{profile.headline}</h2><p className="hero-subtitle">{profile.intro}</p><div className="hero-actions"><a className="button primary" href="#experience">Explore my work <span aria-hidden="true">↗</span></a><a className="button secondary" href="#contact">Get in touch</a></div></div><div className="hero-aside"><span className="aside-label">AT A GLANCE</span>{(content.facts||[]).map((f,i)=><div className="fact" key={i}><span>{f.label}</span><strong>{f.value}</strong></div>)}</div></div><div className="hero-bottom"><span>BASED IN DHAKA, BANGLADESH</span><span>SCROLL TO EXPLORE ↓</span></div></section>
  <div className="reference-breadcrumb"><a href="#top">Profile</a> <span>›</span> <span>Overview</span></div>
@@ -345,23 +214,18 @@ function App(){
    <ContactRequest initialMeeting={window.location.pathname==='/appointment'||window.location.hash==='#appointment'}/>
   </div>
  </Section>
- <Section id="workstation" eyebrow="04 / TOOLS" title="Workstation">
-  <div className="hub-intro"><p>Applications and project environments I build or contribute to. Open a workspace or explore its purpose.</p></div>
-  <div className="workstation-grid">
-   <article className="workstation-card"><span className="hub-kicker">ACCOUNTING APPLICATION</span><h3>Tickydo ERP</h3><p>Chart of Accounts, journals, trial balance, general ledger and financial reports. Sign-in is required to access business records.</p><a href="/erp/" className="hub-link">Open ERP workstation ↗</a></article>
-   <article className="workstation-card"><span className="hub-kicker">VENTURE</span><h3>Tickydo Ticketing</h3><p>Digital passenger ticketing and smart bus-counter operations currently in pilot testing.</p><a href="https://tickydo.com" target="_blank" rel="noopener noreferrer" className="hub-link">Explore Tickydo ↗</a></article>
-  </div>
-  <WorkspaceDirectory/><details className="erp-preview-details" open={window.location.pathname==='/erp-preview'}><summary>Preview Tickydo ERP with sample data</summary><div className="erp-gallery">{[['dashboard','Dashboard'],['journal','Journal entries'],['reports','Trial balance']].map(([file,label])=><figure key={file}><img src={'/previews/erp-'+file+'.png'} alt={label+' with synthetic sample data'} loading="lazy"/><figcaption>{label} · illustrative sample data</figcaption></figure>)}</div></details>
+ <Section id="workstation" eyebrow="04 / TOOLS" title="TickyTools">
+  {activePage==='workstation'&&<Suspense fallback={<p role="status">Loading TickyTools…</p>}><TickyTools/></Suspense>}
  </Section>
  <Section id="contact" eyebrow="LET'S CONNECT" title="Have something in mind?"><p>I'm interested in conversations about accounting, audit and assurance, reporting, technology and entrepreneurship.</p><div className="contact-links"><a href="mailto:abdulowahab.jnu@gmail.com">Email ↗</a><a href="tel:+8801521577910">Phone ↗</a><a href="https://www.linkedin.com/in/abdulowahab/" target="_blank" rel="noopener noreferrer">LinkedIn ↗</a>{[['Facebook',content.social?.facebook],['Messenger',content.social?.messenger],['Instagram',content.social?.instagram]].filter(([,url])=>/^https:\/\//.test(url||'')).map(([name,url])=><a key={name} href={url} target="_blank" rel="noopener noreferrer">{name} ↗</a>)}</div></Section>
- </div></main><PortfolioAI/><nav className="mobile-bottom-nav" aria-label="Mobile quick navigation">{mobileDestinations.map(([label,page])=><a key={page} href={page==='profile'?'/':'/'+page} className={activePage===page?'is-active':''} aria-current={activePage===page?'page':undefined} onClick={e=>mobileNavigate(e,page)}><span className="bottom-nav-icon" aria-hidden="true">{({feed:'▣',profile:'♙',consultation:'✉',workstation:'▤',appointment:'▦'})[page]}</span><span>{label}</span></a>)}</nav><a className="back-to-top" href="#top" aria-label="Back to top">↑</a><footer className="footer" aria-label="Site footer">
+ </div></main>{activePage!=='workstation'&&<PortfolioAI/>}<nav className="mobile-bottom-nav" aria-label="Mobile quick navigation">{mobileDestinations.map(([label,page])=><a key={page} href={page==='profile'?'/':page==='workstation'?'/tickytools':'/'+page} className={activePage===page?'is-active':''} aria-current={activePage===page?'page':undefined} onClick={e=>mobileNavigate(e,page)}><span className="bottom-nav-icon" aria-hidden="true">{({feed:'▣',profile:'♙',consultation:'✉',workstation:'▤',appointment:'▦'})[page]}</span><span>{label}</span></a>)}</nav><a className="back-to-top" href="#top" aria-label="Back to top">↑</a><footer className="footer" aria-label="Site footer">
  <div className="footer-main">
   <div className="footer-intro"><a className="footer-identity" href="#top"><span className="footer-mark">{(content.name||'Abdul Owahab').trim().split(/\s+/).map(x=>x[0]).slice(0,2).join('').toUpperCase()}</span><span>{content.name||'Abdul Owahab'}</span></a><p>Audit &amp; Assurance professional, Chartered Accountancy student and technology co-founder. Grounded in accounting, assurance, practical innovation and meaningful collaboration.</p><span className="footer-location">Dhaka, Bangladesh</span></div>
   <div className="footer-column"><h3>Explore</h3><a href="#about">About</a><a href="#career">Experience</a><a href="#expertise">Expertise</a><a href="#projects">Projects</a><a href="#education">Education</a><a href="#updates">News Feed</a></div>
   <div className="footer-column"><h3>Projects</h3><a href="https://tickydo.com" target="_blank" rel="noopener noreferrer">Tickydo Ticketing ↗</a><a href="/erp/">Tickydo ERP ↗</a><a href="#projects">Other projects</a><a href="/admin">Admin login</a></div>
   <div className="footer-column"><h3>Connect</h3><a href="mailto:abdulowahab.jnu@gmail.com">Email me ↗</a><a href="https://www.linkedin.com/in/abdulowahab/" target="_blank" rel="noopener noreferrer">LinkedIn ↗</a><a href="#consultation">Contact / Request a meeting</a></div>
  </div>
- <div className="footer-bottom"><span>© {new Date().getFullYear()} {content.name||'Abdul Owahab'}. All rights reserved.</span><VisitorTraffic/></div>
+ <div className="footer-bottom"><span>© {new Date().getFullYear()} {content.name||'Abdul Owahab'}. All rights reserved.</span>{activePage!=='workstation'?<VisitorTraffic/>:<span>Local file processing · No document uploads</span>}</div>
  </footer></>
 }
 createRoot(document.getElementById('root')).render(<React.StrictMode><App/></React.StrictMode>);
