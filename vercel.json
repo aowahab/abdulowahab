@@ -6,8 +6,24 @@
       "destination": "/api/erp?route=:route*"
     },
     {
-      "source": "/:page(feed|profile|consultation|workstation|appointment)",
-      "destination": "/index.html"
+      "source": "/feed",
+      "destination": "/"
+    },
+    {
+      "source": "/profile",
+      "destination": "/"
+    },
+    {
+      "source": "/consultation",
+      "destination": "/"
+    },
+    {
+      "source": "/workstation",
+      "destination": "/"
+    },
+    {
+      "source": "/appointment",
+      "destination": "/"
     }
   ],
   "headers": [

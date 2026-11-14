@@ -7,7 +7,9 @@
     "dev": "vite",
     "build": "vite build",
     "preview": "vite preview",
-    "test:erp": "node --test erp/test/*.test.js"
+    "test:erp": "node --test erp/test/*.test.js",
+    "test:foundation": "node --test test/*.test.js",
+    "test": "npm run test:foundation && npm run test:erp"
   },
   "dependencies": {
     "@vercel/blob": "^2.0.0",
