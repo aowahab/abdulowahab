@@ -37,3 +37,12 @@ test('feed photos preserve full images on mobile without cropping',()=>{
  assert.match(css,/#updates \.update \.media img,[\s\S]*?object-fit:contain/);
  assert.match(css,/@media\(max-width:580px\)[\s\S]*?#updates \.update \.media img\{[\s\S]*?aspect-ratio:auto/);
 });
+
+test('social feed renders all posts chronologically without truncation',()=>{
+ assert.match(main,/sortedUpdates\.map\(\(p,i\)=>\s*<UpdateCard/);
+ assert.match(main,/sort\(\(a,b\)=>\(b\.date\|\|''\)\.localeCompare\(a\.date\|\|''\)\)/);
+ assert.match(main,/media\.map\(\(m,j\)=>/);
+ assert.match(main,/updates-social-feed/);
+ assert.match(css,/#updates \.updates-social-feed\{display:flex;flex-direction:column/);
+ assert.match(css,/feed-post-media img,[\s\S]*?object-fit:contain/);
+});
