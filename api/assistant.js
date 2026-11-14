@@ -66,7 +66,14 @@ function contextualFallback(messages) {
 function publicKnowledgeFallback(messages, content) {
  const question=messages.at(-1)?.content||'';
  const priorQuestions=messages.slice(0,-1).filter(m=>m.role==='user').map(m=>m.content).slice(-2).join(' ');
- const query=/^(more|details|elaborate|explain|আরও|আরো|বিস্তারিত|bolo|bolen|how|why|কি|কেন|কিভাবে|that|it|those|এটা|ওটা)/i.test(question.trim())?priorQuestions+' '+question:question;
+ const query=/^(more|details|elaborate|explain|আরও|আরো|বিস্তারিত|bolo|bolen|how|why|কি|কেন|কিভাবে|that|it|those|এটা|ওটা)\\b/i.test(question.trim())?priorQuestions+' '+question:question;
+ // Intent-first routing prevents unrelated profile sections from overriding a new request.
+ const intent=question.toLowerCase();
+ if(/\\b(recruit|recruiter|hiring|hire|job offer|interview|vacancy|niyog|niyog dite|chakri dite|recruit krte|recruit korte)\\b|নিয়োগ|নিয়োগ|চাকরির প্রস্তাব/i.test(intent)){
+  return prefersBangla(question)||/\\b(ami|chai|krte|korte|apnake|apnar)\\b/i.test(question)
+   ?'আপনি কি আব্দুল ওয়াহাবকে নিয়োগ দিতে আগ্রহী? কোন প্রতিষ্ঠান ও পদের জন্য যোগাযোগ করছেন? চাইলে Consultation সেকশনে প্রস্তাব পাঠাতে পারেন; আব্দুল নিজে পর্যালোচনা করবেন।'
+   :'Are you interested in recruiting Abdul Owahab? Which organization and role is this for? You can also submit the opportunity through Consultation for Abdul to review.';
+ }
  const lower=query.toLowerCase();
  const bangla=prefersBangla(query);
  const posts=(content.posts||[]).slice().sort((a,b)=>(b.date||'').localeCompare(a.date||''));
@@ -163,7 +170,7 @@ export async function POST(request){
  if(hasFields&&!prior.includes('[LEAD_CONSENT_REQUEST]'))return response({answer:'May I save your enquiry to Abdul’s private portfolio inbox? Reply exactly Yes, send or হ্যাঁ, পাঠান. [LEAD_CONSENT_REQUEST]',mode:'basic'});
   const key=process.env.OPENAI_API_KEY;
  try{const notified=await maybeNotify(messages,key);if(notified)return response(notified)}catch(e){console.error('Lead notification failed',e?.message);return response({answer:'Unable to send the enquiry via WhatsApp. Please email Abdul directly.',mode:'basic'})}
- if(!key)return response({answer:/(recruit|hiring|hire|client|collaborat|partnership|নিয়োগ|চাকরি|সহযোগিতা)/i.test(question.content)?'Please share your enquiry here in chat using Name: ..., Contact: ..., Details: ... (Organization: ... optional). I will ask for your consent before saving it to Abdul’s private inbox.':publicKnowledgeFallback(messages,content),mode:'basic'});
+ if(!key)return response({answer:publicKnowledgeFallback(messages,content),mode:'basic'});
  try{
   const controller=new AbortController();const timeout=setTimeout(()=>controller.abort(),20000);
   let upstream;
