@@ -67,6 +67,13 @@ function publicKnowledgeFallback(messages, content) {
  const question=messages.at(-1)?.content||'';
  const priorQuestions=messages.slice(0,-1).filter(m=>m.role==='user').map(m=>m.content).slice(-2).join(' ');
  const query=/^(more|details|elaborate|explain|আরও|আরো|বিস্তারিত|bolo|bolen|how|why|কি|কেন|কিভাবে|that|it|those|এটা|ওটা)\\b/i.test(question.trim())?priorQuestions+' '+question:question;
+ // Confidential client identities must never be returned by fallback.
+ if (/(audit|deloitte|engagement|অডিট|নিরীক্ষা)/i.test(query) &&
+     /(client names?|which clients?|name.*clients?|ক্লায়েন্টের নাম|ক্লায়েন্টের নাম|কোন.*কোম্পানি|কোন.*ক্লায়েন্ট)/i.test(query)) {
+  return prefersBangla(query)
+   ? 'অডিট ক্লায়েন্টদের নাম ও engagement-specific তথ্য গোপনীয়। তিনি manufacturing, paints and coatings, agrochemicals, healthcare research ও services খাতে কাজ করেছেন।'
+   : 'Audit client identities and engagement-specific information are confidential. Abdul has experience across manufacturing, paints and coatings, agrochemicals, healthcare research and services.';
+ }
  // Intent-first routing prevents unrelated profile sections from overriding a new request.
  const intent=question.toLowerCase();
  if(/\\b(recruit|recruiter|hiring|hire|job offer|interview|vacancy|niyog|niyog dite|chakri dite|recruit krte|recruit korte)\\b|নিয়োগ|নিয়োগ|চাকরির প্রস্তাব/i.test(intent)){
