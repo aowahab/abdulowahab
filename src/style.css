@@ -526,29 +526,33 @@ html[data-theme=light] .workspace-materiality-result{background:#e5f3f6;border-c
 @media(prefers-reduced-motion:reduce){.workspace-tool{transition:none!important}.workspace-tool:hover{transform:none!important}}
 
 
-/* Mobile app-style views: only the selected destination is scrollable. Desktop remains editorial. */
+/* Route-based portfolio: selected page only, shared across desktop and mobile. */
+html[data-active-page] .content-wrap>.section,
+html[data-active-page] .hero,
+html[data-active-page] .reference-breadcrumb,
+html[data-active-page] .reference-stats{display:none!important}
+html[data-active-page="profile"] .hero,
+html[data-active-page="profile"] .reference-breadcrumb,
+html[data-active-page="profile"] .reference-stats,
+html[data-active-page="profile"] .content-wrap>.section:not(#updates):not(#consultation):not(#workstation):not(#appointment){display:block!important}
+html[data-active-page="feed"] #updates,
+html[data-active-page="consultation"] #consultation,
+html[data-active-page="workstation"] #workstation,
+html[data-active-page="appointment"] #appointment{display:block!important}
+html[data-active-page] .content-wrap{min-height:calc(100dvh - 180px)}
+html[data-active-page] .content-wrap>.section{margin-top:0}
+html[data-active-page] .nav-links a.is-active{font-weight:800;color:var(--accent,#087da3)}
+html[data-active-page="feed"] #updates .updates{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,320px),1fr))}
+html[data-active-page="feed"] #updates .update-card{width:100%;max-width:100%}
+html[data-active-page] .section-heading{padding-top:18px}
+@media(min-width:768px){
+ html[data-active-page] .content-wrap{padding-top:28px}
+ html[data-active-page] .nav-links .nav-destination.is-active{border-bottom:2px solid currentColor}
+}
 @media(max-width:767px){
- html[data-mobile-page] .content-wrap>.section,
- html[data-mobile-page] .hero,
- html[data-mobile-page] .reference-breadcrumb,
- html[data-mobile-page] .reference-stats{display:none!important}
- html[data-mobile-page="profile"] .hero,
- html[data-mobile-page="profile"] .reference-breadcrumb,
- html[data-mobile-page="profile"] .reference-stats,
- html[data-mobile-page="profile"] .content-wrap>.section:not(#updates):not(#consultation):not(#workstation):not(#appointment){display:block!important}
- html[data-mobile-page="feed"] #updates,
- html[data-mobile-page="consultation"] #consultation,
- html[data-mobile-page="workstation"] #workstation,
- html[data-mobile-page="appointment"] #appointment{display:block!important}
- html[data-mobile-page] .content-wrap{min-height:calc(100dvh - 180px)}
- html[data-mobile-page] .content-wrap>.section{margin-top:0}
- html[data-mobile-page] .footer{display:none!important}
- html[data-mobile-page] .back-to-top{display:none!important}
- html[data-mobile-page] .mobile-bottom-nav a.is-active{color:#087da3;font-weight:800}
- html[data-mobile-page] .nav-links a.is-active{font-weight:800}
- html[data-mobile-page] #updates .updates{display:grid}
- html[data-mobile-page="feed"] #updates .updates{grid-template-columns:minmax(0,1fr)}
- html[data-mobile-page="feed"] #updates .update-card{width:100%;max-width:100%}
- html[data-mobile-page] .section-heading{padding-top:18px}
- html[data-mobile-page] #main{padding-bottom:85px}
+ html[data-active-page] .footer,
+ html[data-active-page] .back-to-top{display:none!important}
+ html[data-active-page] .mobile-bottom-nav a.is-active{color:#087da3;font-weight:800}
+ html[data-active-page="feed"] #updates .updates{grid-template-columns:minmax(0,1fr)}
+ html[data-active-page] #main{padding-bottom:85px}
 }
