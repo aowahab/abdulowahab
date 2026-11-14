@@ -271,7 +271,7 @@ function VisitorTraffic(){
   refresh();const interval=setInterval(refresh,60000);document.addEventListener('visibilitychange',refresh);
   return ()=>{active=false;clearInterval(interval);document.removeEventListener('visibilitychange',refresh)};
  },[]);
- return <div className="footer-traffic" aria-label="Website visitor statistics"><span><strong>{stats?.visitors?.toLocaleString('en-US')??'—'}</strong><small>Total visitors</small></span><span><i className="traffic-live-dot" aria-hidden="true"/><strong>{stats?.online?.toLocaleString('en-US')??'—'}</strong><small>Online now</small></span>{!stats&&<small className="traffic-unavailable">Visitor data unavailable</small>}</div>;
+ return <div className="footer-traffic" aria-label="Website visitor statistics"><span><strong>{stats?.visitors?.toLocaleString('en-US')??'—'}</strong><small>Visitor sessions</small></span><span><i className="traffic-live-dot" aria-hidden="true"/><strong>{stats?.online?.toLocaleString('en-US')??'—'}</strong><small>Online now</small></span>{!stats&&<small className="traffic-unavailable">Visitor data unavailable</small>}</div>;
 }
 function App(){
  const mobilePages=['feed','profile','consultation','workstation','appointment'];
