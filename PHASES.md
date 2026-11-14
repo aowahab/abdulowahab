@@ -18,7 +18,7 @@ A phase is complete only when its implementation, tests, preview validation, and
 
 ## Current release
 
-Last verified production promotion prior to this register: Vercel deployment dpl_AemiLeWxFAZ8b73UqYRKNVeRKXVF, commit bb272aba86037a320a1e449c1347002fc4794295. This register identifies gaps and does not mark all seven phases complete.
+Production was updated on 2026-11-14 to deployment dpl_93gWuy7KFkuSXfg7TTbUBosz3mBh, commit defed9e63b0089be0046310ab9d14c83a3da84f0. Vercel returned READY and the aowahab.vercel.app alias was confirmed to target that deployment. This is not proof that all seven phases are fully verified. Subsequent test-only commits must pass CI before any further release.
 
 ## Pre-deployment checklist (2026-11-14)
 
@@ -26,7 +26,7 @@ Last verified production promotion prior to this register: Vercel deployment dpl
 - [x] SEO metadata correctly describes Accounting and ICAB Professional Level.
 - [x] Traffic endpoint rejects invalid/oversized visitor payloads before touching database.
 - [x] Traffic counts are queried in one request; counter endpoint has no-store/noindex headers.
-- [ ] Latest integration branch CI must finish successfully after all commits.
+- [ ] Latest integration branch CI must finish successfully after all commits (prior production commit defed9e6 passed; newer security regression tests pending CI).
 - [ ] Test the real visitor counter against connected Neon PostgreSQL and verify two-minute online expiry.
 - [ ] Verify AI assistant overlay does not cover counters on narrow phones and desktop using screenshots.
 - [ ] Test admin login, session expiration, uploads and permissions with real configured services.
@@ -35,4 +35,4 @@ Last verified production promotion prior to this register: Vercel deployment dpl
 - [ ] Conduct performance, accessibility, browser and privacy/security regression tests.
 - [ ] Production deployment only when user-authorized and Vercel daily quota allows, followed by smoke tests.
 
-**Important:** Automated static checks alone cannot establish that a phase is fully complete. No deploy should be attempted while the quota blocker persists.
+**Important:** Automated static checks alone cannot establish that a phase is fully complete. Production deployment succeeded after the earlier quota issue; do not redeploy untested commits. Added direct API tests for malformed visitor sessions, cross-origin admin login and missing enquiry consent. Browser visual, configured-service and notification delivery checks remain outstanding.
