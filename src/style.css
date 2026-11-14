@@ -631,3 +631,22 @@ html[data-theme=light] .footer .footer-bottom{color:#d3e2f2}
  html:focus-within{scroll-behavior:auto}
  *,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}
 }
+
+/* Feed photos: show the entire uploaded image rather than cropping faces on mobile. */
+#updates .update .media img,
+#updates .updates-preview-layout .media img,
+#updates .updates-preview-layout .update-preview .media img{
+ object-fit:contain;
+ object-position:center;
+ background:#102a43;
+}
+@media(max-width:580px){
+ #updates .update .media img{
+  aspect-ratio:auto;
+  max-height:min(70vh,520px);
+ }
+ #updates .update .media>img:only-child{
+  width:100%;
+  height:auto;
+ }
+}
