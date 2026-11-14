@@ -18,7 +18,7 @@ test('traffic API requires session token and never invents metrics',async()=>{
   const result=await GET();assert.equal(result.status,503);
   assert.equal((await result.json()).available,false);
   const bad=await POST(new Request('http://localhost/api/traffic',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({visitorId:'bad'})}));
-  assert.equal(bad.status,503);
+  assert.equal(bad.status,400);
  }finally{if(old!==undefined)process.env.POSTGRES_URL=old;if(old2!==undefined)process.env.DATABASE_URL=old2}
 });
 test('responsive footer styling exists',()=>assert.match(css,/\.footer-traffic\{display:flex/));
