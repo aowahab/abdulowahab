@@ -266,8 +266,9 @@ function App(){
  const initialPage=()=>{const page=window.location.pathname.split('/').filter(Boolean)[0]?.toLowerCase();return mobilePages.includes(page)?page:'profile'};
  const [activePage,setActivePage]=useState(initialPage);
  useEffect(()=>{const sync=()=>setActivePage(initialPage());window.addEventListener('popstate',sync);return ()=>window.removeEventListener('popstate',sync)},[]);
- useEffect(()=>{document.documentElement.dataset.mobilePage=activePage;window.scrollTo(0,0)},[activePage]);
- const mobileNavigate=(event,page)=>{if(window.matchMedia('(max-width: 767px)').matches){event.preventDefault();window.history.pushState({},'',page==='profile'?'/':'/'+page);setActivePage(page);setMenu(false)}};
+ useEffect(()=>{document.documentElement.dataset.activePage=activePage;window.scrollTo(0,0)},[activePage]);
+ const mobileNavigate=(event,page)=>{event.preventDefault();if(activePage!==page){window.history.pushState({},'',page==='profile'?'/':'/'+page);setActivePage(page)}setMenu(false)};
+ useEffect(()=>{const onHashClick=event=>{const link=event.target.closest?.('a[href^="#"]');if(!link)return;const target=link.getAttribute('href');if(!target||target==='#')return;const page=target==='#updates'?'feed':target==='#workstation'?'workstation':target==='#consultation'?'consultation':target==='#appointment'?'appointment':'profile';if(activePage!==page){event.preventDefault();window.history.pushState({},'',(page==='profile'?'/':'/'+page)+target);setActivePage(page);requestAnimationFrame(()=>document.querySelector(target)?.scrollIntoView())}};document.addEventListener('click',onHashClick);return ()=>document.removeEventListener('click',onHashClick)},[activePage]);
  const mobileDestinations=[['Updates/Feed','feed'],['Profile','profile'],['Consultation','consultation'],['Workstation','workstation'],['Appointment','appointment']];
  const [content,setContent]=useState(fallback);
  const [menu,setMenu]=useState(false);
