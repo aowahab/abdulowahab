@@ -7,23 +7,23 @@
     },
     {
       "source": "/feed",
-      "destination": "/index.html"
+      "destination": "/"
     },
     {
       "source": "/profile",
-      "destination": "/index.html"
+      "destination": "/"
     },
     {
       "source": "/consultation",
-      "destination": "/index.html"
+      "destination": "/"
     },
     {
       "source": "/workstation",
-      "destination": "/index.html"
+      "destination": "/"
     },
     {
       "source": "/appointment",
-      "destination": "/index.html"
+      "destination": "/"
     }
   ],
   "headers": [
