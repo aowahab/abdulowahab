@@ -41,3 +41,12 @@ Git-triggered deployment is currently disabled in `vercel.json`; deployments mus
 The panel refreshes every 15 minutes while visible. The server caches successful results for 15 minutes, filters out stories older than 90 days or undated items, deduplicates headlines and caps the list at 40. Source timeouts and failures show a partial/unavailable state; no fabricated headlines are substituted. Coverage depends on the publishers' available RSS entries. Original NBR, ICAB and IFRS links are provided for checking authoritative notices.
 
 The scrolling headline strip supports pause, hover/focus pause and reduced-motion preferences. Personal-post photos use square `object-fit: cover` thumbnails. Clicking a photo opens its original full-resolution file.
+
+## TickyTools
+
+Workstation tools open directly beneath their own cards, one panel at a time. Existing calculators and checklists remain available. PDF libraries load only when the relevant tools are opened or used.
+
+- **Image to PDF:** local JPG/PNG/WebP input, up to 20 files (20 MB each, 60 MB total), reorder/remove controls, portrait/landscape A4, one fitted image per page and direct PDF download. Images are resized to a maximum dimension of 2400 pixels for manageable output.
+- **Word to PDF:** local, unencrypted DOCX input up to 10 MB. Mammoth extracts document content; DOMPurify removes unsafe markup and remote images. Visitors review the document, open its print window, then select Save as PDF. Legacy DOC files and exact Word page-layout reproduction are not supported.
+
+File contents stay in the browser; neither conversion uploads documents. Official government, financial and reference services remain separate external links.
