@@ -263,7 +263,7 @@ function WorkspaceDirectory(){
 }
 function App(){
  const mobilePages=['feed','profile','consultation','workstation','appointment'];
- const initialPage=()=>{const page=window.location.pathname.replace(/^\\/+|\\/+$/g,'').toLowerCase();return mobilePages.includes(page)?page:'profile'};
+ const initialPage=()=>{const page=window.location.pathname.split('/').filter(Boolean)[0]?.toLowerCase();return mobilePages.includes(page)?page:'profile'};
  const [activePage,setActivePage]=useState(initialPage);
  useEffect(()=>{const sync=()=>setActivePage(initialPage());window.addEventListener('popstate',sync);return ()=>window.removeEventListener('popstate',sync)},[]);
  useEffect(()=>{document.documentElement.dataset.mobilePage=activePage;window.scrollTo(0,0)},[activePage]);
