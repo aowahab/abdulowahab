@@ -33,9 +33,10 @@ test('AI retains safe provider fallback and bounded input',()=>{
  assert.match(assistant,/AbortController/);
 });
 
-test('feed photos preserve full images on mobile without cropping',()=>{
- assert.match(css,/#updates \.update \.media img,[\s\S]*?object-fit:contain/);
- assert.match(css,/@media\(max-width:580px\)[\s\S]*?#updates \.update \.media img\{[\s\S]*?aspect-ratio:auto/);
+test('feed photos use square filled previews while retaining original links',()=>{
+ assert.match(css,/aspect-ratio:1\/1/);
+ assert.match(css,/object-fit:cover!important/);
+ assert.match(main,/Open full photo:/);
 });
 
 test('social feed renders all posts chronologically without truncation',()=>{

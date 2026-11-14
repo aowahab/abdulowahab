@@ -33,3 +33,11 @@ Git-triggered deployment is currently disabled in `vercel.json`; deployments mus
 ## Verification
 
 `npm test` covers portfolio session parsing, content compatibility and normalization, and ERP authentication, database and finance behavior. Browser checks cover desktop/mobile routes, overflow, menu interaction, legacy URLs, optional meeting fields, and form success/reset with a mocked API response. Actual delivery to the production private inbox must be checked on the deployed environment.
+
+## Professional News Feed
+
+`/feed` includes personal posts and an Audit / Accounting / Tax / VAT headline panel. `/api/news` reads publisher RSS feeds from The Daily Star (Tax and Customs), The Business Standard (Economy), IFAC, and Accounting Today. Each headline shows its publisher, publication date, topic and region, with a link to the original article. International and US stories are labelled separately from Bangladesh news; they do not establish Bangladesh law.
+
+The panel refreshes every 15 minutes while visible. The server caches successful results for 15 minutes, filters out stories older than 90 days or undated items, deduplicates headlines and caps the list at 40. Source timeouts and failures show a partial/unavailable state; no fabricated headlines are substituted. Coverage depends on the publishers' available RSS entries. Original NBR, ICAB and IFRS links are provided for checking authoritative notices.
+
+The scrolling headline strip supports pause, hover/focus pause and reduced-motion preferences. Personal-post photos use square `object-fit: cover` thumbnails. Clicking a photo opens its original full-resolution file.

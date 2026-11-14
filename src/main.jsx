@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { createRoot } from 'react-dom/client';
 import './style.css';
+import ProfessionalNews from './ProfessionalNews.jsx';
 import { PROFILE } from '../shared/profile.js';
 import { PROJECTS } from '../shared/projects.js';
 import { publicContentOnly } from '../shared/public-content.js';
@@ -296,7 +297,7 @@ function App(){
  useEffect(()=>{document.documentElement.dataset.activePage=activePage;window.scrollTo(0,0)},[activePage]);
  const mobileNavigate=(event,page)=>{event.preventDefault();if(activePage!==page){window.history.pushState({},'',page==='profile'?'/':'/'+page);setActivePage(page)}setMenu(false)};
  useEffect(()=>{const onHashClick=event=>{const link=event.target.closest?.('a[href^="#"]');if(!link)return;const requestedTarget=link.getAttribute('href');const target=requestedTarget==='#appointment'?'#consultation':requestedTarget;if(!target||target==='#')return;const page=target==='#updates'?'feed':target==='#workstation'?'workstation':target==='#consultation'?'consultation':'profile';if(activePage!==page){event.preventDefault();window.history.pushState({},'',(page==='profile'?'/':'/'+page)+target);setActivePage(page);requestAnimationFrame(()=>document.querySelector(target)?.scrollIntoView())}};document.addEventListener('click',onHashClick);return ()=>document.removeEventListener('click',onHashClick)},[activePage]);
- const mobileDestinations=[['Profile','profile'],['Updates/Feed','feed'],['Workstation','workstation'],['Appointment','consultation']];
+ const mobileDestinations=[['Profile','profile'],['News Feed','feed'],['Workstation','workstation'],['Appointment','consultation']];
  const [content,setContent]=useState(fallback);
  const profile={...PROFILE,...content.profile};
  const [menu,setMenu]=useState(false);
@@ -319,8 +320,9 @@ function App(){
  {!ids.has('experience')&&<Section id="experience" eyebrow="EXPERTISE" title="Professional experience"><p>Working across statutory and group audit engagements at Deloitte Bangladesh, with exposure to a range of sectors and financial statement areas.</p><dl className="detail-list">{experience.map(([a,b])=><div key={a}><dt>{a}</dt><dd>{b}</dd></div>)}</dl></Section>}
  {!ids.has('projects')&&<Section id="projects" eyebrow="SELECTED WORK" title="Projects & ventures"><div className="project-grid">{projects.map((p,i)=><article className="project-card" key={p.title}><span className="project-number">0{i+1} / {p.tag}</span><h3>{p.title}</h3><p>{p.body}</p>{p.url&&<a href={p.url} target="_blank" rel="noopener noreferrer">{p.cta} ↗</a>}</article>)}</div></Section>}
  {!ids.has('education')&&<Section id="education" eyebrow="BACKGROUND" title="Education & development"><p>BBA in Accounting & Information Systems from Jagannath University, Dhaka. Pursuing Chartered Accountancy at ICAB Professional Level.</p></Section>}
- <Section id="updates" eyebrow="01 / FEED" title="Updates & Feed">
-  <div className="hub-intro"><p>Posts, photos and milestones from my work, professional learning and technology projects.</p><span>{sortedUpdates.length} {sortedUpdates.length===1?'update':'updates'}</span></div>
+ <Section id="updates" eyebrow="01 / FEED" title="News Feed">
+  {activePage==='feed'&&<ProfessionalNews/>}
+  <div className="hub-intro"><p>Personal posts, photos and professional milestones.</p><span>{sortedUpdates.length} {sortedUpdates.length===1?'update':'updates'}</span></div>
   {sortedUpdates.length>0?<div className="updates updates-social-feed" aria-label="Latest updates, newest first">
    {sortedUpdates.map((p,i)=><UpdateCard key={p.id||i} post={p} featured={i===0} authorName={content.name||'Abdul Owahab'} avatarUrl={content.avatarUrl||''}/>)}
   </div>:<div className="hub-empty">No public updates yet. New posts and photos published from the Admin Panel will appear here.</div>}
@@ -344,7 +346,7 @@ function App(){
  </div></main><PortfolioAI/><nav className="mobile-bottom-nav" aria-label="Mobile quick navigation">{mobileDestinations.map(([label,page])=><a key={page} href={page==='profile'?'/':'/'+page} className={activePage===page?'is-active':''} aria-current={activePage===page?'page':undefined} onClick={e=>mobileNavigate(e,page)}><span className="bottom-nav-icon" aria-hidden="true">{({feed:'▣',profile:'♙',consultation:'✉',workstation:'▤',appointment:'▦'})[page]}</span><span>{label}</span></a>)}</nav><a className="back-to-top" href="#top" aria-label="Back to top">↑</a><footer className="footer" aria-label="Site footer">
  <div className="footer-main">
   <div className="footer-intro"><a className="footer-identity" href="#top"><span className="footer-mark">{(content.name||'Abdul Owahab').trim().split(/\s+/).map(x=>x[0]).slice(0,2).join('').toUpperCase()}</span><span>{content.name||'Abdul Owahab'}</span></a><p>Audit &amp; Assurance professional, Chartered Accountancy student and technology co-founder. Grounded in accounting, assurance, practical innovation and meaningful collaboration.</p><span className="footer-location">Dhaka, Bangladesh</span></div>
-  <div className="footer-column"><h3>Explore</h3><a href="#about">About</a><a href="#career">Experience</a><a href="#expertise">Expertise</a><a href="#projects">Projects</a><a href="#education">Education</a><a href="#updates">Updates &amp; Feed</a></div>
+  <div className="footer-column"><h3>Explore</h3><a href="#about">About</a><a href="#career">Experience</a><a href="#expertise">Expertise</a><a href="#projects">Projects</a><a href="#education">Education</a><a href="#updates">News Feed</a></div>
   <div className="footer-column"><h3>Projects</h3><a href="https://tickydo.com" target="_blank" rel="noopener noreferrer">Tickydo Ticketing ↗</a><a href="/erp/">Tickydo ERP ↗</a><a href="#projects">Other projects</a><a href="/admin">Admin login</a></div>
   <div className="footer-column"><h3>Connect</h3><a href="mailto:abdulowahab.jnu@gmail.com">Email me ↗</a><a href="https://www.linkedin.com/in/abdulowahab/" target="_blank" rel="noopener noreferrer">LinkedIn ↗</a><a href="#consultation">Contact / Request a meeting</a></div>
  </div>

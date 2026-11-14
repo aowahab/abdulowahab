@@ -917,3 +917,48 @@ html[data-active-page] .content-wrap>.section>.section-heading h2{
   gap:clamp(8px,.8vw,14px);
  }
 }
+
+/* Professional headlines and a compact, independently scrollable news box. */
+.professional-news{border:1px solid #aec3b0;border-radius:16px;background:#f5f8f2;overflow:hidden;margin-bottom:30px;color:#16334b}
+.news-box-heading{padding:22px;display:flex;align-items:start;justify-content:space-between;gap:15px}
+.news-box-heading h3{font-size:22px;line-height:1.3;margin:7px 0}
+.news-box-heading p,.news-box-footer p{font-size:12px;line-height:1.6;margin:5px 0;color:#4b655f}
+.news-box-heading button,.news-ticker button,.news-filters button{font:inherit;font-size:12px;border:1px solid #b4c9be;border-radius:7px;padding:8px 12px;background:#fff;color:#16334b;cursor:pointer}
+.news-box-heading button:disabled{opacity:.6;cursor:wait}
+.news-ticker{display:flex;align-items:center;gap:12px;padding:12px;background:#102b49;color:#fff}
+.news-ticker-label{font-size:10px;letter-spacing:.1em;font-weight:750;flex-shrink:0}
+.news-ticker-window{overflow:hidden;min-width:0;flex:1}
+.news-ticker-track{display:flex;width:max-content;animation:news-scroll 100s linear infinite}
+.news-ticker-group{display:flex;align-items:center;gap:32px;padding-right:32px}
+.news-ticker-group a{white-space:nowrap;font-size:13px;text-decoration:none}
+.news-ticker-group a span{color:#b8d5e4}
+.news-ticker-track.is-paused,.news-ticker:hover .news-ticker-track,.news-ticker:focus-within .news-ticker-track{animation-play-state:paused}
+.news-ticker button{flex-shrink:0;background:#214965;color:#fff;border-color:#557e99}
+@keyframes news-scroll{to{transform:translateX(-50%)}}
+.news-filters{display:flex;gap:8px;flex-wrap:wrap;padding:18px 22px 12px}
+.news-filters button[aria-pressed=true]{background:#163b53;color:#fff;border-color:#163b53}
+.news-status{font-size:13px;padding:0 22px 14px;margin:0}
+.news-list{max-height:440px;overflow-y:auto;overscroll-behavior:contain;scrollbar-gutter:stable;padding:0 22px}
+.news-list ul{list-style:none;padding:0;margin:0}
+.news-list li{padding:17px 0;border-bottom:1px solid #d2dfd5}
+.news-item-meta{display:flex;justify-content:space-between;gap:12px;font-size:11px;line-height:1.5;color:#527263}
+.news-headline{display:block;font-size:16px;font-weight:650;line-height:1.5;margin-top:7px;text-decoration:none}
+.news-headline:hover{text-decoration:underline}
+.news-list li>p{font-size:12px;line-height:1.5;margin:7px 0 0;color:#536f6a}
+.news-box-footer{padding:16px 22px;border-top:1px solid #d2dfd5}
+.official-news-links{display:flex;gap:18px;flex-wrap:wrap;font-size:12px;font-weight:650;margin-top:10px}
+@media(prefers-reduced-motion:reduce){.news-ticker-track{animation:none}.news-ticker-window{overflow-x:auto}.news-ticker-group[aria-hidden=true]{display:none}}
+@media(max-width:600px){.news-box-heading{padding:16px}.news-box-heading h3{font-size:19px}.news-ticker{gap:8px}.news-ticker-label{display:none}.news-filters{padding:14px 16px}.news-list{padding:0 16px;max-height:400px}.news-box-footer{padding:14px 16px}.news-item-meta{flex-wrap:wrap}}
+
+/* Filled square thumbnails; full-resolution originals remain one click away. */
+#updates .updates-social-feed .feed-post-media .feed-photo-link{
+ aspect-ratio:1/1;height:auto!important;min-height:0;grid-column:auto!important;
+}
+#updates .updates-social-feed .feed-post-media.feed-media-count-1 .feed-photo-link{width:min(100%,520px);justify-self:center}
+#updates .updates-social-feed .feed-post-media .feed-photo-link img{width:100%;height:100%;max-height:none;aspect-ratio:1/1;object-fit:cover!important;object-position:center}
+.professional-news .hub-kicker{color:#426d5c}
+html[data-theme=light] #updates .updates-social-feed .feed-post h3{color:#f5faff}
+html[data-theme=light] #updates .updates-social-feed .feed-post-body,
+html[data-theme=light] #updates .updates-social-feed .feed-post-body p,
+html[data-theme=light] #updates .updates-social-feed .feed-post-body dd{color:#d5e5ef}
+html[data-theme=light] #updates .updates-social-feed .feed-post-body a{color:#a9dbff}
