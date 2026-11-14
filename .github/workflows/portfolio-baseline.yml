@@ -1,7 +1,7 @@
 name: Portfolio baseline CI
 on:
   push:
-    branches: ['foundation/**', 'feature/phase-2-*', 'fix/mobile-feed-photo-*', 'feature/facebook-style-feed-*', 'fix/desktop-balanced-layout-*', 'feature/footer-live-traffic-*']
+    branches: ['foundation/**', 'feature/phase-2-*', 'fix/mobile-feed-photo-*', 'feature/facebook-style-feed-*', 'fix/desktop-balanced-layout-*', 'feature/footer-live-traffic-*', 'fix/footer-traffic-ai-overlap-*']
   pull_request:
     branches: [main]
   workflow_dispatch:
