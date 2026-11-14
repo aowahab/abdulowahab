@@ -32,3 +32,8 @@ test('AI retains safe provider fallback and bounded input',()=>{
  assert.match(assistant,/Invalid messages/);
  assert.match(assistant,/AbortController/);
 });
+
+test('feed photos preserve full images on mobile without cropping',()=>{
+ assert.match(css,/#updates \.update \.media img,[\s\S]*?object-fit:contain/);
+ assert.match(css,/@media\(max-width:580px\)[\s\S]*?#updates \.update \.media img\{[\s\S]*?aspect-ratio:auto/);
+});
