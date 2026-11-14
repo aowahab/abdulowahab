@@ -43,8 +43,8 @@ function Engagements(){const [filter,setFilter]=useState('All');const [open,setO
 function CareerTimeline(){return <div className="career-timeline"><article className="career-entry"><span className="career-dot"/><div className="career-card"><h3>Deloitte Bangladesh</h3><p>Audit & Assurance</p><strong>December 2024 – Present</strong><div className="career-role"><h4>Senior Associate</h4><p>December 2025 – Present</p><p>Statutory and group audits, financial statement testing, documentation and coordination of junior team members.</p></div><div className="career-role"><h4>Audit Associate</h4><p>December 2024 – December 2025</p><p>Audit fieldwork, substantive testing and working paper preparation.</p></div></div></article></div>}
 function TrainingCards(){return <div className="training-grid" aria-label="Professional training and qualification progress">{[['Audit & Assurance','Statutory audit','Group audit','Risk assessment and substantive testing'],['Financial Reporting','IFRS and IAS application','Financial statement analysis'],['Data & Technology','Advanced Excel','Deloitte Omnia','Levvia'],['Professional Development','ICAB Professional Level — in progress (not yet a qualified CA)','Accounting and business law']].map(([category,...items])=><article className="training-card" key={category}><h3>{category}</h3>{items.map(item=><p key={item}>{item}</p>)}</article>)}</div>}
 function Enquiry(){const [name,setName]=useState('');const [email,setEmail]=useState('');const [topic,setTopic]=useState('Professional enquiry');const [message,setMessage]=useState('');const send=e=>{e.preventDefault();const body='Name: '+name+'\nEmail: '+email+'\n\n'+message;window.location.href='mailto:abdulowahab.jnu@gmail.com?subject='+encodeURIComponent(topic)+'&body='+encodeURIComponent(body)};return <form className="enquiry-form" onSubmit={send}><p>Request a professional discussion or collaboration. Your email app will open to review and send the message.</p><label>Full name *<input required value={name} onChange={e=>setName(e.target.value)}/></label><label>Email *<input required type="email" value={email} onChange={e=>setEmail(e.target.value)}/></label><label>Topic<select value={topic} onChange={e=>setTopic(e.target.value)}><option>Professional enquiry</option><option>Audit and finance discussion</option><option>Technology collaboration</option><option>Tickydo partnership</option><option>Meeting request</option></select></label><label>Message *<textarea required rows="5" value={message} onChange={e=>setMessage(e.target.value)}/></label><button className="button primary" type="submit">Review and send enquiry</button><p className="muted-note">No booking is confirmed automatically. This form does not store your information.</p></form>}
-function ContactRequest({mode='consultation'}) {
- const appointment=mode==='appointment';
+function ContactRequest({initialMeeting=false}) {
+ const [appointment,setAppointment]=useState(initialMeeting);
  const [v,setV]=useState({name:'',organization:'',contact:'',details:'',preferredDate:'',preferredTime:'',timezone:'Asia/Dhaka',leadType:'client',consent:false,website:''});
  const [status,setStatus]=useState('');
  const [busy,setBusy]=useState(false);
@@ -66,6 +66,7 @@ function ContactRequest({mode='consultation'}) {
   finally{setBusy(false);}
  };
  return <form className="quick-request" onSubmit={submit}>
+  <label className="meeting-option"><input type="checkbox" checked={appointment} onChange={e=>{setAppointment(e.target.checked);setStatus('')}}/> I would like to suggest a meeting time</label>
   <div className="request-fields">
    <label>Full name *<input type="text" required maxLength={120} value={v.name} onChange={e=>update('name',e.target.value)} placeholder="Your name"/></label>
    <label>Email or phone *<input type="text" required minLength={5} maxLength={200} value={v.contact} onChange={e=>update('contact',e.target.value)} placeholder="How to reach you"/></label>
@@ -80,7 +81,7 @@ function ContactRequest({mode='consultation'}) {
   </div>
   <input className="lead-honeypot" aria-hidden="true" tabIndex={-1} autoComplete="off" value={v.website} onChange={e=>update('website',e.target.value)}/>
   <label className="request-consent"><input type="checkbox" checked={v.consent} required onChange={e=>update('consent',e.target.checked)}/> I consent to sharing these details privately for follow-up.</label>
-  <button className="request-submit" type="submit" disabled={busy}>{busy?'Sending…':appointment?'Request appointment':'Send consultation enquiry'}</button>
+  <button className="request-submit" type="submit" disabled={busy}>{busy?'Sending…':appointment?'Request appointment':'Send enquiry'}</button>
   {status&&<p className="request-status" role="status">{status}</p>}
   <p className="request-note">{appointment?'Date and time are preferences only; no appointment is booked until confirmed.':'Enquiries are stored privately for follow-up. No professional service or fee is promised.'}</p>
  </form>;
@@ -280,8 +281,8 @@ function SelectedProjects({cases=PROJECTS}){
  return <div className="case-studies">{publicContentOnly(cases).map((p,i)=><article className="case-study" key={p.title}><span className="eyebrow">0{i+1} / {p.tag}</span><h3>{p.title}</h3><ol className="project-flow" aria-label={p.title+' workflow'}>{p.flow.map(step=><li key={step}>{step}</li>)}</ol><p className="diagram-caption">Illustrative workflow</p><dl><div><dt>Purpose</dt><dd>{p.problem}</dd></div><div><dt>Contribution</dt><dd>{p.contribution}</dd></div><div><dt>Current state</dt><dd>{p.result}</dd></div></dl><a className="hub-link" href={p.link} {...(p.link.startsWith('https:')?{target:'_blank',rel:'noopener noreferrer'}:{})}>{p.cta} ↗</a>{i===0&&<p className="muted-note">Business records require sign-in. <a href="/erp-preview">See application screenshots</a> before opening the workspace.</p>}</article>)}</div>;
 }
 function App(){
- const mobilePages=['feed','profile','consultation','workstation','appointment'];
- const initialPage=()=>{const route=window.location.pathname.split('/').filter(Boolean)[0]?.toLowerCase();const page=({contact:'consultation',resources:'workstation','erp-preview':'workstation'})[route]||route;return mobilePages.includes(page)?page:'profile'};
+ const mobilePages=['feed','profile','consultation','workstation'];
+ const initialPage=()=>{const route=window.location.pathname.split('/').filter(Boolean)[0]?.toLowerCase();const page=({contact:'consultation',appointment:'consultation',resources:'workstation','erp-preview':'workstation'})[route]||route;return mobilePages.includes(page)?page:'profile'};
  const [activePage,setActivePage]=useState(initialPage);
  useEffect(()=>{
   const nav=document.querySelector('header.nav');
@@ -294,8 +295,8 @@ function App(){
  useEffect(()=>{const sync=()=>setActivePage(initialPage());window.addEventListener('popstate',sync);return ()=>window.removeEventListener('popstate',sync)},[]);
  useEffect(()=>{document.documentElement.dataset.activePage=activePage;window.scrollTo(0,0)},[activePage]);
  const mobileNavigate=(event,page)=>{event.preventDefault();if(activePage!==page){window.history.pushState({},'',page==='profile'?'/':'/'+page);setActivePage(page)}setMenu(false)};
- useEffect(()=>{const onHashClick=event=>{const link=event.target.closest?.('a[href^="#"]');if(!link)return;const target=link.getAttribute('href');if(!target||target==='#')return;const page=target==='#updates'?'feed':target==='#workstation'?'workstation':target==='#consultation'?'consultation':target==='#appointment'?'appointment':'profile';if(activePage!==page){event.preventDefault();window.history.pushState({},'',(page==='profile'?'/':'/'+page)+target);setActivePage(page);requestAnimationFrame(()=>document.querySelector(target)?.scrollIntoView())}};document.addEventListener('click',onHashClick);return ()=>document.removeEventListener('click',onHashClick)},[activePage]);
- const mobileDestinations=[['Updates/Feed','feed'],['Profile','profile'],['Consultation','consultation'],['Workstation','workstation'],['Appointment','appointment']];
+ useEffect(()=>{const onHashClick=event=>{const link=event.target.closest?.('a[href^="#"]');if(!link)return;const requestedTarget=link.getAttribute('href');const target=requestedTarget==='#appointment'?'#consultation':requestedTarget;if(!target||target==='#')return;const page=target==='#updates'?'feed':target==='#workstation'?'workstation':target==='#consultation'?'consultation':'profile';if(activePage!==page){event.preventDefault();window.history.pushState({},'',(page==='profile'?'/':'/'+page)+target);setActivePage(page);requestAnimationFrame(()=>document.querySelector(target)?.scrollIntoView())}};document.addEventListener('click',onHashClick);return ()=>document.removeEventListener('click',onHashClick)},[activePage]);
+ const mobileDestinations=[['Updates/Feed','feed'],['Profile','profile'],['Appointment','consultation'],['Workstation','workstation']];
  const [content,setContent]=useState(fallback);
  const profile={...PROFILE,...content.profile};
  const [menu,setMenu]=useState(false);
@@ -324,11 +325,11 @@ function App(){
    {sortedUpdates.map((p,i)=><UpdateCard key={p.id||i} post={p} featured={i===0} authorName={content.name||'Abdul Owahab'} avatarUrl={content.avatarUrl||''}/>)}
   </div>:<div className="hub-empty">No public updates yet. New posts and photos published from the Admin Panel will appear here.</div>}
  </Section>
- <Section id="consultation" eyebrow="03 / DISCUSS" title="Consultation">
-  <div className="hub-intro"><p>For professional conversations, recruitment opportunities, knowledge exchange and technology collaboration.</p></div>
+ <Section id="consultation" eyebrow="03 / CONNECT" title="Consultation & Appointment">
+  <div className="hub-intro"><p>Send a professional enquiry or suggest a meeting time for career opportunities, knowledge exchange and technology collaboration.</p></div>
   <div className="hub-shell">
    <div className="hub-detail"><span className="hub-kicker">START A CONVERSATION</span><h3>Discuss an idea or opportunity</h3><p>Share the scope of your question or proposal. I can review relevant enquiries and respond directly where appropriate.</p><div className="hub-tags"><span>Professional discussion</span><span>Career opportunities</span><span>Technology & projects</span></div><p className="hub-caution">This is an enquiry channel, not an offer of independent regulated audit or tax services.</p></div>
-   <ContactRequest mode="consultation"/>
+   <ContactRequest initialMeeting={window.location.pathname==='/appointment'||window.location.hash==='#appointment'}/>
   </div>
  </Section>
  <Section id="workstation" eyebrow="04 / TOOLS" title="Workstation">
@@ -339,22 +340,15 @@ function App(){
   </div>
   <WorkspaceDirectory/><details className="erp-preview-details" open={window.location.pathname==='/erp-preview'}><summary>Preview Tickydo ERP with sample data</summary><div className="erp-gallery">{[['dashboard','Dashboard'],['journal','Journal entries'],['reports','Trial balance']].map(([file,label])=><figure key={file}><img src={'/previews/erp-'+file+'.png'} alt={label+' with synthetic sample data'} loading="lazy"/><figcaption>{label} · illustrative sample data</figcaption></figure>)}</div></details>
  </Section>
- <Section id="appointment" eyebrow="05 / MEET" title="Appointment">
-  <div className="hub-intro"><p>Prefer a scheduled conversation? Send your requested date, time and purpose for review.</p></div>
-  <div className="hub-shell">
-   <div className="hub-detail"><span className="hub-kicker">MEETING REQUEST</span><h3>Propose a time to connect</h3><p>Request a discussion about a career opportunity, partnership or project. Your preferred time will be shared privately, not automatically booked.</p><div className="hub-tags"><span>Online discussion</span><span>Time-zone aware request</span><span>Private follow-up</span></div><p className="hub-caution">Availability is not confirmed here. Please wait for a personal response before considering the meeting scheduled.</p></div>
-   <ContactRequest mode="appointment"/>
-  </div>
- </Section>
  <Section id="contact" eyebrow="LET'S CONNECT" title="Have something in mind?"><p>I'm interested in conversations about accounting, audit and assurance, reporting, technology and entrepreneurship.</p><div className="contact-links"><a href="mailto:abdulowahab.jnu@gmail.com">Email ↗</a><a href="tel:+8801521577910">Phone ↗</a><a href="https://www.linkedin.com/in/abdulowahab/" target="_blank" rel="noopener noreferrer">LinkedIn ↗</a>{[['Facebook',content.social?.facebook],['Messenger',content.social?.messenger],['Instagram',content.social?.instagram]].filter(([,url])=>/^https:\/\//.test(url||'')).map(([name,url])=><a key={name} href={url} target="_blank" rel="noopener noreferrer">{name} ↗</a>)}</div></Section>
  </div></main><PortfolioAI/><nav className="mobile-bottom-nav" aria-label="Mobile quick navigation">{mobileDestinations.map(([label,page])=><a key={page} href={page==='profile'?'/':'/'+page} className={activePage===page?'is-active':''} aria-current={activePage===page?'page':undefined} onClick={e=>mobileNavigate(e,page)}><span className="bottom-nav-icon" aria-hidden="true">{({feed:'▣',profile:'♙',consultation:'✉',workstation:'▤',appointment:'▦'})[page]}</span><span>{label}</span></a>)}</nav><a className="back-to-top" href="#top" aria-label="Back to top">↑</a><footer className="footer" aria-label="Site footer">
  <div className="footer-main">
   <div className="footer-intro"><a className="footer-identity" href="#top"><span className="footer-mark">{(content.name||'Abdul Owahab').trim().split(/\s+/).map(x=>x[0]).slice(0,2).join('').toUpperCase()}</span><span>{content.name||'Abdul Owahab'}</span></a><p>Audit &amp; Assurance professional, Chartered Accountancy student and technology co-founder. Grounded in accounting, assurance, practical innovation and meaningful collaboration.</p><span className="footer-location">Dhaka, Bangladesh</span></div>
   <div className="footer-column"><h3>Explore</h3><a href="#about">About</a><a href="#career">Experience</a><a href="#expertise">Expertise</a><a href="#projects">Projects</a><a href="#education">Education</a><a href="#updates">Updates &amp; Feed</a></div>
-  <div className="footer-column"><h3>Projects</h3><a href="https://tickydo.com" target="_blank" rel="noopener noreferrer">Tickydo Ticketing ↗</a><a href="/erp/">Tickydo ERP ↗</a><a href="#projects">Other projects</a></div>
-  <div className="footer-column"><h3>Connect</h3><a href="mailto:abdulowahab.jnu@gmail.com">Email me ↗</a><a href="https://www.linkedin.com/in/abdulowahab/" target="_blank" rel="noopener noreferrer">LinkedIn ↗</a><a href="#consultation">Consultation enquiry</a><a href="#appointment">Appointment request</a></div>
+  <div className="footer-column"><h3>Projects</h3><a href="https://tickydo.com" target="_blank" rel="noopener noreferrer">Tickydo Ticketing ↗</a><a href="/erp/">Tickydo ERP ↗</a><a href="#projects">Other projects</a><a href="/admin">Admin login</a></div>
+  <div className="footer-column"><h3>Connect</h3><a href="mailto:abdulowahab.jnu@gmail.com">Email me ↗</a><a href="https://www.linkedin.com/in/abdulowahab/" target="_blank" rel="noopener noreferrer">LinkedIn ↗</a><a href="#consultation">Contact / Request a meeting</a></div>
  </div>
- <div className="footer-bottom"><span>© {new Date().getFullYear()} {content.name||'Abdul Owahab'}. All rights reserved.</span><VisitorTraffic/><a href="/admin">Admin login</a></div>
+ <div className="footer-bottom"><span>© {new Date().getFullYear()} {content.name||'Abdul Owahab'}. All rights reserved.</span><VisitorTraffic/></div>
  </footer></>
 }
 createRoot(document.getElementById('root')).render(<React.StrictMode><App/></React.StrictMode>);

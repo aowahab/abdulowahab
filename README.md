@@ -1,6 +1,6 @@
 # Abdul Owahab portfolio
 
-React and Vite portfolio preserving the production five-page layout, editable content, full footer, visitor statistics and Admin access, with optional project case studies. Vercel Functions serve the API; Blob stores portfolio content and PostgreSQL stores enquiries and ERP records.
+React and Vite portfolio preserving the production layout, editable content, full footer, visitor statistics and Admin access, with optional project case studies. Vercel Functions serve the API; Blob stores portfolio content and PostgreSQL stores enquiries and ERP records.
 
 ## Local development
 
@@ -10,13 +10,13 @@ Use Node.js 22 or newer. Run `npm ci`, `npm run dev`, `npm run build`, and `npm 
 
 - `/profile` (or `/`): original profile layout, editable sections and additional project case studies.
 - `/feed`: full chronological feed with compact photos and full-size image links.
-- `/consultation`: professional enquiry form.
+- `/consultation`: combined professional enquiry form with optional meeting date/time.
 - `/workstation`: original applications, calculators and resource directory, plus sample ERP screenshots.
-- `/appointment`: meeting request form.
+- `/appointment`: compatible link to the same form with meeting fields enabled.
 - `/admin`: password-protected editor, linked from navigation and footer.
 - `/erp/`: accounting application with separate authentication.
 
-Original five-destination navigation, footer columns and server-backed visitor-session/online statistics are preserved. `/contact`, `/resources` and `/erp-preview` remain compatible aliases. Existing visitor records are not reset by deploying this code.
+Four-destination navigation with one Contact / Meet button, footer columns and server-backed visitor-session/online statistics are preserved. `/contact`, `/resources` and `/erp-preview` remain compatible aliases. Existing visitor records are not reset by deploying this code.
 
 ## Editable content
 

@@ -866,3 +866,8 @@ html[data-active-page] .content-wrap>.section>.section-heading h2{
   border-bottom:1px solid #afc5b0;
  }
 }
+
+/* One shared enquiry/meeting destination in the four-item mobile navigation. */
+.meeting-option{display:flex;align-items:center;gap:10px;margin:0 0 22px;line-height:1.5;font-size:14px;font-weight:650}
+.meeting-option input{width:18px;height:18px;flex:0 0 18px}
+@media(max-width:900px){html[data-active-page] .mobile-bottom-nav{grid-template-columns:repeat(4,minmax(0,1fr))}html[data-active-page] .mobile-bottom-nav a{flex:1;min-width:0}}
