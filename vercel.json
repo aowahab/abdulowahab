@@ -6,7 +6,35 @@
       "destination": "/api/erp?route=:route*"
     },
     {
-      "source": "/:page(feed|profile|consultation|workstation|appointment|contact|resources|erp-preview)",
+      "source": "/feed",
+      "destination": "/"
+    },
+    {
+      "source": "/profile",
+      "destination": "/"
+    },
+    {
+      "source": "/consultation",
+      "destination": "/"
+    },
+    {
+      "source": "/workstation",
+      "destination": "/"
+    },
+    {
+      "source": "/appointment",
+      "destination": "/"
+    },
+    {
+      "source": "/contact",
+      "destination": "/"
+    },
+    {
+      "source": "/resources",
+      "destination": "/"
+    },
+    {
+      "source": "/erp-preview",
       "destination": "/"
     }
   ],
@@ -57,10 +85,22 @@
           "value": "no-store"
         }
       ]
+    },
+    {
+      "source": "/api/traffic",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "no-store"
+        },
+        {
+          "key": "X-Robots-Tag",
+          "value": "noindex, nofollow"
+        }
+      ]
     }
   ],
   "git": {
     "deploymentEnabled": false
   }
 }
-

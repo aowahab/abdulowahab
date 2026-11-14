@@ -8,6 +8,7 @@
     "build": "vite build",
     "preview": "vite preview",
     "test:erp": "node --test erp/test/*.test.js",
+    "test:foundation": "node --test test/*.test.js",
     "test": "node --test test/*.test.js erp/test/*.test.js"
   },
   "dependencies": {
