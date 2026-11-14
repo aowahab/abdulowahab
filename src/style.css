@@ -650,3 +650,32 @@ html[data-theme=light] .footer .footer-bottom{color:#d3e2f2}
   height:auto;
  }
 }
+
+/* Social-style feed: chronological full posts in one scrollable column. */
+#updates .updates-social-feed{display:flex;flex-direction:column;align-items:stretch;gap:18px;width:100%;max-width:720px;margin:0 auto}
+#updates .updates-social-feed .feed-post{display:block;width:100%;padding:0 0 18px;border-radius:16px;background:#0b2544;overflow:hidden;box-shadow:0 4px 20px #00102618}
+#updates .feed-post-header{display:flex;align-items:center;gap:12px;padding:17px 18px 12px}
+#updates .feed-post-avatar{width:43px;height:43px;flex:0 0 43px;border-radius:50%;background:#246082;color:#fff;display:grid;place-items:center;font-weight:800;overflow:hidden}
+#updates .feed-post-avatar img{width:100%;height:100%;object-fit:cover;object-position:center;display:block}
+#updates .feed-post-author{display:flex;flex:1;min-width:0;flex-direction:column;gap:3px}
+#updates .feed-post-author strong{font-size:14px;color:#f5faff;overflow-wrap:anywhere}
+#updates .feed-post-author time{font-size:12px;color:#b9d6ed;margin:0}
+#updates .feed-post-latest{font-size:11px;font-weight:750;color:#c5e7ff;border:1px solid #47779b;padding:4px 8px;border-radius:20px}
+#updates .updates-social-feed .feed-post h3{padding:0 18px;margin:2px 0 10px;font-size:18px}
+#updates .updates-social-feed .feed-post-body{padding:0 18px}
+#updates .updates-social-feed .feed-post-body p{font-size:14px;line-height:1.7}
+#updates .updates-social-feed .feed-post-media{display:grid;grid-template-columns:1fr;gap:8px;margin:12px 0 0}
+#updates .updates-social-feed .feed-post-media img,
+#updates .updates-social-feed .feed-post-media video{width:100%;max-width:100%;height:auto;max-height:720px;aspect-ratio:auto;object-fit:contain;object-position:center;background:#102a43;border-radius:0}
+#updates .updates-social-feed .feed-post-media>img:only-child,
+#updates .updates-social-feed .feed-post-media>video:only-child{max-width:100%;grid-column:auto}
+#updates .updates-social-feed .feed-post-media>a{padding:0 18px;color:#b9e3ff}
+@media(max-width:600px){
+ #updates .updates-social-feed{gap:12px;max-width:100%}
+ #updates .updates-social-feed .feed-post{border-radius:12px;padding-bottom:14px}
+ #updates .feed-post-header{padding:13px 14px 10px}
+ #updates .updates-social-feed .feed-post h3{padding:0 14px;font-size:16px}
+ #updates .updates-social-feed .feed-post-body{padding:0 14px}
+ #updates .updates-social-feed .feed-post-media img,
+ #updates .updates-social-feed .feed-post-media video{max-height:75vh}
+}
