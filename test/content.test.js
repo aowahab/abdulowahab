@@ -6,7 +6,7 @@ test('legacy saved content receives profile and project defaults',()=>{
  const legacy={...DEFAULT_CONTENT};delete legacy.profile;delete legacy.projects;
  const result=normalizeContent(legacy);
  assert.equal(result.profile.headline,PROFILE.headline);
- assert.equal(result.projects.length,3);
+ assert.equal(result.projects.length,2);
  assert.equal(result.profile.cvUrl,'');
 });
 test('editor changes survive normalization and unsafe links are rejected',()=>{
@@ -15,5 +15,13 @@ test('editor changes survive normalization and unsafe links are rejected',()=>{
 });
 test('public case studies retain their approved profile fields',()=>{
  const result=publicPortfolioContent(DEFAULT_CONTENT);
- assert.equal(result.profile.headline,PROFILE.headline);assert.equal(result.projects.length,3);
+ assert.equal(result.profile.headline,PROFILE.headline);assert.equal(result.projects.length,2);
+});
+
+test('public content removes saved repository links and portfolio case studies',()=>{
+ const content={...DEFAULT_CONTENT,sections:[{id:'projects',title:'Projects',body:'Tickydo ticketing\nPersonal portfolio: React and Vercel\nSource: https://github.com/example/repo'}],projects:[...DEFAULT_CONTENT.projects,{title:'Personal portfolio',link:'https://github.com/example/repo'}]};
+ const result=publicPortfolioContent(content);
+ assert.equal(/github|personal portfolio/i.test(JSON.stringify(result)),false);
+ assert.match(result.sections[0].body,/Tickydo ticketing/);
+ assert.equal(result.projects.length,2);
 });

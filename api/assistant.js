@@ -1,6 +1,6 @@
 import pg from 'pg';
 import { readContent } from '../lib/store.js';
-import { DEFAULT_CONTENT, publicPortfolioContent } from '../lib/content.js';
+import { DEFAULT_CONTENT, publicPortfolioContent } from '../lib/portfolio-content.js';
 
 const profile = `Abdul Owahab is a Senior Associate in Audit & Assurance at Deloitte Bangladesh. He works on statutory and group audit assignments across paints and coatings, agrochemicals and manufacturing, healthcare and nonprofit research, telecommunications, trading and services. Work areas include revenue, inventory, receivables, payroll, payables, grant income, financial reporting, reconciliations and analytical review. The identity of all audit clients and engagement-specific records is confidential and must not be provided. His primary academic background is ACCOUNTING: a BBA in Accounting & Information Systems (AIS) from Jagannath University, alongside Chartered Accountancy studies at ICAB Professional Level. Describe him as an accounting-background audit and assurance professional, not as a finance graduate or a financial adviser. Tools include Advanced Excel, Deloitte Omnia and Levvia. He is a co-founder of the Tickydo transport technology venture, currently in pilot testing. The portfolio has Updates, Consultation, Workstation and Appointment sections. Contact: abdulowahab.jnu@gmail.com. Never claim he is a qualified CA or independent regulated audit or tax practitioner.`;
 const assistantSkills = [
@@ -97,7 +97,7 @@ function publicKnowledgeFallback(messages, content) {
  }
  if(/(appointment|meeting|book|schedule|অ্যাপয়েন্টমেন্ট|মিটিং|সময়)/i.test(lower))return bangla?'Appointment সেকশনে পছন্দের তারিখ, সময় ও আলোচনার বিষয় দিয়ে meeting request পাঠাতে পারবেন। সময় চূড়ান্ত হবে আব্দুলের নিশ্চিতকরণের পর।':'Use the Appointment section to request a meeting with your preferred date, time, and purpose. Nothing is booked until Abdul confirms.';
  if(/(consultation|consult|advice|পরামর্শ|কনসাল্টেশন)/i.test(lower))return bangla?'Consultation সেকশনে পেশাগত আলোচনা, চাকরির সুযোগ বা প্রযুক্তি সহযোগিতার বিষয়ে enquiry পাঠাতে পারবেন। এটি স্বাধীন audit বা tax practice-এর প্রতিশ্রুতি নয়।':'Use the Consultation section for professional discussions, career opportunities or technology collaborations. This is not a promise of independent regulated audit or tax services.';
- if(/(workstation|software|application|টুলস|ওয়ার্কস্টেশন)/i.test(lower))return bangla?'Workstation সেকশনে Tickydo ERP Finance, Tickydo Ticketing ও Portfolio source project-এর লিংক আছে। ERP-তে প্রবেশের জন্য অনুমোদিত access প্রয়োজন।':'The Workstation section links to Tickydo ERP Finance, Tickydo Ticketing and the portfolio source code. ERP access requires authorization.';
+ if(/(workstation|software|application|টুলস|ওয়ার্কস্টেশন)/i.test(lower))return bangla?'Workstation সেকশনে Tickydo ERP Finance ও Tickydo Ticketing-এর লিংক আছে। ERP-তে প্রবেশের জন্য অনুমোদিত access প্রয়োজন।':'The Workstation section links to Tickydo ERP Finance and Tickydo Ticketing. ERP access requires authorization.';
  const sections=(content.sections||[]).filter(v=>v&&v.title&&v.body);
  const tokens=lower.match(/[a-z]{3,}|[\\u0980-\\u09ff]{2,}/g)||[];
  const stop=new Set(['what','when','where','which','about','tell','know','more','please','abdul','owahab','would','could','the','and','for','his','you','have','this','that','some','does','with','করে','তার','কি','কী','সম্পর্কে']);
@@ -174,6 +174,7 @@ export async function POST(request){
  if(!messages.length||messages.some(m=>!['user','assistant'].includes(m.role)||typeof m.content!=='string'||m.content.length>1500))return response({error:'Invalid messages'},400);
  const question=messages.at(-1);
  if(question.role!=='user'||!question.content.trim())return response({error:'Question required'},400);
+ if(/github|repository|source.?code/i.test(question.content))return response({answer:'Repository and source-code details are not shared on this website. You can explore the Tickydo projects or contact Abdul directly.',mode:'basic'});
  let content=DEFAULT_CONTENT;
  try{content=publicPortfolioContent(await readContent())}catch{content=publicPortfolioContent(DEFAULT_CONTENT)}
  const publicContent=JSON.stringify({name:content.name,facts:content.facts,sections:content.sections?.map(s=>({title:s.title,body:s.body?.slice(0,1600)})),recentPosts:content.posts?.slice(-8).map(p=>({date:p.date,title:p.title,body:p.body?.slice(0,500)}))}).slice(0,14000);
@@ -191,6 +192,6 @@ export async function POST(request){
   if(!upstream.ok){console.error('OpenAI upstream HTTP status:',upstream.status);throw Error('AI provider unavailable (HTTP '+upstream.status+')')}
   const result=await upstream.json();const answer=result.choices?.[0]?.message?.content;
   if(typeof answer!=='string'||!answer.trim())throw Error('Empty AI response');
-  return response({answer:answer.slice(0,2400),mode:'ai'});
+  return response({answer:/github|githubusercontent|githubassets/i.test(answer)?'Repository details are not shared on this website. Please contact Abdul directly.':answer.slice(0,2400),mode:'ai'});
  }catch(error){console.error('portfolio assistant request failed:',error?.message);return response({answer:publicKnowledgeFallback(messages,content),mode:'basic'})}
 }

@@ -3,6 +3,7 @@ import { createRoot } from 'react-dom/client';
 import './style.css';
 import { PROFILE } from '../shared/profile.js';
 import { PROJECTS } from '../shared/projects.js';
+import { publicContentOnly } from '../shared/public-content.js';
 
 const fallback = {
  name:'Abdul Owahab',
@@ -17,9 +18,8 @@ const experience = [
 ];
 const projects = [
  {title:'Tickydo',tag:'Co-founder · Pilot operations',body:'Digital ticketing and bus-counter technology. Passenger and counter-facing platforms are being tested; operator onboarding is in progress.',url:'https://tickydo.com',cta:'Explore Tickydo'},
- {title:'Tickydo ERP — Accounting',tag:'GitHub project · Node.js · PostgreSQL / SQLite',body:'Accounting module featuring a chart of accounts, balanced double-entry journal entries, reversal documents, period locking, trial balance, general ledger, income statement and balance sheet. Built with Node.js, SQLite for local development and PostgreSQL support for Vercel.',url:'/erp/',cta:'Open ERP application'},
+ {title:'Tickydo ERP — Accounting',tag:'Accounting application · Node.js · PostgreSQL / SQLite',body:'Accounting module featuring a chart of accounts, balanced double-entry journal entries, reversal documents, period locking, trial balance, general ledger, income statement and balance sheet. Built with Node.js, SQLite for local development and PostgreSQL support for Vercel.',url:'/erp/',cta:'Open ERP application'},
  {title:'Audit workflows',tag:'Professional practice',body:'Evidence-based audit testing, reconciliations, financial reporting and structured documentation across diverse industries.'},
- {title:'Personal portfolio',tag:'React · Vercel',body:'A dynamic React portfolio with an editable content dashboard, serverless API and Vercel Blob storage.',url:'https://github.com/aowahab/abdulowahab',cta:'View source'}
 ];
 function LinkText({text=''}) {
  return text.split(/(https?:\/\/[^\s]+)/g).map((part,i)=>/^https?:\/\//.test(part)?<a key={i} href={part} target="_blank" rel="noopener noreferrer">{part}</a>:part);
@@ -277,7 +277,7 @@ function VisitorTraffic(){
 }
 function SelectedProjects({cases=PROJECTS}){
 
- return <div className="case-studies">{cases.map((p,i)=><article className="case-study" key={p.title}><span className="eyebrow">0{i+1} / {p.tag}</span><h3>{p.title}</h3><ol className="project-flow" aria-label={p.title+' workflow'}>{p.flow.map(step=><li key={step}>{step}</li>)}</ol><p className="diagram-caption">Illustrative workflow</p><dl><div><dt>Purpose</dt><dd>{p.problem}</dd></div><div><dt>Contribution</dt><dd>{p.contribution}</dd></div><div><dt>Current state</dt><dd>{p.result}</dd></div></dl><a className="hub-link" href={p.link} {...(p.link.startsWith('https:')?{target:'_blank',rel:'noopener noreferrer'}:{})}>{p.cta} ↗</a>{i===0&&<p className="muted-note">Business records require sign-in. <a href="/erp-preview">See application screenshots</a> before opening the workspace.</p>}</article>)}</div>;
+ return <div className="case-studies">{publicContentOnly(cases).map((p,i)=><article className="case-study" key={p.title}><span className="eyebrow">0{i+1} / {p.tag}</span><h3>{p.title}</h3><ol className="project-flow" aria-label={p.title+' workflow'}>{p.flow.map(step=><li key={step}>{step}</li>)}</ol><p className="diagram-caption">Illustrative workflow</p><dl><div><dt>Purpose</dt><dd>{p.problem}</dd></div><div><dt>Contribution</dt><dd>{p.contribution}</dd></div><div><dt>Current state</dt><dd>{p.result}</dd></div></dl><a className="hub-link" href={p.link} {...(p.link.startsWith('https:')?{target:'_blank',rel:'noopener noreferrer'}:{})}>{p.cta} ↗</a>{i===0&&<p className="muted-note">Business records require sign-in. <a href="/erp-preview">See application screenshots</a> before opening the workspace.</p>}</article>)}</div>;
 }
 function App(){
  const mobilePages=['feed','profile','consultation','workstation','appointment'];
@@ -292,7 +292,7 @@ function App(){
  const profile={...PROFILE,...content.profile};
  const [menu,setMenu]=useState(false);
  useEffect(()=>{document.documentElement.dataset.theme='light';document.documentElement.dataset.layout='editorial';document.documentElement.dataset.font='inter';document.documentElement.dataset.accent='teal';},[]);
- useEffect(()=>{const controller=new AbortController();fetch('/api/content',{signal:controller.signal}).then(r=>{if(!r.ok)throw Error('Content unavailable');return r.json()}).then(data=>{if(data&&Array.isArray(data.sections))setContent(data)}).catch(()=>{});return ()=>controller.abort()},[]);
+ useEffect(()=>{const controller=new AbortController();fetch('/api/content',{signal:controller.signal}).then(r=>{if(!r.ok)throw Error('Content unavailable');return r.json()}).then(data=>{if(data&&Array.isArray(data.sections))setContent(publicContentOnly(data))}).catch(()=>{});return ()=>controller.abort()},[]);
  useEffect(()=>{document.title=(content.name||'Abdul Owahab')+' | Audit & Assurance · Deloitte Bangladesh'},[content.name]);
  const ids=new Set((content.sections||[]).map(x=>x.id));
  const sortedUpdates=[...(content.posts||[])].sort((a,b)=>(b.date||'').localeCompare(a.date||''));
@@ -328,7 +328,6 @@ function App(){
   <div className="workstation-grid">
    <article className="workstation-card"><span className="hub-kicker">ACCOUNTING APPLICATION</span><h3>Tickydo ERP</h3><p>Chart of Accounts, journals, trial balance, general ledger and financial reports. Sign-in is required to access business records.</p><a href="/erp/" className="hub-link">Open ERP workstation ↗</a></article>
    <article className="workstation-card"><span className="hub-kicker">VENTURE</span><h3>Tickydo Ticketing</h3><p>Digital passenger ticketing and smart bus-counter operations currently in pilot testing.</p><a href="https://tickydo.com" target="_blank" rel="noopener noreferrer" className="hub-link">Explore Tickydo ↗</a></article>
-   <article className="workstation-card"><span className="hub-kicker">DEVELOPMENT</span><h3>Portfolio source</h3><p>React portfolio with content management and Vercel-backed features. Browse the public source repository.</p><a href="https://github.com/aowahab/abdulowahab" target="_blank" rel="noopener noreferrer" className="hub-link">View GitHub project ↗</a></article>
   </div>
   <WorkspaceDirectory/><details className="erp-preview-details" open={window.location.pathname==='/erp-preview'}><summary>Preview Tickydo ERP with sample data</summary><div className="erp-gallery">{[['dashboard','Dashboard'],['journal','Journal entries'],['reports','Trial balance']].map(([file,label])=><figure key={file}><img src={'/previews/erp-'+file+'.png'} alt={label+' with synthetic sample data'} loading="lazy"/><figcaption>{label} · illustrative sample data</figcaption></figure>)}</div></details>
  </Section>
@@ -345,7 +344,7 @@ function App(){
   <div className="footer-intro"><a className="footer-identity" href="#top"><span className="footer-mark">{(content.name||'Abdul Owahab').trim().split(/\s+/).map(x=>x[0]).slice(0,2).join('').toUpperCase()}</span><span>{content.name||'Abdul Owahab'}</span></a><p>Audit &amp; Assurance professional, Chartered Accountancy student and technology co-founder. Grounded in accounting, assurance, practical innovation and meaningful collaboration.</p><span className="footer-location">Dhaka, Bangladesh</span></div>
   <div className="footer-column"><h3>Explore</h3><a href="#about">About</a><a href="#career">Experience</a><a href="#expertise">Expertise</a><a href="#projects">Projects</a><a href="#education">Education</a><a href="#updates">Updates &amp; Feed</a></div>
   <div className="footer-column"><h3>Projects</h3><a href="https://tickydo.com" target="_blank" rel="noopener noreferrer">Tickydo Ticketing ↗</a><a href="/erp/">Tickydo ERP ↗</a><a href="#projects">Other projects</a></div>
-  <div className="footer-column"><h3>Connect</h3><a href="mailto:abdulowahab.jnu@gmail.com">Email me ↗</a><a href="https://www.linkedin.com/in/abdulowahab/" target="_blank" rel="noopener noreferrer">LinkedIn ↗</a><a href="https://github.com/aowahab" target="_blank" rel="noopener noreferrer">GitHub ↗</a><a href="#consultation">Consultation enquiry</a><a href="#appointment">Appointment request</a></div>
+  <div className="footer-column"><h3>Connect</h3><a href="mailto:abdulowahab.jnu@gmail.com">Email me ↗</a><a href="https://www.linkedin.com/in/abdulowahab/" target="_blank" rel="noopener noreferrer">LinkedIn ↗</a><a href="#consultation">Consultation enquiry</a><a href="#appointment">Appointment request</a></div>
  </div>
  <div className="footer-bottom"><span>© {new Date().getFullYear()} {content.name||'Abdul Owahab'}. All rights reserved.</span><VisitorTraffic/><a href="/admin">Admin login</a></div>
  </footer></>
