@@ -615,3 +615,19 @@ html[data-theme=light] .footer .footer-bottom{color:#d3e2f2}
  html[data-active-page] .mobile-bottom-nav a:focus-visible{outline:2px solid #26799d;outline-offset:-2px}
  html[data-active-page] .mobile-bottom-nav .bottom-nav-icon{color:inherit}
 }
+
+/* Phase 2: keyboard visibility and AA text contrast without changing navigation layout. */
+@media(max-width:767px){
+ html[data-active-page] .mobile-bottom-nav a.is-active{color:#176587!important}
+}
+:where(a,button,input,select,textarea,[tabindex]):focus-visible{
+ outline:3px solid #1678b6;
+ outline-offset:3px;
+}
+:where(.nav,.hero,.footer,.hub-detail,.workstation-card,.ai-panel) :where(a,button,input,select,textarea):focus-visible{
+ outline-color:#78d5ff;
+}
+@media(prefers-reduced-motion:reduce){
+ html:focus-within{scroll-behavior:auto}
+ *,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}
+}
