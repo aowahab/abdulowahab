@@ -4,6 +4,10 @@
     {
       "source": "/api/erp/:route*",
       "destination": "/api/erp?route=:route*"
+    },
+    {
+      "source": "/:page(feed|profile|consultation|workstation|appointment)",
+      "destination": "/index.html"
     }
   ],
   "headers": [
