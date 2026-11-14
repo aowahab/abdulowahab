@@ -462,3 +462,65 @@ html[data-theme=light] .section-content .secondary{color:#142e4a}
 .workspace-planning-group legend{padding:0 7px;font-weight:750}
 .workspace-planning-group label{display:flex;align-items:flex-start;gap:10px;width:100%;font-weight:450;line-height:1.5}
 .workspace-planning-group input[type=checkbox]{flex:0 0 auto;width:17px;height:17px;margin-top:3px;accent-color:#207f71}
+
+
+/* Contrast repair: light-mode content must never inherit dark-theme white text. */
+html[data-theme=light] .workspace-directory,
+html[data-theme=light] .workspace-directory-head,
+html[data-theme=light] .workspace-category,
+html[data-theme=light] .workspace-tool-panel{color:#142b42}
+html[data-theme=light] .workspace-directory-head{background:#f7fafc;border-color:#c4d5df}
+html[data-theme=light] .workspace-directory-head h3,
+html[data-theme=light] .workspace-category h4,
+html[data-theme=light] .workspace-tool-panel h4,
+html[data-theme=light] .workspace-tool-panel legend,
+html[data-theme=light] .workspace-tool-panel label,
+html[data-theme=light] .workspace-tool-panel strong{color:#142b42}
+html[data-theme=light] .workspace-directory-head p,
+html[data-theme=light] .workspace-tool-panel p,
+html[data-theme=light] .workspace-tool-panel small{color:#36546b}
+html[data-theme=light] .workspace-tool{background:#fff;color:#142b42;border-color:#b8cbd8}
+html[data-theme=light] .workspace-tool small{color:#36546b}
+html[data-theme=light] .workspace-tool-panel{background:#f7fafc;border-color:#b8cbd8}
+html[data-theme=light] .workspace-tool-panel input,
+html[data-theme=light] .workspace-tool-panel select,
+html[data-theme=light] .workspace-search input{background:#fff;color:#142b42;border-color:#819daf}
+html[data-theme=light] .workspace-result{background:#e4f3ed;color:#173e36}
+html[data-theme=light] .workspace-materiality-result,
+html[data-theme=light] .workspace-materiality-result strong,
+html[data-theme=light] .workspace-materiality-result small{color:#173e36}
+html[data-theme=light] .workspace-disclaimer{color:#405b6f;opacity:1}
+html[data-theme=light] .workspace-planning-progress button{color:#142b42}
+html[data-theme=light] .hub-intro p{color:#36546b}
+html[data-theme=light] .workstation-card{background:#102b49;color:#f4f8ff}
+html[data-theme=light] .workstation-card h3{color:#fff}
+html[data-theme=light] .workstation-card p{color:#d6e5f5}
+html[data-theme=light] .workstation-card .hub-link{color:#9fe0ff}
+.workspace-reference-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:10px;width:100%}
+.workspace-reference-grid article{padding:14px;border:1px solid #c5d6e0;border-radius:10px;background:#fff;color:#142b42}
+.workspace-reference-grid article strong{color:#142b42}
+.workspace-reference-grid article p{margin:7px 0 0;color:#36546b;line-height:1.6}
+.workspace-tool-panel [role=alert]{color:#a11c24;font-weight:650}
+.workspace-tool-panel .workspace-result{overflow-wrap:anywhere;max-width:100%}
+.workspace-tool-panel .workspace-result button{margin-top:10px;border:1px solid #86b6a8;border-radius:8px;background:#fff;color:#173e36;padding:8px 12px;cursor:pointer}
+.workspace-tool>a:focus-visible,.workspace-tool>button:focus-visible,.workspace-tool-panel button:focus-visible{outline:3px solid #0077b6;outline-offset:3px}
+
+
+/* Workstation visual system: match the portfolio's navy, sky-blue and soft-blue palette. */
+html[data-theme=light] .workspace-directory{--workspace-ink:#102b49;--workspace-accent:#0c5484}
+html[data-theme=light] .workspace-directory-head{background:linear-gradient(120deg,#102b49,#174a71);border-color:#315d80;color:#f4faff}
+html[data-theme=light] .workspace-directory-head h3{color:#fff}
+html[data-theme=light] .workspace-directory-head p{color:#d8e8f6}
+html[data-theme=light] .workspace-directory-head .hub-kicker{color:#a6e3ff}
+html[data-theme=light] .workspace-directory-head .workspace-search{color:#fff}
+html[data-theme=light] .workspace-category h4{color:#102b49}
+html[data-theme=light] .workspace-tool{border-color:#b6cfdf;border-top:3px solid #1e83ba;transition:box-shadow .2s,transform .2s}
+html[data-theme=light] .workspace-tool:hover{box-shadow:0 8px 25px #102b4920;transform:translateY(-2px)}
+html[data-theme=light] .workspace-tool>a,html[data-theme=light] .workspace-tool>button,html[data-theme=light] .workspace-tool-panel>button{background:#123d63;color:#fff;border-color:#123d63}
+html[data-theme=light] .workspace-tool>a:hover,html[data-theme=light] .workspace-tool>button:hover,html[data-theme=light] .workspace-tool-panel>button:hover{background:#1b5c8d;color:#fff}
+html[data-theme=light] .workspace-tool-panel{border-top:4px solid #1e83ba;box-shadow:0 8px 28px #102b490d}
+html[data-theme=light] .workspace-planning-group{background:#fff;border-color:#b6cfdf}
+html[data-theme=light] .workspace-planning-progress{border-color:#b6cfdf}
+html[data-theme=light] .workspace-reference-grid article{border-top:3px solid #1e83ba}
+html[data-theme=light] .workspace-materiality-result{background:#e5f3f6;border-color:#8dbbc8}
+@media(prefers-reduced-motion:reduce){.workspace-tool{transition:none!important}.workspace-tool:hover{transform:none!important}}
