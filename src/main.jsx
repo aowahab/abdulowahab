@@ -296,7 +296,7 @@ function App(){
  useEffect(()=>{document.documentElement.dataset.activePage=activePage;window.scrollTo(0,0)},[activePage]);
  const mobileNavigate=(event,page)=>{event.preventDefault();if(activePage!==page){window.history.pushState({},'',page==='profile'?'/':'/'+page);setActivePage(page)}setMenu(false)};
  useEffect(()=>{const onHashClick=event=>{const link=event.target.closest?.('a[href^="#"]');if(!link)return;const requestedTarget=link.getAttribute('href');const target=requestedTarget==='#appointment'?'#consultation':requestedTarget;if(!target||target==='#')return;const page=target==='#updates'?'feed':target==='#workstation'?'workstation':target==='#consultation'?'consultation':'profile';if(activePage!==page){event.preventDefault();window.history.pushState({},'',(page==='profile'?'/':'/'+page)+target);setActivePage(page);requestAnimationFrame(()=>document.querySelector(target)?.scrollIntoView())}};document.addEventListener('click',onHashClick);return ()=>document.removeEventListener('click',onHashClick)},[activePage]);
- const mobileDestinations=[['Updates/Feed','feed'],['Profile','profile'],['Appointment','consultation'],['Workstation','workstation']];
+ const mobileDestinations=[['Profile','profile'],['Updates/Feed','feed'],['Workstation','workstation'],['Appointment','consultation']];
  const [content,setContent]=useState(fallback);
  const profile={...PROFILE,...content.profile};
  const [menu,setMenu]=useState(false);

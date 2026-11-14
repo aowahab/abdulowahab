@@ -871,3 +871,49 @@ html[data-active-page] .content-wrap>.section>.section-heading h2{
 .meeting-option{display:flex;align-items:center;gap:10px;margin:0 0 22px;line-height:1.5;font-size:14px;font-weight:650}
 .meeting-option input{width:18px;height:18px;flex:0 0 18px}
 @media(max-width:900px){html[data-active-page] .mobile-bottom-nav{grid-template-columns:repeat(4,minmax(0,1fr))}html[data-active-page] .mobile-bottom-nav a{flex:1;min-width:0}}
+
+/* Use the desktop viewport instead of nesting narrow, centered containers. */
+@media(min-width:901px){
+ html[data-active-page] #main{--desktop-gutter:clamp(24px,2.5vw,48px)}
+ html[data-active-page] #main .hero-inner,
+ html[data-active-page] #main .reference-breadcrumb,
+ html[data-active-page] #main .reference-stats,
+ html[data-active-page] #main .content-wrap{
+  width:100%;max-width:none;margin-inline:0;
+  padding-inline:var(--desktop-gutter);
+ }
+ html[data-active-page] #main .content-wrap>.section{
+  width:100%;max-width:none;margin-inline:0;
+ }
+ html[data-active-page] #main .content-wrap>.section:has(.section-heading){
+  grid-template-columns:clamp(180px,18vw,260px) minmax(0,1fr)!important;
+  gap:clamp(24px,2.5vw,40px);
+ }
+ html[data-active-page="profile"] #main .reference-stats{
+  display:grid!important;
+  grid-template-columns:repeat(auto-fit,minmax(200px,1fr));
+  gap:14px;
+ }
+ html[data-active-page] #main .reference-stats .stat-card{min-width:0}
+ html[data-active-page] #main .hub-shell{max-width:none}
+ html[data-active-page] #main .hero-inner{
+  grid-template-columns:minmax(0,1.5fr) minmax(280px,.7fr);
+  gap:clamp(32px,4vw,72px);
+ }
+}
+@media(min-width:768px) and (max-width:1060px){
+ html[data-theme=light] .nav-links:not(.open){display:none;visibility:hidden}
+}
+
+/* Four desktop buttons fill the right-aligned navigation without empty grid slots. */
+@media(min-width:1061px){
+ html[data-theme=light] .nav{padding-inline:clamp(24px,2.5vw,48px)}
+ html[data-theme=light] .nav-links{
+  display:grid;
+  grid-template-columns:repeat(4,minmax(0,1fr));
+  width:min(56vw,640px);
+  margin-left:auto;
+  justify-content:end;
+  gap:clamp(8px,.8vw,14px);
+ }
+}
