@@ -9,9 +9,13 @@ export async function POST(request) {
     return json({ error: 'ADMIN_PASSWORD is not set on the server yet.' }, 503);
   }
 
+  if (Number(request.headers.get('content-length') || 0) > 1024) return json({ error: 'Request too large.' }, 413);
   let body;
   try {
-    body = await request.json();
+    const raw = await request.text();
+    if (raw.length > 1024) return json({ error: 'Request too large.' }, 413);
+    body = JSON.parse(raw);
+    if (!body || typeof body !== 'object' || Array.isArray(body)) return json({ error: 'Send a JSON object.' }, 400);
   } catch {
     return json({ error: 'Send the password as JSON.' }, 400);
   }
