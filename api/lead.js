@@ -9,7 +9,8 @@ export async function POST(request) {
   for (const [k, t] of limits) if (now - t > 3600000) limits.delete(k);
   if (limits.has(ip) && now - limits.get(ip) < 600000) return json({ error: 'Please wait before sending another enquiry.' }, 429);
   let data;
-  try { data = await request.json(); } catch { return json({ error: 'Invalid request' }, 400); }
+  try { const raw = await request.text(); if (raw.length > 4000) return json({ error: 'Request too large' }, 413); data = JSON.parse(raw); } catch { return json({ error: 'Invalid request' }, 400); }
+  if (!data || typeof data !== 'object' || Array.isArray(data)) return json({ error: 'Invalid request' }, 400);
   if (data.website) return json({ ok: true });
   if (data.consent !== true) return json({ error: 'Consent is required' }, 400);
   const type = clean(data.type, 30);
