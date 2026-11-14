@@ -47,6 +47,7 @@ The scrolling headline strip supports pause, hover/focus pause and reduced-motio
 Dedicated `/tickytools` workspace with category and tool dropdowns. Heavy libraries load only when selected. Existing audit calculators and checklists remain available.
 
 - PDF: image conversion, merger, PDF to PNG/JPEG, reorder/rotate/delete, extract/split, crop, watermark, page numbers, password protection/unlock with a known password, form fill/flatten, selectable text extraction, scanned-PDF compression, and English/Bangla scan OCR.
+- PDF Studio: opens as an expanded app workspace with a toolbar, page sidebar/navigation, zoom, hand pan, selection, drag-to-move, shape/signature resizing, selected-item colours and text properties, delete, and 50-step undo/redo. Export edits from the same workspace. Existing tool categories remain available through All tools.
 - Editor: add text, highlights, shapes and visual signatures. Permanent redaction rebuilds raster pages without underlying selectable text. This removes forms, links and text selection. Existing text is not rewritten; visual signatures are not certified digital signatures.
 - Excel: merge XLSX files into separate sheets or stack matching headers. Values, saved formula results, dates and number formats are retained; macros, charts and layout are not copied.
 
