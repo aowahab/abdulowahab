@@ -51,3 +51,12 @@ Production was updated on 2026-11-14 to deployment dpl_93gWuy7KFkuSXfg7TTbUBosz3
 - Source commits: `73dd58f`, `4a7ea5b`. Verify CI for the latest head before release.
 - These tests do not replace a real authenticated admin session/upload test, live Neon expiry check, browser screenshots, AI provider/prompt-injection test, appointment delivery or numerical Workstation review.
 - **Deployment gate remains closed** until the above external/integration checks are completed and Vercel accepts production deployments. Do not claim Phase 1–7 complete.
+
+## Assistant input-hardening follow-up (2026-11-14)
+
+- Verified previous branch head `5d3abfa6` passed GitHub Actions CI.
+- Identified assistant API crash risk for JSON `null` and null message entries, plus unbounded raw JSON request bodies when Content-Length is absent or inaccurate.
+- Updated `api/assistant.js` to enforce the 12,000-character raw body limit, validate top-level JSON object and reject null/invalid message entries before role/content access.
+- Added executable assistant regression coverage for `null`, arrays, malformed JSON, missing message properties, null entries and oversized request bodies in `test/assistant.test.js`.
+- Fix commit `c184734b`; regression test commit `c5dac4c7`. CI for the latest branch head must be confirmed before release.
+- No claim of complete Phase 1–7 acceptance: browser screenshots with real media, configured admin/upload/WhatsApp integration, live Neon expiry, AI provider/prompt injection, numerical exports, and Lighthouse/accessibility remain open. Do not deploy until all release gates are met.
