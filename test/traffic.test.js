@@ -22,3 +22,11 @@ test('traffic API requires session token and never invents metrics',async()=>{
  }finally{if(old!==undefined)process.env.POSTGRES_URL=old;if(old2!==undefined)process.env.DATABASE_URL=old2}
 });
 test('responsive footer styling exists',()=>assert.match(css,/\.footer-traffic\{display:flex/));
+
+test('traffic endpoint rejects malformed sessions and oversized payloads before database access',async()=>{
+ const {POST}=await import('../api/traffic.js');
+ const invalid=await POST(new Request('http://localhost/api/traffic',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({visitorId:'bad'})}));
+ assert.equal(invalid.status,400);
+ const oversized=await POST(new Request('http://localhost/api/traffic',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({visitorId:'x'.repeat(600)})}));
+ assert.equal(oversized.status,413);
+});
