@@ -7,7 +7,7 @@
     },
     {
       "source": "/:page(feed|profile|consultation|workstation|appointment|contact|resources|erp-preview)",
-      "destination": "/index.html"
+      "destination": "/"
     }
   ],
   "headers": [
@@ -63,3 +63,4 @@
     "deploymentEnabled": false
   }
 }
+
