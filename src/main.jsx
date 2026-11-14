@@ -137,7 +137,7 @@ function UpdateCard({post,featured=false,expanded=true,authorName='Abdul Owahab'
   </header>
   {post.title&&<h3>{post.title}</h3>}
   {text&&<div className="feed-post-body"><RichText body={text}/></div>}
-  {media.length>0&&<div className="media feed-post-media">{media.map((m,j)=>m.type?.startsWith('image/')?<img key={j} loading="lazy" src={m.url} alt={m.name||post.title||'Update photo'}/>:m.type?.startsWith('video/')?<video key={j} controls preload="metadata" src={m.url}/>:<a key={j} href={m.url} target="_blank" rel="noopener noreferrer">{m.name||'View attachment'}</a>)}</div>}
+  {media.length>0&&<div className={`media feed-post-media feed-media-count-${Math.min(media.filter(m=>m.type?.startsWith('image/')||m.type?.startsWith('video/')).length,4)}`}>{media.map((m,j)=>m.type?.startsWith('image/')?<a className="feed-photo-link" key={j} href={m.url} target="_blank" rel="noopener noreferrer" aria-label={`Open full photo: ${m.name||post.title||'Update photo'}`}><img loading="lazy" src={m.url} alt={m.name||post.title||'Update photo'}/></a>:m.type?.startsWith('video/')?<video key={j} controls preload="metadata" playsInline src={m.url}/>:<a key={j} className="feed-attachment-link" href={m.url} target="_blank" rel="noopener noreferrer">{m.name||'View attachment'}</a>)}</div>}
  </article>;
 }
 
