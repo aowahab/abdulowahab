@@ -329,7 +329,7 @@ function App(){
   <div className="footer-column"><h3>Projects</h3><a href="https://tickydo.com" target="_blank" rel="noopener noreferrer">Tickydo Ticketing ↗</a><a href="/erp/">Tickydo ERP ↗</a><a href="#projects">Other projects</a></div>
   <div className="footer-column"><h3>Connect</h3><a href="mailto:abdulowahab.jnu@gmail.com">Email me ↗</a><a href="https://www.linkedin.com/in/abdulowahab/" target="_blank" rel="noopener noreferrer">LinkedIn ↗</a><a href="https://github.com/aowahab" target="_blank" rel="noopener noreferrer">GitHub ↗</a><a href="#consultation">Consultation enquiry</a><a href="#appointment">Appointment request</a></div>
  </div>
- <div className="footer-bottom"><span>© {new Date().getFullYear()} {content.name||'Abdul Owahab'}. All rights reserved.</span><span>Designed for clarity · Built with React &amp; Vercel</span><a href="#top">Back to top ↑</a></div>
+ <div className="footer-bottom"><span>© {new Date().getFullYear()} {content.name||'Abdul Owahab'}. All rights reserved.</span></div>
  </footer></>
 }
 createRoot(document.getElementById('root')).render(<React.StrictMode><App/></React.StrictMode>);
