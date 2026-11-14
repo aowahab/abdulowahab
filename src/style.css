@@ -715,3 +715,13 @@ html[data-theme=light] .footer .footer-bottom{color:#d3e2f2}
 .footer-traffic .traffic-live-dot{display:inline-block;width:7px;height:7px;flex:0 0 7px;border-radius:50%;background:#45d49b;box-shadow:0 0 0 3px #45d49b26}
 .footer-traffic .traffic-unavailable{font-size:10px;color:#aac5dc}
 @media(max-width:600px){.footer-traffic{width:100%;gap:16px}.footer-traffic>span{flex-wrap:wrap}}
+
+/* Keep live traffic counters safely to the left of the floating AI assistant. */
+.footer-bottom{justify-content:flex-start;gap:18px 28px;padding-right:clamp(96px,12vw,190px)}
+.footer-bottom .footer-traffic{margin-left:0;margin-right:auto;justify-content:flex-start;max-width:calc(100% - 10px)}
+@media(max-width:900px){.footer-bottom{padding-right:110px}}
+@media(max-width:720px){
+ .footer-bottom{padding-right:clamp(92px,25vw,125px);align-items:flex-start;flex-direction:column}
+ .footer-bottom .footer-traffic{width:100%;max-width:100%;margin-left:0;gap:12px 18px}
+ .footer-bottom .footer-traffic>span{align-items:flex-start;flex-direction:column;gap:3px}
+}
