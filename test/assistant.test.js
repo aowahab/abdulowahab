@@ -57,3 +57,13 @@ test('invalid input rejected',async()=>{
  assert.equal((await POST(request([{role:'assistant',content:'hello'}]))).status,400);
  assert.equal((await POST(request([{role:'user',content:'x'.repeat(1501)}]))).status,400);
 });
+
+test('malformed and oversized assistant payloads are rejected safely',async()=>{
+ const url='http://localhost/api/assistant';
+ for(const payload of ['null','[]','{}','{"messages":[null]}','{"messages":[{}]}','{broken']){
+  const res=await POST(new Request(url,{method:'POST',body:payload}));
+  assert.equal(res.status,400,'Unexpected status for '+payload);
+ }
+ const huge=await POST(new Request(url,{method:'POST',body:JSON.stringify({messages:[{role:'user',content:'hello'}],padding:'x'.repeat(12500)})}));
+ assert.equal(huge.status,413);
+});
