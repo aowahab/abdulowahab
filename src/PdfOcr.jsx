@@ -1,8 +1,10 @@
 import {useState,useRef,useEffect} from 'react';
 import {renderablePdf,pageCanvas,releasePdf} from './pdfRender.js';
-import {downloadFile,parsePageRange,validateFile} from './toolFiles.js';
-export default function PdfOcr(){
- const [file,setFile]=useState(null),[lang,setLang]=useState('eng'),[range,setRange]=useState('1'),[busy,setBusy]=useState(false),[status,setStatus]=useState(''),[text,setText]=useState('');
+import {usePdfToolOutput} from './usePdfToolOutput.js';
+import {parsePageRange,validateFile} from './toolFiles.js';
+export default function PdfOcr({initialFile=null,onResult,onBusyChange}={}){
+ const [file,setFile]=useState(initialFile),[lang,setLang]=useState('eng'),[range,setRange]=useState('1'),[busy,setBusy]=useState(false),[status,setStatus]=useState(''),[text,setText]=useState('');
+ const downloadFile=usePdfToolOutput(onResult,busy,onBusyChange);
  const alive=useRef(true),workerRef=useRef(null);
  useEffect(()=>{alive.current=true;return()=>{alive.current=false;workerRef.current?.terminate()}},[]);
  async function run(){setBusy(true);setText('');setStatus('Loading local recognition engine…');let pdf,worker;

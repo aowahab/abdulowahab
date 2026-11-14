@@ -1,11 +1,12 @@
 import {useEffect,useRef,useState} from 'react';
+import {usePdfToolOutput} from './usePdfToolOutput.js';
 import {validatePdfFiles,mergePdfFiles} from './pdfMerge.js';
 const imageTypes=new Set(['image/jpeg','image/png','image/webp']);
 const megabytes=n=>`${(n/1024/1024).toFixed(1)} MB`;
-function saveBlob(blob,name){const url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download=name;a.click();setTimeout(()=>URL.revokeObjectURL(url),60000)}
 
-export function ImageToPdf(){
+export function ImageToPdf({onResult,onBusyChange}={}){
  const [files,setFiles]=useState([]),[orientation,setOrientation]=useState('portrait'),[busy,setBusy]=useState(false),[error,setError]=useState(''),[status,setStatus]=useState('');
+ const saveBlob=usePdfToolOutput(onResult,busy,onBusyChange);
  const alive=useRef(true);useEffect(()=>{alive.current=true;return()=>{alive.current=false}},[]);
  const select=event=>{const selected=[...event.target.files];setStatus('');setError('');
   if(selected.length>20||selected.some(f=>!imageTypes.has(f.type)||f.size>20*1024*1024)||selected.reduce((n,f)=>n+f.size,0)>60*1024*1024){setFiles([]);setError('Choose up to 20 JPG, PNG or WebP images, at most 20 MB each and 60 MB in total.');return}setFiles(selected)};
@@ -28,8 +29,9 @@ export function ImageToPdf(){
  <label>Page orientation<select value={orientation} disabled={busy} onChange={e=>setOrientation(e.target.value)}><option value="portrait">Portrait</option><option value="landscape">Landscape</option></select></label><button type="button" disabled={busy||!files.length} onClick={convert}>{busy?'Creating PDF…':'Create & download PDF'}</button><small>Up to 20 images · 20 MB each · 60 MB total. High-resolution images are resized for a manageable PDF.</small>{error&&<p role="alert">{error}</p>}{status&&<p role="status">{status}</p>}</div>;
 }
 
-export function PdfMerger(){
- const [files,setFiles]=useState([]),[busy,setBusy]=useState(false),[error,setError]=useState(''),[status,setStatus]=useState('');
+export function PdfMerger({initialFile=null,onResult,onBusyChange}={}){
+ const [files,setFiles]=useState(initialFile?[initialFile]:[]),[busy,setBusy]=useState(false),[error,setError]=useState(''),[status,setStatus]=useState('');
+ const saveBlob=usePdfToolOutput(onResult,busy,onBusyChange);
  const controller=useRef(null),alive=useRef(true);
  useEffect(()=>{alive.current=true;return()=>{alive.current=false;controller.current?.abort()}},[]);
  const changeFiles=next=>{setFiles(next);setError('');setStatus('')};
