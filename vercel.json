@@ -2,6 +2,14 @@
   "cleanUrls": true,
   "rewrites": [
     {
+      "source": "/api/assistant-admin",
+      "destination": "/api/assistant?workspace=admin"
+    },
+    {
+      "source": "/api/assistant-tools",
+      "destination": "/api/assistant?workspace=tools"
+    },
+    {
       "source": "/api/erp/:route*",
       "destination": "/api/erp?route=:route*"
     },

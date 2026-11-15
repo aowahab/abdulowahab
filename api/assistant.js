@@ -1,6 +1,7 @@
+import {GET as adminGet,POST as adminPost} from '../lib/assistant-admin-handler.js';
 import {resolvedConversationQuestion} from '../shared/assistant-conversation.js';
 import {sameOrigin} from '../lib/http.js';
-import {POST as assistantTool,confidentialQuestion} from './assistant-tools.js';
+import {POST as assistantTool,confidentialQuestion} from '../lib/assistant-research.js';
 import {redactClientNames} from '../lib/content.js';
 import pg from 'pg';
 import { readContent } from '../lib/store.js';
@@ -173,7 +174,11 @@ async function maybeNotify(messages,key){
   return {answer:kind==='recruiter'?'Thank you! Your recruitment opportunity was saved to Abdul’s private Recruitment inbox. He can review and follow up.':kind==='client'?'Thank you! Your business enquiry was saved to Abdul’s private Client Leads inbox for follow-up.':'Thank you! Your enquiry was saved to Abdul’s private inbox for follow-up.',mode:'saved'};
  }catch(e){console.error('Portfolio inbox save failed:',e.message);return {answer:'Sorry, the enquiry could not be saved right now. Please try again later.',mode:'basic'}}
 }
+function workspaceRoute(request){const url=new URL(request.url);return url.searchParams.get('workspace')||(url.pathname.endsWith('/assistant-admin')?'admin':url.pathname.endsWith('/assistant-tools')?'tools':'')}
+export async function GET(request){return workspaceRoute(request)==='admin'?adminGet(request):response({error:'Method not allowed'},405)}
 export async function POST(request){
+ const workspace=workspaceRoute(request);if(workspace==='admin')return adminPost(request);if(workspace==='tools')return assistantTool(request);if(workspace)return response({error:'Unknown assistant workspace'},400);
+
  if(!sameOrigin(request))return response({error:'Cross-site request blocked'},403);
  const length=Number(request.headers.get('content-length')||0);
  if(length>64000)return response({error:'Request too large'},413);

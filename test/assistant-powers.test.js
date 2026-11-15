@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {POST as toolsPOST,safeSources,briefAnswer} from '../api/assistant-tools.js';
-import {GET as adminGET,POST as adminPOST} from '../api/assistant-admin.js';
+import {POST as toolsPOST,safeSources,briefAnswer} from '../lib/assistant-research.js';
+import {GET as adminGET,POST as adminPOST} from '../lib/assistant-admin-handler.js';
 import {contentVersion,editSiteContent,appointmentInput,confirmAppointment} from '../lib/assistant-admin.js';
 const request=(data,path='assistant-tools',headers={})=>new Request('https://site.test/api/'+path,{method:'POST',headers:{host:'site.test',origin:'https://site.test','content-type':'application/json',...headers},body:JSON.stringify(data)});
 test('public tools reject cross-origin, invalid actions and unapproved document sharing',async()=>{
@@ -44,3 +44,5 @@ test('signed Admin sessions allow only reviewed same-origin operations',async()=
 test('tool intent understands short commands without turning profile questions into operations',async()=>{
  const{assistantToolIntent}=await import('../src/assistantIntent.js');assert.equal(assistantToolIntent('pdf marge koro'),'pdf-merge');assert.equal(assistantToolIntent('excel merge'),'excel-merge');assert.equal(assistantToolIntent('pic resize koro'),'resize');assert.equal(assistantToolIntent('bank recon koro'),'bank-recon');assert.equal(assistantToolIntent('what PDF tools has Abdul used?'),'');
 });
+
+test('shared assistant function dispatches private and research routes without bypassing validation',async()=>{const{GET,POST}=await import('../api/assistant.js');assert.equal((await GET(new Request('https://site.test/api/assistant?workspace=admin'))).status,401);assert.equal((await POST(request({action:'edit-website',confirm:true},'assistant?workspace=admin'))).status,401);assert.equal((await POST(request({action:'document',question:'summary'},'assistant?workspace=tools'))).status,400);assert.equal((await GET(new Request('https://site.test/api/assistant'))).status,405);assert.equal((await POST(request({messages:[]},'assistant?workspace=unexpected'))).status,400);});
