@@ -1,3 +1,4 @@
+import {groqText,portfolioGroqSystem} from '../lib/groq-chat.js';
 import {basicConversationReply} from '../lib/assistant-basic.js';
 import {GET as adminGet,POST as adminPost} from '../lib/assistant-admin-handler.js';
 import {resolvedConversationQuestion} from '../shared/assistant-conversation.js';
@@ -191,17 +192,21 @@ export async function POST(request){
  if(question.role!=='user'||!question.content.trim())return response({error:'Question required'},400);
  if(confidentialQuestion(resolvedConversationQuestion(messages)))return response({answer:prefersBangla(question.content)?'ক্লায়েন্টের নাম ও engagement-specific তথ্য confidential। শুধু sector-level অভিজ্ঞতা বলতে পারি।':'Audit client identities and engagement-specific information are confidential. I can discuss sector-level experience only.',mode:'basic'});
  if(/github|repository|source.?code/i.test(question.content))return response({answer:'Repository and source-code details are not shared on this website. You can explore the Tickydo projects or contact Abdul directly.',mode:'basic'});
- const direct=basicConversationReply(messages);if(direct)return response({answer:direct,mode:'basic'});
+ const direct=basicConversationReply(messages);if(direct&&!process.env.GROQ_API_KEY)return response({answer:direct,mode:'basic'});
  let content=DEFAULT_CONTENT;
  try{content=publicPortfolioContent(await readContent())}catch{content=publicPortfolioContent(DEFAULT_CONTENT)}
  const publicContent=JSON.stringify({name:content.name,facts:content.facts,sections:content.sections?.map(s=>({title:s.title,body:s.body?.slice(0,1600)})),recentPosts:content.posts?.slice(-8).map(p=>({date:p.date,title:p.title,body:p.body?.slice(0,500)}))}).slice(0,14000);
- if(process.env.OPENAI_API_KEY&&/(?:linkedin|facebook|personal life|family|hobbies|ব্যক্তিগত জীবন|পরিবার|শখ)/i.test(resolvedConversationQuestion(messages))&&!/(?:contact|reach|যোগাযোগ)/i.test(question.content)){const lookup=await assistantTool(new Request(request.url,{method:'POST',headers:request.headers,body:JSON.stringify({action:'profile',question:resolvedConversationQuestion(messages).slice(0,700)})}));if(lookup.ok)return lookup;}
+ if(!process.env.GROQ_API_KEY&&process.env.OPENAI_API_KEY&&/(?:linkedin|facebook|personal life|family|hobbies|ব্যক্তিগত জীবন|পরিবার|শখ)/i.test(resolvedConversationQuestion(messages))&&!/(?:contact|reach|যোগাযোগ)/i.test(question.content)){const lookup=await assistantTool(new Request(request.url,{method:'POST',headers:request.headers,body:JSON.stringify({action:'profile',question:resolvedConversationQuestion(messages).slice(0,700)})}));if(lookup.ok)return lookup;}
  const prior=messages.slice(0,-1).filter(m=>m.role==='assistant').map(m=>m.content).join(' ');
  const allUser=messages.filter(m=>m.role==='user').map(m=>m.content).join('\n');
  const hasFields=/(?:^|\n)name\s*:/im.test(allUser)&&/(?:^|\n)contact\s*:/im.test(allUser)&&/(?:^|\n)details\s*:/im.test(allUser);
  if(hasFields&&!prior.includes('[LEAD_CONSENT_REQUEST]'))return response({answer:'May I save your enquiry to Abdul’s private portfolio inbox? Reply exactly Yes, send or হ্যাঁ, পাঠান. [LEAD_CONSENT_REQUEST]',mode:'basic'});
   const key=process.env.OPENAI_API_KEY;
- try{const notified=await maybeNotify(messages,key);if(notified)return response(notified)}catch(e){console.error('Lead notification failed',e?.message);return response({answer:'Unable to send the enquiry via WhatsApp. Please email Abdul directly.',mode:'basic'})}
+ try{const notified=await maybeNotify(messages,process.env.GROQ_API_KEY?null:key);if(notified)return response(notified)}catch(e){console.error('Lead notification failed',e?.message);return response({answer:'Unable to send the enquiry via WhatsApp. Please email Abdul directly.',mode:'basic'})}
+ if(process.env.GROQ_API_KEY){
+  try{const answer=await groqText({system:portfolioGroqSystem(content),messages});return response({answer:/github|githubusercontent|githubassets/i.test(answer)?'Repository details are not shared on this website. Please contact Abdul directly.':answer,mode:'ai',provider:'groq'})}
+  catch(error){console.warn('Groq chat unavailable:',error.statusCode||error.name||'unknown');return response({answer:direct||publicKnowledgeFallback(messages,content),mode:'basic',availability:'limited'})}
+ }
  if(!key)return response({answer:publicKnowledgeFallback(messages,content),mode:'basic'});
  try{
   const controller=new AbortController();const timeout=setTimeout(()=>controller.abort(),20000);
