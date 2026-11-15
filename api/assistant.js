@@ -1,3 +1,4 @@
+import {basicConversationReply} from '../lib/assistant-basic.js';
 import {GET as adminGet,POST as adminPost} from '../lib/assistant-admin-handler.js';
 import {resolvedConversationQuestion} from '../shared/assistant-conversation.js';
 import {sameOrigin} from '../lib/http.js';
@@ -33,7 +34,7 @@ function fallback(q){
  if(/(erp|website|portfolio|site|admin|ওয়েবসাইট)/i.test(x))return bn?'এই পোর্টফোলিওতে আব্দুলের অভিজ্ঞতা, শিক্ষা, প্রকল্প ও যোগাযোগের তথ্য রয়েছে। এতে কনটেন্ট এডিট করার Admin Panel, Professional Enquiry ফর্ম এবং /erp/ ঠিকানায় Tickydo ERP অ্যাপ আছে।':'This portfolio shares Abdul’s experience, projects, education and contact details. It includes an admin panel, professional enquiry form and Tickydo ERP at /erp/.';
  if(/(audit|deloitte|experience|client|engagement|অডিট|অভিজ্ঞতা)/i.test(x))return bn?'আব্দুল ওয়াহাব Deloitte Bangladesh-এর Audit & Assurance বিভাগের Senior Associate। তিনি statutory ও group audit-এ কাজ করেছেন। তাঁর অভিজ্ঞতার খাতগুলোর মধ্যে manufacturing, paints and coatings, agrochemicals, healthcare research ও services রয়েছে। Revenue, inventory, receivables, payroll এবং অন্যান্য financial statement area-তেও কাজ করেছেন।':'Abdul is a Senior Associate in Audit & Assurance at Deloitte Bangladesh. His experience includes statutory and group audits across manufacturing, paints, agrochemicals, healthcare research and services.';
  if(/(education|university|icab|study|qualification|পড়াশোনা|শিক্ষা)/i.test(x))return bn?'আব্দুল জগন্নাথ বিশ্ববিদ্যালয় থেকে Accounting & Information Systems-এ BBA করেছেন। বর্তমানে ICAB Professional Level-এ Chartered Accountancy অধ্যয়ন করছেন। তিনি এখনো qualified CA হিসেবে পরিচিত নন।':'Abdul studied Accounting & Information Systems at Jagannath University and is pursuing Chartered Accountancy at ICAB Professional Level.';
- return bn?'আব্দুল ওয়াহাবের অডিট অভিজ্ঞতা, পড়াশোনা, Tickydo উদ্যোগ, ওয়েবসাইটের ফিচার ও যোগাযোগের তথ্য সম্পর্কে জানতে পারেন। আপনি কোন বিষয়টি জানতে চান?':'I can help with Abdul Owahab’s audit experience, education, Tickydo projects, website features and contact details. What would you like to know?';
+ return bn?'প্রশ্নটা ঠিক বুঝতে পারিনি। আরেকটু স্পষ্ট করে বলবেন?':'I’m not sure what you mean. Could you rephrase that briefly?';
 }
 
 
@@ -190,6 +191,7 @@ export async function POST(request){
  if(question.role!=='user'||!question.content.trim())return response({error:'Question required'},400);
  if(confidentialQuestion(resolvedConversationQuestion(messages)))return response({answer:prefersBangla(question.content)?'ক্লায়েন্টের নাম ও engagement-specific তথ্য confidential। শুধু sector-level অভিজ্ঞতা বলতে পারি।':'Audit client identities and engagement-specific information are confidential. I can discuss sector-level experience only.',mode:'basic'});
  if(/github|repository|source.?code/i.test(question.content))return response({answer:'Repository and source-code details are not shared on this website. You can explore the Tickydo projects or contact Abdul directly.',mode:'basic'});
+ const direct=basicConversationReply(messages);if(direct)return response({answer:direct,mode:'basic'});
  let content=DEFAULT_CONTENT;
  try{content=publicPortfolioContent(await readContent())}catch{content=publicPortfolioContent(DEFAULT_CONTENT)}
  const publicContent=JSON.stringify({name:content.name,facts:content.facts,sections:content.sections?.map(s=>({title:s.title,body:s.body?.slice(0,1600)})),recentPosts:content.posts?.slice(-8).map(p=>({date:p.date,title:p.title,body:p.body?.slice(0,500)}))}).slice(0,14000);
