@@ -25,3 +25,15 @@ test('client identities do not appear in public UI source',()=>{
   assert.ok(!ui.includes(name),'Confidential client name exposed: '+name);
  }
 });
+
+test('materiality calculator handles numeric overflow and percentage scaling safely',()=>{
+ assert.match(ui,/Number\.isFinite\(amount\)/);
+ assert.match(ui,/Number\.isFinite\(rate\)/);
+ assert.match(ui,/Number\.isFinite\(performance\)/);
+ assert.match(ui,/const overall=amount\*\(rate\/100\),pm=overall\*\(performance\/100\)/);
+ assert.match(ui,/!Number\.isFinite\(overall\)\|\|!Number\.isFinite\(pm\)/);
+ const materiality=(amount,rate,performance)=>({overall:amount*(rate/100),pm:amount*(rate/100)*(performance/100)});
+ assert.deepEqual(materiality(10000000,5,75),{overall:500000,pm:375000});
+ assert.equal(Number.isFinite(materiality(1e308,100,100).overall),true);
+ assert.equal(Number.isFinite(materiality(1e308,100,100).pm),true);
+});
