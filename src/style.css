@@ -1124,3 +1124,13 @@ html[data-theme=light] .contact-request .contact-form-intro h3{color:#18344e}htm
  html[data-active-page] .footer{padding-bottom:calc(120px + env(safe-area-inset-bottom))!important}
  .back-to-top{bottom:calc(105px + env(safe-area-inset-bottom))}
 }
+
+/* Compact section titles without losing section-aware sticky navigation. */
+html[data-active-page] .content-wrap>.section>.section-heading{margin:0;padding:0}
+html[data-active-page] .content-wrap>.section>.section-heading .eyebrow{display:block;line-height:1.25;margin:0;font-size:10px}
+html[data-active-page] .content-wrap>.section>.section-heading h2{margin:6px 0 0;line-height:1.18}
+@media(max-width:900px){
+ html[data-active-page] #main .content-wrap>.section{padding-top:16px;padding-bottom:24px;row-gap:12px}
+ html[data-active-page] .content-wrap>.section>.section-heading{padding:8px 0;margin:0 0 12px}
+ html[data-active-page] .content-wrap>.section>.section-heading h2{margin:5px 0 0;font-size:22px}
+}
