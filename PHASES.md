@@ -60,3 +60,11 @@ Production was updated on 2026-11-14 to deployment dpl_93gWuy7KFkuSXfg7TTbUBosz3
 - Added executable assistant regression coverage for `null`, arrays, malformed JSON, missing message properties, null entries and oversized request bodies in `test/assistant.test.js`.
 - Fix commit `c184734b`; regression test commit `c5dac4c7`. CI for the latest branch head must be confirmed before release.
 - No claim of complete Phase 1–7 acceptance: browser screenshots with real media, configured admin/upload/WhatsApp integration, live Neon expiry, AI provider/prompt injection, numerical exports, and Lighthouse/accessibility remain open. Do not deploy until all release gates are met.
+
+## Workstation numerical review (2026-11-15)
+
+- Reviewed the materiality calculator formula and changed percentage application to `amount * (rate / 100)` and `overall * (performance / 100)`, with a finite-output guard and an accessible alert for out-of-range results. A BDT 10,000,000 benchmark at 5% overall and 75% performance gives BDT 500,000 overall and BDT 375,000 performance materiality.
+- Added regression assertions in `test/release-gates.test.js` for numeric validation, formula and example output.
+- Implementation commit `24bd8c42`; test commit `ae213f4c`. Confirm latest branch CI before release.
+- This is a source-level calculation review, **not** full browser verification of the Workstation or proof of financial correctness for every tool. Real media screenshots, admin sessions, notification delivery, AI prompt-injection/provider tests and Neon expiry remain open.
+- No deployment requested by this verification step; keep release gate closed until all checks are completed.
