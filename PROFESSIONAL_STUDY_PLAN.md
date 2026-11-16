@@ -58,7 +58,7 @@ Existing portfolio PHASES.md is a different workstream; do not confuse its compl
 - [x] P1.3 Create versioned level/subject/chapter catalogue and session-specific exam blueprints. Do not assume every PL subject is written; check IT Governance separately.
 - [x] P1.4 Design database migrations: syllabus versions, materials, questions, rubrics, papers, attempts, responses, uploads, marking jobs, feedback and account ownership.
 - [x] P1.5 Define guest storage and account retention/deletion/export rules. Guest browser-only history is not cross-device persistence.
-- [ ] P1.6 Design private file storage, signed uploads, PDF/DOCX/image extraction, OCR, asynchronous marking and provider integration using existing resources where suitable.
+- [x] P1.6 Design private file storage, signed uploads, PDF/DOCX/image extraction, OCR, asynchronous marking and provider integration using existing resources where suitable.
 - [ ] P1.7 Specify file/page limits, AI cost controls, rate limits, failure handling and job retry policy before implementation.
 
 Acceptance: reviewed architecture and verified subject/session matrix; migration and rollback design; no mock integrations presented as working services.
@@ -242,3 +242,11 @@ The user approved using the researched syllabus baseline as the working implemen
 - Added privacy tests for cross-owner rejection, private-field omission, premature feedback, consent, active-attempt transfer rejection and local-score provenance.
 - No retention worker, profile UI, export endpoint or deletion endpoint implemented; do not claim data is currently being expired.
 - Next: P1.6 inspect actual private storage, extraction and durable marking capabilities; retain P2.4 Admin-upload requirement. No deployment or live data changes.
+
+### P1.6 capability design and inspection complete — 2026-11-16
+
+- Added docs/professional-study-capabilities.md: read-only inspection evidence, extraction/upload/marking boundaries and unresolved integration gates.
+- Installed Blob SDK supports private access, but connected store privacy is unverified. Existing OCR is browser-only. DOCX extraction and durable marking worker are not implemented. Existing Neon Auth env names should be inspected before adding a new provider.
+- Added shared/study/capabilities.js and tests: separate fail-closed readiness for Admin materials, student submissions and marking. Helpers do not enable endpoints.
+- No resources provisioned, secrets decrypted, real scripts processed or live database changed. No deployment.
+- Next P1.7: file/page limits, AI budget controls, retries and failure policy. Private storage/provider/worker runtime verification remains mandatory before P4/P5 release.
