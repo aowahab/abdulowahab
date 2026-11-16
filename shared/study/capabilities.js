@@ -15,7 +15,7 @@ export const INSPECTED_STUDY_CAPABILITIES=Object.freeze({
  checkedOn:'2026-11-16',blobSdkVersion:'2.9.0',
  metadataDatabase:'environment-names-present-not-runtime-tested',
  gradingProvider:'groq-key-production-only-not-calibrated-for-marking',
- privateStore:'unverified',learnerIdentity:'neon-auth-environment-names-present-not-integrated',
+ privateStore:'created-private-store-unconnected-runtime-unverified',learnerIdentity:'neon-auth-environment-names-present-not-integrated',
  pdfExtraction:'browser-rendering-present-server-pipeline-missing',
  docxExtraction:'missing',imageExtraction:'missing',
  ocrReview:'browser-ocr-present-submission-pipeline-missing',durableWorker:'missing'

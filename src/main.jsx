@@ -4,6 +4,7 @@ import './style.css';
 import ProfessionalNews from './ProfessionalNews.jsx';
 import PortfolioAI from './PortfolioAI.jsx';
 const TickyTools=lazy(()=>import('./TickyTools.jsx'));
+const ProfessionalStudy=lazy(()=>import('./study/Study.jsx'));
 import { PROFILE } from '../shared/profile.js';
 import { PROJECTS } from '../shared/projects.js';
 import { publicContentOnly } from '../shared/public-content.js';
@@ -124,7 +125,7 @@ function SelectedProjects({cases=PROJECTS}){
  return <div className="case-studies">{publicContentOnly(cases).map((p,i)=><article className="case-study" key={p.title}><span className="eyebrow">0{i+1} / {p.tag}</span><h3>{p.title}</h3><ol className="project-flow" aria-label={p.title+' workflow'}>{p.flow.map(step=><li key={step}>{step}</li>)}</ol><p className="diagram-caption">Illustrative workflow</p><dl><div><dt>Purpose</dt><dd>{p.problem}</dd></div><div><dt>Contribution</dt><dd>{p.contribution}</dd></div><div><dt>Current state</dt><dd>{p.result}</dd></div></dl><a className="hub-link" href={p.link} {...(p.link.startsWith('https:')?{target:'_blank',rel:'noopener noreferrer'}:{})}>{p.cta} ↗</a>{i===0&&<p className="muted-note">Business records require sign-in. <a href="/erp-preview">See application screenshots</a> before opening the workspace.</p>}</article>)}</div>;
 }
 function App(){
- const mobilePages=['feed','profile','consultation','workstation'];
+ const mobilePages=['feed','profile','consultation','workstation','study'];
  const initialPage=()=>{const route=window.location.pathname.split('/').filter(Boolean)[0]?.toLowerCase();const page=({contact:'consultation',appointment:'consultation',tickytools:'workstation',resources:'workstation','erp-preview':'workstation'})[route]||route;return mobilePages.includes(page)?page:'profile'};
  const [activePage,setActivePage]=useState(initialPage);
  useEffect(()=>{
@@ -139,13 +140,13 @@ function App(){
  useEffect(()=>{document.documentElement.dataset.activePage=activePage;window.scrollTo(0,0)},[activePage]);
  const mobileNavigate=(event,page)=>{if(event.metaKey||event.ctrlKey||event.shiftKey||event.altKey)return;if(activePage==='workstation'||page==='workstation')return;event.preventDefault();if(activePage!==page){window.history.pushState({},'',page==='profile'?'/':page==='workstation'?'/tickytools':page==='consultation'?'/contact':'/'+page);setActivePage(page)}setMenu(false)};
  useEffect(()=>{const onHashClick=event=>{const link=event.target.closest?.('a[href^="#"]');if(!link)return;const requestedTarget=link.getAttribute('href');const target=requestedTarget==='#appointment'?'#consultation':requestedTarget;if(!target||target==='#')return;const page=target==='#updates'?'feed':target==='#workstation'?'workstation':target==='#consultation'?'consultation':'profile';if(activePage!==page){event.preventDefault();const destination=(page==='profile'?'/':page==='workstation'?'/tickytools':page==='consultation'?'/contact':'/'+page)+target;if(activePage==='workstation'||page==='workstation'){window.location.assign(destination);return}window.history.pushState({},'',destination);setActivePage(page);requestAnimationFrame(()=>document.querySelector(target)?.scrollIntoView())}};document.addEventListener('click',onHashClick);return ()=>document.removeEventListener('click',onHashClick)},[activePage]);
- const mobileDestinations=[['Profile','profile'],['News Feed','feed'],['TickyTools','workstation'],['Contact','consultation']];
+ const mobileDestinations=[['Profile','profile'],['News Feed','feed'],['TickyTools','workstation'],['Study','study'],['Contact','consultation']];
  const [content,setContent]=useState(fallback);
  const profile={...PROFILE,...content.profile};
  const [menu,setMenu]=useState(false);
  useEffect(()=>{document.documentElement.dataset.theme='light';document.documentElement.dataset.layout='editorial';document.documentElement.dataset.font='inter';document.documentElement.dataset.accent='teal';},[]);
  useEffect(()=>{if(activePage==='workstation')return;const controller=new AbortController();fetch('/api/content',{signal:controller.signal}).then(r=>{if(!r.ok)throw Error('Content unavailable');return r.json()}).then(data=>{if(data&&Array.isArray(data.sections))setContent(publicContentOnly(data))}).catch(()=>{});return ()=>controller.abort()},[activePage]);
- useEffect(()=>{document.title=activePage==='workstation'?'TickyTools | Private browser tools':activePage==='consultation'?'Contact | Abdul Owahab':(content.name||'Abdul Owahab')+' | Audit & Assurance · Deloitte Bangladesh'},[content.name,activePage]);
+ useEffect(()=>{document.title=activePage==='study'?'Professional Study | CA learning':activePage==='workstation'?'TickyTools | Private browser tools':activePage==='consultation'?'Contact | Abdul Owahab':(content.name||'Abdul Owahab')+' | Audit & Assurance · Deloitte Bangladesh'},[content.name,activePage]);
  const ids=new Set((content.sections||[]).map(x=>x.id));
  const sortedUpdates=[...(content.posts||[])].sort((a,b)=>(b.date||'').localeCompare(a.date||''));
  return <>
@@ -176,11 +177,12 @@ function App(){
    <ContactRequest initialMeeting={window.location.pathname==='/appointment'||window.location.hash==='#appointment'}/>
   </div>
  </Section>
+ <Section id="study" eyebrow="STUDY" title="Professional Study">{activePage==='study'&&<Suspense fallback={<p role="status">Loading Professional Study…</p>}><ProfessionalStudy/></Suspense>}</Section>
  <Section id="workstation" eyebrow="04 / TOOLS" title="TickyTools">
   {activePage==='workstation'&&<Suspense fallback={<p role="status">Loading TickyTools…</p>}><TickyTools/></Suspense>}
  </Section>
  <Section id="contact" eyebrow="LET'S CONNECT" title="Have something in mind?"><p>I'm interested in conversations about accounting, audit and assurance, reporting, technology and entrepreneurship.</p><div className="contact-links"><a href="mailto:abdulowahab.jnu@gmail.com">Email ↗</a><a href="tel:+8801521577910">Phone ↗</a><a href="https://www.linkedin.com/in/abdulowahab/" target="_blank" rel="noopener noreferrer">LinkedIn ↗</a>{[['Facebook',content.social?.facebook],['Messenger',content.social?.messenger],['Instagram',content.social?.instagram]].filter(([,url])=>/^https:\/\//.test(url||'')).map(([name,url])=><a key={name} href={url} target="_blank" rel="noopener noreferrer">{name} ↗</a>)}</div></Section>
- </div></main>{activePage!=='workstation'&&<PortfolioAI/>}<nav className="mobile-bottom-nav" aria-label="Mobile quick navigation">{mobileDestinations.map(([label,page])=><a key={page} href={page==='profile'?'/':page==='workstation'?'/tickytools':page==='consultation'?'/contact':'/'+page} className={activePage===page?'is-active':''} aria-current={activePage===page?'page':undefined} onClick={e=>mobileNavigate(e,page)}><span className="bottom-nav-icon" aria-hidden="true">{({feed:'▣',profile:'♙',consultation:'✉',workstation:'▤'})[page]}</span><span>{label}</span></a>)}</nav><a className="back-to-top" href="#top" aria-label="Back to top">↑</a><footer className="footer" aria-label="Site footer">
+ </div></main>{!['workstation','study'].includes(activePage)&&<PortfolioAI/>}<nav className="mobile-bottom-nav" aria-label="Mobile quick navigation">{mobileDestinations.map(([label,page])=><a key={page} href={page==='profile'?'/':page==='workstation'?'/tickytools':page==='consultation'?'/contact':'/'+page} className={activePage===page?'is-active':''} aria-current={activePage===page?'page':undefined} onClick={e=>mobileNavigate(e,page)}><span className="bottom-nav-icon" aria-hidden="true">{({feed:'▣',profile:'♙',consultation:'✉',workstation:'▤',study:'▥'})[page]}</span><span>{label}</span></a>)}</nav><a className="back-to-top" href="#top" aria-label="Back to top">↑</a><footer className="footer" aria-label="Site footer">
  <div className="footer-main">
   <div className="footer-intro"><a className="footer-identity" href="#top"><span className="footer-mark">{(content.name||'Abdul Owahab').trim().split(/\s+/).map(x=>x[0]).slice(0,2).join('').toUpperCase()}</span><span>{content.name||'Abdul Owahab'}</span></a><p>Audit &amp; Assurance professional, Chartered Accountancy student and technology co-founder. Grounded in accounting, assurance, practical innovation and meaningful collaboration.</p><span className="footer-location">Dhaka, Bangladesh</span></div>
   <div className="footer-column"><h3>Explore</h3><a href="#about">About</a><a href="#career">Experience</a><a href="#expertise">Expertise</a><a href="#projects">Projects</a><a href="#education">Education</a><a href="#updates">News Feed</a></div>

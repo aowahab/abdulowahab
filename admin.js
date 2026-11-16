@@ -600,3 +600,6 @@ window.addEventListener('beforeunload', function (e) {
 });
 
 boot();
+
+// Dedicated Study workspace reuses the existing authenticated Admin session.
+var studyShortcut = document.createElement('a'); studyShortcut.href='/study?view=admin'; studyShortcut.textContent='Open Study Admin ↗'; studyShortcut.style.cssText='position:fixed;right:18px;bottom:18px;z-index:50;background:#123f3b;color:white;padding:12px 18px;border-radius:9px;text-decoration:none;font:600 14px system-ui'; document.body.appendChild(studyShortcut);

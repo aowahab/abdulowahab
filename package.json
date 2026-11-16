@@ -9,7 +9,9 @@
     "preview": "vite preview",
     "test:erp": "node --test erp/test/*.test.js",
     "test:foundation": "node --test test/*.test.js",
-    "test": "node --test test/*.test.js erp/test/*.test.js"
+    "test": "node --test test/*.test.js erp/test/*.test.js",
+    "dev:study": "node scripts/dev-study.mjs",
+    "study:migrate": "node scripts/study-migrate.mjs"
   },
   "dependencies": {
     "@ai-sdk/groq": "^4.0.84",
@@ -32,7 +34,11 @@
     "tesseract.js": "^7.0.0"
   },
   "devDependencies": {
+    "@electric-sql/pglite": "0.5.16",
+    "@testing-library/react": "16.3.3",
+    "@testing-library/user-event": "14.6.12",
     "@vitejs/plugin-react": "^5.1.0",
+    "jsdom": "31.0.1",
     "vite": "^7.2.0"
   },
   "engines": {

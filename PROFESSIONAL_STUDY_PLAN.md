@@ -66,33 +66,33 @@ Evidence / blockers: P1.1 findings recorded in [architecture discovery](docs/pro
 
 ## P2 — Study and content administration
 
-- [ ] P2.1 Add responsive Professional Study entry and Study / Exam / My Progress navigation without breaking existing routes.
-- [ ] P2.2 Implement CL / PL / AL → subject → chapter filters and empty/loading/error states.
-- [ ] P2.3 Display materials, explanations, worked calculations, revision notes and practice questions.
+- [x] P2.1 Add responsive Professional Study entry and Study / Exam / My Progress navigation without breaking existing routes.
+- [x] P2.2 Implement CL / PL / AL → subject → chapter filters and empty/loading/error states.
+- [x] P2.3 Display materials, explanations, worked calculations, revision notes and practice questions.
 - [ ] P2.4 Extend authenticated Admin with draft, preview, publish, edit and archive for materials/questions/rubrics.
-- [ ] P2.5 Store source, session, syllabus version and last verification date with technical content; flag stale tax/law material.
-- [ ] P2.6 Use original or permitted content; distinguish original practice questions from official past questions.
-- [ ] P2.7 Seed an explicitly labelled, reviewed pilot module; show unavailable subjects honestly.
+- [x] P2.5 Store source, session, syllabus version and last verification date with technical content; flag stale tax/law material.
+- [x] P2.6 Use original or permitted content; distinguish original practice questions from official past questions.
+- [x] P2.7 Seed an explicitly labelled, reviewed pilot module; show unavailable subjects honestly.
 
 Acceptance: Admin-published content appears under correct filters; unpublished content remains private; mobile, keyboard and regression checks pass.
 Evidence / blockers: none yet.
 
 ## P3 — MCQ exam engine
 
-- [ ] P3.1 Build paper selection by level, subject, session and practice/full mock mode, using published reviewed questions.
-- [ ] P3.2 Show duration, marks and rules before start; navigation, unanswered counts and review flags during exam.
-- [ ] P3.3 Persist attempt deadline and autosaved answers server-side; refresh/device clock changes must not extend exam time.
-- [ ] P3.4 Implement manual submission, expiry submission, reconnection behavior and idempotent finalization.
-- [ ] P3.5 Keep answer keys and explanations server-side until the attempt is finalized.
-- [ ] P3.6 Return immediate deterministic score with selected/correct answers and explanations for every question.
-- [ ] P3.7 Generate topic breakdown and specific revision recommendations; avoid unsupported readiness claims.
+- [x] P3.1 Build paper selection by level, subject, session and practice/full mock mode, using published reviewed questions.
+- [x] P3.2 Show duration, marks and rules before start; navigation, unanswered counts and review flags during exam.
+- [x] P3.3 Persist attempt deadline and autosaved answers server-side; refresh/device clock changes must not extend exam time.
+- [x] P3.4 Implement manual submission, expiry submission, reconnection behavior and idempotent finalization.
+- [x] P3.5 Keep answer keys and explanations server-side until the attempt is finalized.
+- [x] P3.6 Return immediate deterministic score with selected/correct answers and explanations for every question.
+- [x] P3.7 Generate topic breakdown and specific revision recommendations; avoid unsupported readiness claims.
 
 Acceptance: known fixtures produce exact scores; timer/refresh/disconnection/double-submit tested; correct answers cannot be fetched early.
 Evidence / blockers: none yet.
 
 ## P4 — Written exam and 30-minute submission window
 
-- [ ] P4.1 Prepare reviewed PL/AL papers with subquestion marks, rubrics, model answers and subject/session-specific rules.
+- [x] P4.1 Prepare reviewed PL/AL papers with subquestion marks, rubrics, model answers and subject/session-specific rules.
 - [ ] P4.2 Start immutable server-side exam and upload deadlines; upload deadline = exam deadline + 30 minutes.
 - [ ] P4.3 Switch from writing to upload state at exam end; explain that off-device writing cannot be technically prevented.
 - [ ] P4.4 Accept PDF, DOCX and multiple image pages, with preview, ordering, question mapping and upload receipt.
@@ -258,3 +258,18 @@ The user approved using the researched syllabus baseline as the working implemen
 - Added test/study-resources.test.js; total 126 tests passed and build passed. Actual provider prices are not assumed; missing verified price/budget must block dispatch.
 - Limits are design defaults and pure validators only; no upload/marking endpoint or worker is enabled. No deployment or live database changes.
 - Next P2.1: build lazy-loaded Professional Study navigation and screen. P1.2 session details remain officially unverified; owner-approved baseline allows implementation without inventing current rules.
+
+### P2.1–P4.1 source implementation — 2026-11-16
+
+- Implemented Study/Exam/guest history/Admin UI, 17-subject filtering, materials source/session/review metadata, explicit empty/error states and tax/law verification notices.
+- Authenticated Admin text materials support draft/preview/publish/edit/archive; structured question/rubric editor and immutable paper builder are implemented. Portfolio Admin links to /study?view=admin.
+- Private direct material-upload/validation/download code is implemented, but P2.4 remains OPEN for connected file-upload acceptance. Created empty private store abdulowahab-study-private (store_4Ra3oy7WqXyEehue, iad1). It is NOT connected; do not create a duplicate. Connector has no existing-store connect operation; no CLI credential is available. No existing public Blob setting was changed.
+- MCQ uses actual database guest sessions, server clock/deadlines, answer autosave, flags, owner-scoped resume/submit/results, idempotent start/submission, bounded daily practice and request counters. Answer keys/explanations are withheld until finalization. Expiry is enforced on every write/read; closed-browser status finalizes on next access, not a claimed background scheduler.
+- Seed: 13 original study/practice materials; a 3-question CL Assurance pilot; nine original PL/AL written focus papers with explicit marks, suggested model approaches and rubrics. These are NOT full ICAB mocks or complete syllabus content. Full-mock builder requires Admin-reviewed session source, question count, total marks, pass rule, zero-negative-marking rule and baseline duration; do not claim official session verification.
+- Added migrations/study/002_learning_runtime.sql and explicit scripts/study-migrate.mjs --apply [--seed-pilot]. Neither migration nor pilot is applied to production.
+- Verification: 132 tests passed, production build passed (existing large-chunk warnings). Real PGlite migrations/service/API tests plus React/jsdom clicks cover browsing, MCQ/resume/flag/submit/result and Admin draft save/preview. ZIP validation bounds decompression and rejects entities/macros; signature and rubric checks tested.
+- Browser visual/mobile QA remains OPEN: local preview was not reachable by the attached browser. Source implementation checkboxes do not certify browser or connected-service acceptance. P2 overall acceptance/P7 remain pending these gates.
+- /api/study is routed through existing /api/content?workspace=study to retain the existing function count. Existing portfolio API tests pass.
+- No deployment, no production database writes, no student script uploads or marking enabled. New private store is empty and unconnected.
+- Exact next tasks: connect the existing private store with a dedicated STUDY_BLOB_READ_WRITE_TOKEN, verify real upload/download and anonymous denial in an isolated environment; run browser/mobile QA; then P4.2 timed written attempts. Do not deploy without explicit user instruction.
+- Full handoff and setup: docs/professional-study-implementation.md.
