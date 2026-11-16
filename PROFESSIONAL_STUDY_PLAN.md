@@ -59,7 +59,7 @@ Existing portfolio PHASES.md is a different workstream; do not confuse its compl
 - [x] P1.4 Design database migrations: syllabus versions, materials, questions, rubrics, papers, attempts, responses, uploads, marking jobs, feedback and account ownership.
 - [x] P1.5 Define guest storage and account retention/deletion/export rules. Guest browser-only history is not cross-device persistence.
 - [x] P1.6 Design private file storage, signed uploads, PDF/DOCX/image extraction, OCR, asynchronous marking and provider integration using existing resources where suitable.
-- [ ] P1.7 Specify file/page limits, AI cost controls, rate limits, failure handling and job retry policy before implementation.
+- [x] P1.7 Specify file/page limits, AI cost controls, rate limits, failure handling and job retry policy before implementation.
 
 Acceptance: reviewed architecture and verified subject/session matrix; migration and rollback design; no mock integrations presented as working services.
 Evidence / blockers: P1.1 findings recorded in [architecture discovery](docs/professional-study-architecture.md). Remaining P1 items are open.
@@ -250,3 +250,11 @@ The user approved using the researched syllabus baseline as the working implemen
 - Added shared/study/capabilities.js and tests: separate fail-closed readiness for Admin materials, student submissions and marking. Helpers do not enable endpoints.
 - No resources provisioned, secrets decrypted, real scripts processed or live database changed. No deployment.
 - Next P1.7: file/page limits, AI budget controls, retries and failure policy. Private storage/provider/worker runtime verification remains mandatory before P4/P5 release.
+
+### P1.7 resource/cost/retry policy complete — 2026-11-16
+
+- Added shared/study/resource-policy.js with file/aggregate limits, extraction constraints, worst-case grading reservation calculation and bounded retry decisions.
+- Added docs/professional-study-resource-policy.md defining numeric defaults, durable quota enforcement requirements, cost settlement, failure states and release tests.
+- Added test/study-resources.test.js; total 126 tests passed and build passed. Actual provider prices are not assumed; missing verified price/budget must block dispatch.
+- Limits are design defaults and pure validators only; no upload/marking endpoint or worker is enabled. No deployment or live database changes.
+- Next P2.1: build lazy-loaded Professional Study navigation and screen. P1.2 session details remain officially unverified; owner-approved baseline allows implementation without inventing current rules.
