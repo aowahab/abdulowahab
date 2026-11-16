@@ -1,0 +1,177 @@
+# Professional Study — delivery plan and handoff checklist
+
+Last updated: 2026-11-16 (Asia/Dhaka)
+Repository: aowahab/abdulowahab
+Canonical checklist: `PROFESSIONAL_STUDY_PLAN.md` on main.
+Scope: a separate Professional Study section within the existing portfolio, with Study, Exam and My Progress.
+Status: PLANNING SAVED. No study platform implementation has been verified.
+Owner: unassigned. Next task: P1.1.
+Existing portfolio PHASES.md is a different workstream; do not confuse its completion with this plan.
+
+## Product decisions agreed with Abdul Owahab
+
+- CL / PL / AL filters, then subject and chapter.
+- Study contains materials, worked examples, revision, mock practice and written practice.
+- Exam provides ICAB-style practice appropriate to the selected subject and session.
+- MCQs: immediate result after submission; explanations for BOTH correct and incorrect answers.
+- PL and AL written: timed paper, then 30 minutes to upload PDF, Word or multiple images.
+- Written feedback: marks per subquestion, workings/alternative valid methods, why marks were lost, correct answer, improved answer and focus areas.
+- My Progress records attempts, topic performance, scripts and recommendations.
+- Profile is optional. Guests can study and sit exams; account users can retain private history across devices.
+- AI marking is practice assessment, not official ICAB grading. Unreadable handwriting requires review, not invented interpretation.
+- Separate Study practice mode from Exam mode; exam answers stay hidden until submission.
+- Preserve existing live portfolio behavior. This plan does not authorize automatic production deployment.
+
+## How to use this checklist
+
+1. Read this file and current main before starting. Inspect AGENTS.md if present.
+2. Claim one item in the handoff log with owner, branch and starting SHA.
+3. Work on a focused branch from current main. Keep secrets and student scripts out of Git.
+4. Mark an item [x] only after its acceptance evidence is recorded. Partial or blocked work stays [ ].
+5. Record tests, preview URL if available, commit, limitations and exact next task before handing over.
+6. Recheck current deployment and main before any release. Obtain explicit deployment instruction for this feature.
+7. Keep this single document current; link other technical documents rather than creating conflicting checklists.
+
+## Phase overview
+
+| Phase | Deliverable | Depends on | Status |
+|---|---|---|---|
+| P0 | Scope and handoff register | None | Plan recorded |
+| P1 | Verified syllabus and architecture | P0 | Not started |
+| P2 | Study section and content management | P1 | Not started |
+| P3 | Timed MCQ exams and instant feedback | P1, P2 | Not started |
+| P4 | Written exams and script submission | P1, P2 | Not started |
+| P5 | Written marking and learning feedback | P4 | Not started |
+| P6 | Optional profiles and progress | P3, P5 | Not started |
+| P7 | Full verification and controlled release | P2–P6 | Not started |
+
+## P0 — Scope and continuity
+
+- [x] P0.1 Record user requirements and implementation phases.
+- [x] P0.2 Establish one canonical checklist with acceptance criteria and handoff fields.
+- [ ] P0.3 Link this register from repository README when implementation starts.
+
+## P1 — Verified syllabus, data and architecture
+
+- [ ] P1.1 Inspect existing routes, navigation, Admin, auth, Blob and PostgreSQL integration; identify extension points and baseline tests.
+- [ ] P1.2 Verify official current ICAB subjects, syllabus, assessment format, duration, marks and permitted resources per subject/session. Record source URLs, checked dates and effective sessions; resolve conflicting older documents.
+- [ ] P1.3 Create versioned level/subject/chapter catalogue and session-specific exam blueprints. Do not assume every PL subject is written; check IT Governance separately.
+- [ ] P1.4 Design database migrations: syllabus versions, materials, questions, rubrics, papers, attempts, responses, uploads, marking jobs, feedback and account ownership.
+- [ ] P1.5 Define guest storage and account retention/deletion/export rules. Guest browser-only history is not cross-device persistence.
+- [ ] P1.6 Design private file storage, signed uploads, PDF/DOCX/image extraction, OCR, asynchronous marking and provider integration using existing resources where suitable.
+- [ ] P1.7 Specify file/page limits, AI cost controls, rate limits, failure handling and job retry policy before implementation.
+
+Acceptance: reviewed architecture and verified subject/session matrix; migration and rollback design; no mock integrations presented as working services.
+Evidence / blockers: none yet.
+
+## P2 — Study and content administration
+
+- [ ] P2.1 Add responsive Professional Study entry and Study / Exam / My Progress navigation without breaking existing routes.
+- [ ] P2.2 Implement CL / PL / AL → subject → chapter filters and empty/loading/error states.
+- [ ] P2.3 Display materials, explanations, worked calculations, revision notes and practice questions.
+- [ ] P2.4 Extend authenticated Admin with draft, preview, publish, edit and archive for materials/questions/rubrics.
+- [ ] P2.5 Store source, session, syllabus version and last verification date with technical content; flag stale tax/law material.
+- [ ] P2.6 Use original or permitted content; distinguish original practice questions from official past questions.
+- [ ] P2.7 Seed an explicitly labelled, reviewed pilot module; show unavailable subjects honestly.
+
+Acceptance: Admin-published content appears under correct filters; unpublished content remains private; mobile, keyboard and regression checks pass.
+Evidence / blockers: none yet.
+
+## P3 — MCQ exam engine
+
+- [ ] P3.1 Build paper selection by level, subject, session and practice/full mock mode, using published reviewed questions.
+- [ ] P3.2 Show duration, marks and rules before start; navigation, unanswered counts and review flags during exam.
+- [ ] P3.3 Persist attempt deadline and autosaved answers server-side; refresh/device clock changes must not extend exam time.
+- [ ] P3.4 Implement manual submission, expiry submission, reconnection behavior and idempotent finalization.
+- [ ] P3.5 Keep answer keys and explanations server-side until the attempt is finalized.
+- [ ] P3.6 Return immediate deterministic score with selected/correct answers and explanations for every question.
+- [ ] P3.7 Generate topic breakdown and specific revision recommendations; avoid unsupported readiness claims.
+
+Acceptance: known fixtures produce exact scores; timer/refresh/disconnection/double-submit tested; correct answers cannot be fetched early.
+Evidence / blockers: none yet.
+
+## P4 — Written exam and 30-minute submission window
+
+- [ ] P4.1 Prepare reviewed PL/AL papers with subquestion marks, rubrics, model answers and subject/session-specific rules.
+- [ ] P4.2 Start immutable server-side exam and upload deadlines; upload deadline = exam deadline + 30 minutes.
+- [ ] P4.3 Switch from writing to upload state at exam end; explain that off-device writing cannot be technically prevented.
+- [ ] P4.4 Accept PDF, DOCX and multiple image pages, with preview, ordering, question mapping and upload receipt.
+- [ ] P4.5 Handle legacy .doc only with safe supported conversion; otherwise give a clear DOCX/PDF conversion message.
+- [ ] P4.6 Support reliable signed direct uploads beyond function request limits; validate MIME/signature, size/page limits and access.
+- [ ] P4.7 Define upload-start versus upload-completion cutoff; enforce late submission and retry rules on the server.
+- [ ] P4.8 Store private immutable submitted script version; prevent cross-user access and accidental public Blob exposure.
+
+Acceptance: server enforces the exact 30-minute window; mixed page uploads preserve order; expired/invalid/unauthorized submissions fail clearly.
+Evidence / blockers: none yet.
+
+## P5 — AI practice marking and feedback
+
+- [ ] P5.1 Extract PDF/DOCX text and OCR images/scans; detect missing/unreadable pages and allow review.
+- [ ] P5.2 Build private asynchronous marking jobs with queued/running/completed/review-required/failed states, retries and duplicate protection.
+- [ ] P5.3 Mark per subquestion against versioned rubric; award workings, partial credit and valid alternative methods.
+- [ ] P5.4 Enforce score bounds and total reconciliation; validate calculations with deterministic checks where feasible.
+- [ ] P5.5 Show criterion-level evidence, lost marks, corrected solution, improved answer structure and next learning actions.
+- [ ] P5.6 Treat scripts as untrusted data: embedded instructions cannot change rubrics, reveal secrets or run tools.
+- [ ] P5.7 Calibrate against manually reviewed scripts; measure disagreements, transcription confidence and failure modes before enabling full use.
+- [ ] P5.8 Label marks as AI practice estimates; support recheck requests and reviewer overrides with an audit trail.
+- [ ] P5.9 Store rubric/model versions and grading inputs securely so results can be reproduced or explained.
+
+Acceptance: reviewed calibration set, readable feedback and reconciled marks; unreadable scripts enter review; provider outages do not lose submissions.
+Evidence / blockers: marking provider/storage/worker design not yet verified.
+
+## P6 — Optional profiles and progress
+
+- [ ] P6.1 Implement optional sign-in and private ownership checks; guest access remains available.
+- [ ] P6.2 Offer guest local history and downloadable results; explain device/storage limitations.
+- [ ] P6.3 Allow explicit migration of guest history to account without duplication; never trust guest scores as server-verified marks.
+- [ ] P6.4 Show attempts, saved scripts, feedback, level/subject/topic performance and score trends.
+- [ ] P6.5 Recommend revision from coverage, repeated errors, recency and time use; label insufficient evidence.
+- [ ] P6.6 Provide export/delete controls, retention policy and secure account/session handling.
+- [ ] P6.7 Test isolation between two users and guest/account transitions.
+
+Acceptance: account history works across devices; private scripts are isolated; guest learning needs no account; recommendations cite actual attempts.
+Evidence / blockers: none yet.
+
+## P7 — Verification, release and operations
+
+- [ ] P7.1 Run unit/integration checks for scoring, deadlines, upload cutoffs, authorization and grading state transitions.
+- [ ] P7.2 Complete end-to-end MCQ flow and PL/AL written flow through upload, marking, feedback and progress.
+- [ ] P7.3 Test iPhone Safari, Android and desktop; keyboard navigation, contrast, reading order and accessible timer announcements.
+- [ ] P7.4 Test poor network, interrupted uploads, provider rate limits/timeouts, OCR failures and background job recovery.
+- [ ] P7.5 Run existing portfolio regression tests and production build; verify Admin, Feed, Workstation, AI and Contact remain functional.
+- [ ] P7.6 Validate migration backup/rollback, private storage, abuse limits, operational logs and cost controls without logging scripts or secrets.
+- [ ] P7.7 Prepare tested preview, known limitations, exact release SHA and previous production rollback target.
+- [ ] P7.8 Deploy only on explicit instruction; then verify domain mapping, routes, APIs and private file access.
+- [ ] P7.9 Record release evidence and maintenance ownership. Planning or passing static tests alone does not mean the product is complete.
+
+Acceptance: complete flows pass with real configured services; limitations documented; user-authorized release verified.
+Evidence / blockers: none yet.
+
+## Pending decisions — resolve during the relevant phase
+
+| Decision | When | Safe working assumption |
+|---|---|---|
+| Initial subject and exam session | P1–P2 | Verify syllabus first; offer a small reviewed pilot |
+| ICAB exam format and passing thresholds | P1 | Verified per subject/session; never invent official thresholds |
+| Profile identity provider | P1/P6 | Optional account; inspect existing auth before selecting integration |
+| File limits and retention | P1/P4 | Explicit limits and private storage; no indefinite retention by accident |
+| AI/OCR provider and budget | P1/P5 | Verify actual capabilities and costs before enabling marking |
+| Late/incomplete uploads | P4 | Publish clear server-enforced rules before exam starts |
+| Public versus restricted availability | Before release | Preserve existing site audience; scripts/results always private |
+
+## Handoff log
+
+| Date | Owner | Branch / commit | Work and evidence | Blocker | Exact next task |
+|---|---|---|---|---|---|
+| 2026-11-16 | Codex | main / see this file's Git history | Requirements and phase checklist recorded. Implementation not started. Existing production baseline e744c61; this plan changes documentation only. | None for discovery | P1.1 inspect extension points and current baseline |
+
+## Required handoff template
+
+- Owner / date:
+- Branch / commit / working-tree changes:
+- Items completed (IDs):
+- Evidence (commands, results, reviewed sources, preview):
+- Items partially done or blocked:
+- Schema / env / service changes (names only; no secret values):
+- Deployment state / rollback target:
+- Exact next item and how to reproduce:
