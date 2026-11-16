@@ -205,3 +205,10 @@ The user approved using the researched syllabus baseline as the working implemen
 - P1.3 PARTIAL: chapter structure exists, but reviewed chapter lists/content still need importing. No chapter names were invented. P1.3 checkbox remains open.
 - No Study UI, database migration, private upload or grading endpoint added. Existing live website unchanged.
 - Exact next task: import reviewed chapter lists by subject/version, then complete P1.3 and proceed to P1.4 database design.
+
+### P1.3 chapter-map progress — 2026-11-16
+
+- Added reviewed syllabus-area navigation for 8 subjects: CL Assurance, Accounting, BTF, MI; PL AA, FAR, ITG; AL Corporate Reporting.
+- These are syllabus-area groupings, NOT claims of textbook chapter numbers. Labels are paraphrased; printed PDF pages are recorded with each entry. No study materials are published by this import.
+- Remaining 9 subject maps are explicitly pending, so P1.3 remains partial. Next: verify/import remaining maps, then database design P1.4.
+- Deploy remains prohibited by latest user instruction. Changes are saved on draft PR #10 only.

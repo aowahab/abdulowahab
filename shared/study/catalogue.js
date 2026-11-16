@@ -1,3 +1,4 @@
+import {reviewedChapters} from './chapters.js';
 // Syllabus baseline approved by the product owner; not session certification.
 export const CATALOGUE_VERSION = 'icab-2023-baseline-v1';
 export const CHECKED_AT = '2026-11-16';
@@ -33,7 +34,7 @@ const rows = [
 export const SUBJECTS = deepFreeze(rows.map(([id,level,title,format,durationMinutes])=>({
  id,level,title,format,durationMinutes,version:CATALOGUE_VERSION,
  sourceIds:level==='AL'?['syllabus','advanced']:['syllabus','introduction'],
- chapters:[],chapterStatus:'awaiting-reviewed-import',
+ chapters:reviewedChapters(id),chapterStatus:reviewedChapters(id).length?'reviewed-syllabus-areas':'awaiting-reviewed-import',
  durationStatus:id==='pl-itg'?'conflicting-sources-owner-approved-practice-default':'syllabus-baseline',
  requiresAdvanceInformation:id==='al-case'
 })));

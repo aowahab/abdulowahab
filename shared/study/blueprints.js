@@ -15,7 +15,7 @@ export function createBlueprint(subjectId, sessionId=TARGET_SESSION) {
   advanceInformationRequired:subject.requiresAdvanceInformation,
   uploadWindowMinutes:subject.format.startsWith('written')?30:0,
   uploadWindowAuthority:'platform-policy',
-  chapters:[],questions:[],rubricVersion:null,reviewedBy:null
+  chapters:subject.chapters.map(chapter=>chapter.id),questions:[],rubricVersion:null,reviewedBy:null
  });
 }
 export function publicationBlockers(blueprint) {
