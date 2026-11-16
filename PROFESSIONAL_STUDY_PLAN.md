@@ -4,8 +4,8 @@ Last updated: 2026-11-16 (Asia/Dhaka)
 Repository: aowahab/abdulowahab
 Canonical checklist: `PROFESSIONAL_STUDY_PLAN.md` on main.
 Scope: a separate Professional Study section within the existing portfolio, with Study, Exam and My Progress.
-Status: PLANNING SAVED. No study platform implementation has been verified.
-Owner: unassigned. Next task: P1.1.
+Status: P1 discovery started; P1.1 complete. No study platform implementation has been verified.
+Owner: Codex (discovery completed). Next task: P1.2.
 Existing portfolio PHASES.md is a different workstream; do not confuse its completion with this plan.
 
 ## Product decisions agreed with Abdul Owahab
@@ -20,7 +20,7 @@ Existing portfolio PHASES.md is a different workstream; do not confuse its compl
 - Profile is optional. Guests can study and sit exams; account users can retain private history across devices.
 - AI marking is practice assessment, not official ICAB grading. Unreadable handwriting requires review, not invented interpretation.
 - Separate Study practice mode from Exam mode; exam answers stay hidden until submission.
-- Preserve existing live portfolio behavior. This plan does not authorize automatic production deployment.
+- Preserve existing live portfolio behavior. User authorized deployment after each completed, tested increment on 2026-11-16.
 
 ## How to use this checklist
 
@@ -29,7 +29,7 @@ Existing portfolio PHASES.md is a different workstream; do not confuse its compl
 3. Work on a focused branch from current main. Keep secrets and student scripts out of Git.
 4. Mark an item [x] only after its acceptance evidence is recorded. Partial or blocked work stays [ ].
 5. Record tests, preview URL if available, commit, limitations and exact next task before handing over.
-6. Recheck current deployment and main before any release. Obtain explicit deployment instruction for this feature.
+6. Recheck current deployment and main before any release. Deployment of completed tested increments is authorized; verify target and release checks.
 7. Keep this single document current; link other technical documents rather than creating conflicting checklists.
 
 ## Phase overview
@@ -49,11 +49,11 @@ Existing portfolio PHASES.md is a different workstream; do not confuse its compl
 
 - [x] P0.1 Record user requirements and implementation phases.
 - [x] P0.2 Establish one canonical checklist with acceptance criteria and handoff fields.
-- [ ] P0.3 Link this register from repository README when implementation starts.
+- [x] P0.3 Link this register from repository README when implementation starts.
 
 ## P1 — Verified syllabus, data and architecture
 
-- [ ] P1.1 Inspect existing routes, navigation, Admin, auth, Blob and PostgreSQL integration; identify extension points and baseline tests.
+- [x] P1.1 Inspect existing routes, navigation, Admin, auth, Blob and PostgreSQL integration; identify extension points and baseline tests.
 - [ ] P1.2 Verify official current ICAB subjects, syllabus, assessment format, duration, marks and permitted resources per subject/session. Record source URLs, checked dates and effective sessions; resolve conflicting older documents.
 - [ ] P1.3 Create versioned level/subject/chapter catalogue and session-specific exam blueprints. Do not assume every PL subject is written; check IT Governance separately.
 - [ ] P1.4 Design database migrations: syllabus versions, materials, questions, rubrics, papers, attempts, responses, uploads, marking jobs, feedback and account ownership.
@@ -62,7 +62,7 @@ Existing portfolio PHASES.md is a different workstream; do not confuse its compl
 - [ ] P1.7 Specify file/page limits, AI cost controls, rate limits, failure handling and job retry policy before implementation.
 
 Acceptance: reviewed architecture and verified subject/session matrix; migration and rollback design; no mock integrations presented as working services.
-Evidence / blockers: none yet.
+Evidence / blockers: P1.1 findings recorded in [architecture discovery](docs/professional-study-architecture.md). Remaining P1 items are open.
 
 ## P2 — Study and content administration
 
@@ -141,7 +141,7 @@ Evidence / blockers: none yet.
 - [ ] P7.5 Run existing portfolio regression tests and production build; verify Admin, Feed, Workstation, AI and Contact remain functional.
 - [ ] P7.6 Validate migration backup/rollback, private storage, abuse limits, operational logs and cost controls without logging scripts or secrets.
 - [ ] P7.7 Prepare tested preview, known limitations, exact release SHA and previous production rollback target.
-- [ ] P7.8 Deploy only on explicit instruction; then verify domain mapping, routes, APIs and private file access.
+- [ ] P7.8 Deploy completed tested increments under the user's standing instruction; then verify domain mapping, routes, APIs and private file access.
 - [ ] P7.9 Record release evidence and maintenance ownership. Planning or passing static tests alone does not mean the product is complete.
 
 Acceptance: complete flows pass with real configured services; limitations documented; user-authorized release verified.
@@ -175,3 +175,18 @@ Evidence / blockers: none yet.
 - Schema / env / service changes (names only; no secret values):
 - Deployment state / rollback target:
 - Exact next item and how to reproduce:
+
+### 2026-11-16 discovery handoff
+
+- Branch: feature/professional-study-foundation; base main 149626f.
+- Completed: P1.1 repository inspection. Architecture findings: docs/professional-study-architecture.md.
+- Runtime changes: none; no services, secrets or database changes.
+- Next: P1.2 verify the official subject/session matrix, then complete architecture decisions.
+- Verification: see commit/PR evidence; production remains unchanged.
+
+### 2026-11-16 assessment research
+- Baseline matrix: [docs/icab-assessment-baseline.md](docs/icab-assessment-baseline.md).
+- P1.2 PARTIAL: 17 subjects and syllabus durations/formats researched. Session notice details, marks and permitted resources remain unverified; checkbox intentionally open.
+- IT Governance duration conflict recorded; no guessed session rules.
+- User now authorizes deploy after each tested increment. This release contains documentation only; no Study UI yet.
+- Next: finish session rules in P1.2, then P1.3 versioned catalogue.
