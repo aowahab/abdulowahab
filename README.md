@@ -97,3 +97,7 @@ A draft reveals a contextual review card, not a permanent menu. Visitors may edi
 Assistant submissions use a retry UUID and a transaction-locked receipt table to avoid duplicate inserts on identical retries. Reusing a token with changed content is rejected. The receipt table is created on the first real consented assistant submission. The Admin inbox remains authenticated and shows these enquiries under their existing recruiter/client/collaboration/appointment type, with a source note in details. Tests mock all submissions; no owner records or notifications are created during code verification.
 
 Ordinary assistant chat has no application-imposed message-count cap. The AI provider’s free-tier rate and quota limits still apply; bounded input/history size is not a conversation-count limit.
+
+## Professional Study development
+
+The phased checklist and handoff record is [PROFESSIONAL_STUDY_PLAN.md](PROFESSIONAL_STUDY_PLAN.md). Start there before implementing or resuming CA study work. Repository discovery is in [docs/professional-study-architecture.md](docs/professional-study-architecture.md).
