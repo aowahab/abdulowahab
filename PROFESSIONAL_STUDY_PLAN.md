@@ -190,3 +190,7 @@ Evidence / blockers: none yet.
 - IT Governance duration conflict recorded; no guessed session rules.
 - User now authorizes deploy after each tested increment. This release contains documentation only; no Study UI yet.
 - Next: finish session rules in P1.2, then P1.3 versioned catalogue.
+
+### User decision — 2026-11-16
+
+The user approved using the researched syllabus baseline as the working implementation format ("confirmed e dhore neo"). Proceed to P1.3 without blocking on session-specific notices. This is product-owner acceptance, not independent ICAB verification. Keep session-specific unknowns labelled; IT Governance may use the detailed syllabus's 210-minute online baseline as a configurable practice default, with item types pending. Do not invent pass marks, allowed resources or official session dates. Next task: P1.3 versioned catalogue and blueprint configuration.
