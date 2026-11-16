@@ -125,3 +125,16 @@ test('visitor counter does not fabricate analytics when database is unconfigured
   if(beforeDatabase===undefined)delete process.env.DATABASE_URL;else process.env.DATABASE_URL=beforeDatabase;
  }
 });
+
+test('upload negotiation requires admin before parsing body or invoking Blob',async()=>{
+ const {POST}=await import('../api/upload.js');
+ const url='https://example.com/api/upload';
+ const unauthorized=await POST(new Request(url,{method:'POST',body:'{bad'}));
+ assert.equal(unauthorized.status,401);
+ const crossSite=await POST(new Request(url,{method:'POST',headers:{origin:'https://attacker.example'},body:'{}'}));
+ assert.equal(crossSite.status,403);
+ const upload=readFileSync(new URL('../api/upload.js',import.meta.url),'utf8');
+ assert.match(upload,/raw\.length > 8192/);
+ assert.match(upload,/Array\.isArray\(body\)/);
+ assert.doesNotMatch(upload,/error: error\.message/);
+});
