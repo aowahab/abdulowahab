@@ -56,7 +56,7 @@ Existing portfolio PHASES.md is a different workstream; do not confuse its compl
 - [x] P1.1 Inspect existing routes, navigation, Admin, auth, Blob and PostgreSQL integration; identify extension points and baseline tests.
 - [ ] P1.2 Verify official current ICAB subjects, syllabus, assessment format, duration, marks and permitted resources per subject/session. Record source URLs, checked dates and effective sessions; resolve conflicting older documents.
 - [x] P1.3 Create versioned level/subject/chapter catalogue and session-specific exam blueprints. Do not assume every PL subject is written; check IT Governance separately.
-- [ ] P1.4 Design database migrations: syllabus versions, materials, questions, rubrics, papers, attempts, responses, uploads, marking jobs, feedback and account ownership.
+- [x] P1.4 Design database migrations: syllabus versions, materials, questions, rubrics, papers, attempts, responses, uploads, marking jobs, feedback and account ownership.
 - [ ] P1.5 Define guest storage and account retention/deletion/export rules. Guest browser-only history is not cross-device persistence.
 - [ ] P1.6 Design private file storage, signed uploads, PDF/DOCX/image extraction, OCR, asynchronous marking and provider integration using existing resources where suitable.
 - [ ] P1.7 Specify file/page limits, AI cost controls, rate limits, failure handling and job retry policy before implementation.
@@ -224,3 +224,12 @@ The user approved using the researched syllabus baseline as the working implemen
 - No deployment, database writes or infrastructure changes.
 
 - P1.3 baseline catalogue now complete: 17 subjects, 77 syllabus areas/integrated skills, versioned templates. Chapter navigation uses reviewed syllabus areas; textbook-specific chapter mapping is future content work. Latest verification: 116 tests passed, build passed, then focused tests passed after template version update. Next task: P1.4 database/schema and migration design. No deployment.
+
+### P1.4 database design complete — 2026-11-16
+
+- Added migrations/study/001_foundation.sql: 17 namespaced PostgreSQL tables, including separate Admin material assets and student script uploads.
+- Added docs/professional-study-database.md with ownership/query rules, publication boundaries, transactional submission/job contracts and rollback approach.
+- Added scripts/verify-study-schema.mjs for isolated PGlite checks. Passed actual migration execution, table count, account identity constraint, paper immutability, invalid deadline rejection and transactional rollback.
+- P1.4 is DESIGN completion only: migration not applied to live Neon; no auth, worker or upload route implemented. No deployment.
+- New explicit user requirement: Admin must upload PDF/DOCX/images by level/subject/chapter, save draft, preview and publish. P2.4 includes this and material_assets supports it; upload functionality is not yet delivered.
+- Next: P1.5 guest/account retention, deletion and export policies. P1.6 must inspect private storage and worker capabilities before integration.
