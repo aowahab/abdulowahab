@@ -5,7 +5,7 @@ export function createBlueprint(subjectId, sessionId=TARGET_SESSION) {
  if(!subject) throw Error('Unknown subject');
  if(typeof sessionId!=='string'||!/^\d{4}-[a-z]+(?:-[a-z]+)*$/.test(sessionId)) throw Error('Invalid session');
  return deepFreeze({
-  id:`${subjectId}:${sessionId}:v1`,version:1,catalogueVersion:CATALOGUE_VERSION,
+  id:`${subjectId}:${sessionId}:v2`,version:2,catalogueVersion:CATALOGUE_VERSION,
   subjectId,sessionId,status:'draft',purpose:'practice',
   format:subject.format,durationMinutes:subject.durationMinutes,
   durationStatus:subject.durationStatus,sessionVerification:'pending',

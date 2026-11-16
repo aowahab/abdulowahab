@@ -1,6 +1,6 @@
 import {reviewedChapters} from './chapters.js';
 // Syllabus baseline approved by the product owner; not session certification.
-export const CATALOGUE_VERSION = 'icab-2023-baseline-v1';
+export const CATALOGUE_VERSION = 'icab-2023-baseline-v2';
 export const CHECKED_AT = '2026-11-16';
 export const TARGET_SESSION = '2027-may-june';
 export const SOURCES = Object.freeze({

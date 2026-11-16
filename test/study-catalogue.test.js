@@ -33,12 +33,18 @@ test('unreviewed chapter imports reject missing provenance and invalid order',()
 });
 
 test('reviewed syllabus areas preserve provenance and independent immutable snapshots',()=>{
- const populated=SUBJECTS.filter(s=>s.chapters.length);assert.equal(populated.length,8);
+ const populated=SUBJECTS.filter(s=>s.chapters.length);assert.equal(populated.length,17);
  for(const subject of populated){
   assert.equal(new Set(subject.chapters.map(c=>c.id)).size,subject.chapters.length);
-  subject.chapters.forEach((chapter,index)=>{assert.equal(validateChapter(chapter),true);assert.equal(chapter.order,index+1);assert.ok(chapter.sourcePage>0);assert.equal(chapter.kind,'syllabus-area');assert.equal(chapter.materialStatus,'not-published')});
+  subject.chapters.forEach((chapter,index)=>{assert.equal(validateChapter(chapter),true);assert.equal(chapter.order,index+1);assert.ok(chapter.sourcePage>0);assert.equal(chapter.kind,subject.id==='al-case'?'integrated-skill':'syllabus-area');assert.equal(chapter.materialStatus,'not-published')});
   assert.deepEqual(createBlueprint(subject.id).chapters,subject.chapters.map(c=>c.id));
  }
  assert.throws(()=>subjectById('pl-far').chapters[0].title='changed',TypeError);
- assert.equal(subjectById('pl-tax').chapterStatus,'awaiting-reviewed-import');
+ assert.equal(subjectById('pl-tax').chapterStatus,'reviewed-syllabus-areas');
+});
+
+test('all subjects have source-backed navigation and no silent pending maps',()=>{
+ assert.ok(SUBJECTS.every(s=>s.chapters.length>0));
+ const ids=SUBJECTS.flatMap(s=>s.chapters.map(c=>c.id));assert.equal(new Set(ids).size,ids.length);
+ assert.ok(subjectById('al-case').chapters.every(c=>c.kind==='integrated-skill'));
 });

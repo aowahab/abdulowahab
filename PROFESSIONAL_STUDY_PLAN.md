@@ -55,7 +55,7 @@ Existing portfolio PHASES.md is a different workstream; do not confuse its compl
 
 - [x] P1.1 Inspect existing routes, navigation, Admin, auth, Blob and PostgreSQL integration; identify extension points and baseline tests.
 - [ ] P1.2 Verify official current ICAB subjects, syllabus, assessment format, duration, marks and permitted resources per subject/session. Record source URLs, checked dates and effective sessions; resolve conflicting older documents.
-- [ ] P1.3 Create versioned level/subject/chapter catalogue and session-specific exam blueprints. Do not assume every PL subject is written; check IT Governance separately.
+- [x] P1.3 Create versioned level/subject/chapter catalogue and session-specific exam blueprints. Do not assume every PL subject is written; check IT Governance separately.
 - [ ] P1.4 Design database migrations: syllabus versions, materials, questions, rubrics, papers, attempts, responses, uploads, marking jobs, feedback and account ownership.
 - [ ] P1.5 Define guest storage and account retention/deletion/export rules. Guest browser-only history is not cross-device persistence.
 - [ ] P1.6 Design private file storage, signed uploads, PDF/DOCX/image extraction, OCR, asynchronous marking and provider integration using existing resources where suitable.
@@ -212,3 +212,13 @@ The user approved using the researched syllabus baseline as the working implemen
 - These are syllabus-area groupings, NOT claims of textbook chapter numbers. Labels are paraphrased; printed PDF pages are recorded with each entry. No study materials are published by this import.
 - Remaining 9 subject maps are explicitly pending, so P1.3 remains partial. Next: verify/import remaining maps, then database design P1.4.
 - Deploy remains prohibited by latest user instruction. Changes are saved on draft PR #10 only.
+
+### P1.3 completed — 2026-11-16
+
+- All 17 subjects now have 77 reviewed baseline syllabus-area / integrated-skill navigation entries. These are NOT textbook chapter numbers, teaching materials or session confirmation.
+- Source: ICAB Syllabus 2023 official PDF; page references retained. Case Study is labelled integrated skills rather than a specification-grid chapter list. Tax and law headings are navigation only, not current legal advice.
+- Catalogue and area-map versions are v2; blueprint IDs/versions bumped to v2 so existing v1 templates are not silently replaced.
+- Existing draft configuration remains non-publishable until a reviewed paper and its rules exist.
+- P1.3 complete at syllabus-area navigation granularity. Future manual-specific chapter imports may be added as a separate content version in P2.
+- Next task: P1.4 additive database migration design, ownership, immutable paper/attempt snapshots and rollback plan.
+- No deployment, database writes or infrastructure changes.
