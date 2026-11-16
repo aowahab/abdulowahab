@@ -68,3 +68,10 @@ Production was updated on 2026-11-14 to deployment dpl_93gWuy7KFkuSXfg7TTbUBosz3
 - Implementation commit `24bd8c42`; test commit `ae213f4c`. Confirm latest branch CI before release.
 - This is a source-level calculation review, **not** full browser verification of the Workstation or proof of financial correctness for every tool. Real media screenshots, admin sessions, notification delivery, AI prompt-injection/provider tests and Neon expiry remain open.
 - No deployment requested by this verification step; keep release gate closed until all checks are completed.
+
+## Upload endpoint security review (2026-11-16)
+
+- api/upload.js now rejects unauthenticated upload-token requests before Blob negotiation, caps JSON at 8,192 characters (including absent Content-Length), rejects null/array JSON, and returns generic errors rather than internal exception messages.
+- Regression coverage added for unauthenticated malformed upload requests, cross-site rejection, and static bounds/error checks.
+- Implementation commit 02f962f4; test commit 141af920. Latest CI must pass before release.
+- Authenticated Blob upload integration and browser testing remain open. Preserve the Facebook-style photo grid and do not deploy before release gates pass.
