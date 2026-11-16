@@ -194,3 +194,14 @@ Evidence / blockers: none yet.
 ### User decision — 2026-11-16
 
 The user approved using the researched syllabus baseline as the working implementation format ("confirmed e dhore neo"). Proceed to P1.3 without blocking on session-specific notices. This is product-owner acceptance, not independent ICAB verification. Keep session-specific unknowns labelled; IT Governance may use the detailed syllabus's 210-minute online baseline as a configurable practice default, with item types pending. Do not invent pass marks, allowed resources or official session dates. Next task: P1.3 versioned catalogue and blueprint configuration.
+
+### P1.3 implementation handoff — 2026-11-16
+
+- User's latest instruction overrides earlier automatic deployment permission: DO NOT DEPLOY before further instruction.
+- Implemented: shared/study/catalogue.js with 17 stable subject IDs, immutable syllabus version, provenance, and reviewed chapter validation.
+- Implemented: shared/study/blueprints.js with immutable session templates, subject-specific formats/durations and incomplete-paper publication blockers. These are configuration utilities, not an exam service.
+- Unknown marks/pass rules/resources remain null. IT Governance source conflict remains visible. Platform upload window is distinguished from ICAB rules.
+- Tests: test/study-catalogue.test.js checks level coverage, timing exceptions, immutability, missing metadata and chapter provenance.
+- P1.3 PARTIAL: chapter structure exists, but reviewed chapter lists/content still need importing. No chapter names were invented. P1.3 checkbox remains open.
+- No Study UI, database migration, private upload or grading endpoint added. Existing live website unchanged.
+- Exact next task: import reviewed chapter lists by subject/version, then complete P1.3 and proceed to P1.4 database design.
