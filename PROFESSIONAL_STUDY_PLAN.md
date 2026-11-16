@@ -222,3 +222,5 @@ The user approved using the researched syllabus baseline as the working implemen
 - P1.3 complete at syllabus-area navigation granularity. Future manual-specific chapter imports may be added as a separate content version in P2.
 - Next task: P1.4 additive database migration design, ownership, immutable paper/attempt snapshots and rollback plan.
 - No deployment, database writes or infrastructure changes.
+
+- P1.3 baseline catalogue now complete: 17 subjects, 77 syllabus areas/integrated skills, versioned templates. Chapter navigation uses reviewed syllabus areas; textbook-specific chapter mapping is future content work. Latest verification: 116 tests passed, build passed, then focused tests passed after template version update. Next task: P1.4 database/schema and migration design. No deployment.
