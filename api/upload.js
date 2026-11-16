@@ -23,9 +23,15 @@ const ALLOWED_TYPES = [
 export async function POST(request) {
   if (!sameOrigin(request)) return json({ error: 'Blocked cross-site request.' }, 403);
 
+  // Reject unauthenticated requests before invoking Blob upload negotiation.
+  if (!isAdmin(request)) return json({ error: 'Authentication required.' }, 401);
+  if (Number(request.headers.get('content-length') || 0) > 8192) return json({ error: 'Request too large.' }, 413);
   let body;
   try {
-    body = await request.json();
+    const raw = await request.text();
+    if (raw.length > 8192) return json({ error: 'Request too large.' }, 413);
+    body = JSON.parse(raw);
+    if (!body || typeof body !== 'object' || Array.isArray(body)) return json({ error: 'Bad request.' }, 400);
   } catch {
     return json({ error: 'Bad request.' }, 400);
   }
@@ -47,6 +53,7 @@ export async function POST(request) {
     });
     return json(result);
   } catch (error) {
-    return json({ error: error.message || 'Upload failed.' }, 400);
+    console.error('Upload token request failed', error?.name || 'Error');
+    return json({ error: 'Upload request failed.' }, 400);
   }
 }
