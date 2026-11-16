@@ -198,8 +198,7 @@
       projects.body.appendChild(el('h2', null, 'Selected projects'));
       renderText(projects.body,
         '- Tickydo — digital ticketing: Co-founding a transport technology venture focused on passenger ticketing and practical bus-counter operations. Passenger and counter-facing websites are in testing; operator onboarding is in progress.\\n' +
-        '- Audit workflow and analytics: Applying advanced spreadsheets and structured audit documentation to financial statement testing, reconciliations and evidence review.\\n' +
-        '- Personal portfolio: A lightweight, editable website powered by Vercel Functions and Blob storage, with a private content editor.');
+        '- Audit workflow and analytics: Applying advanced spreadsheets and structured audit documentation to financial statement testing, reconciliations and evidence review.');
       var projectLink = el('p');
       var projectAnchor = el('a', null, 'Explore Tickydo');
       projectAnchor.href = 'https://tickydo.com/';
@@ -239,19 +238,13 @@
 
     var connect = sheet(String.fromCharCode(65 + ((index + (c.posts && c.posts.length ? 1 : 0)) % 26)), 'connect');
     connect.body.appendChild(el('h2', null, 'Connect'));
-    connect.body.appendChild(el('p', null, 'Interested in audit, financial reporting, technology or entrepreneurship? Find me on LinkedIn or explore my work on GitHub.'));
+    connect.body.appendChild(el('p', null, 'Interested in audit, financial reporting, technology or entrepreneurship? Find me on LinkedIn.'));
     var links = el('p');
     var linkedin = el('a', null, 'LinkedIn profile');
     linkedin.href = 'https://www.linkedin.com/in/abdulowahab/';
     linkedin.target = '_blank';
     linkedin.rel = 'noopener noreferrer';
-    var github = el('a', null, 'GitHub projects');
-    github.href = 'https://github.com/aowahab';
-    github.target = '_blank';
-    github.rel = 'noopener noreferrer';
     links.appendChild(linkedin);
-    links.appendChild(document.createTextNode('  ·  '));
-    links.appendChild(github);
     connect.body.appendChild(links);
     frag.appendChild(connect.sheet);
 

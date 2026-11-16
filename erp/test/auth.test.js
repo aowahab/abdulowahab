@@ -27,6 +27,12 @@ test('session tokens verify, and tampered or expired tokens are rejected', () =>
   assert.equal(auth.isAuthenticated({}), false);
 });
 
+test('malformed cookie encoding fails authentication without throwing', () => {
+  assert.equal(auth.isAuthenticated({ cookie: 'erp_session=%E0%A4%A' }), false);
+  const token = auth.makeToken();
+  assert.equal(auth.isAuthenticated({ cookie: `unrelated=%ZZ; erp_session=${token}` }), true);
+});
+
 test('without a password the deployed app fails closed', () => {
   delete process.env.APP_PASSWORD;
   process.env.VERCEL = '1';

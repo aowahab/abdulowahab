@@ -1,0 +1,4 @@
+export const PROJECTS =[
+  {title:'Tickydo ERP',tag:'Accounting application',problem:'Bring double-entry records and financial reports into one application.',contribution:'Accounting workflows for a chart of accounts, balanced journals, reversals and period locking.',result:'Implemented trial balance, general ledger, income statement and balance sheet. PostgreSQL support for deployment and SQLite for local development.',link:'/erp/',cta:'Open application',flow:['Journal entries','Double-entry validation','Financial reports']},
+  {title:'Tickydo Ticketing',tag:'Co-founder · Pilot operations',problem:'Support digital bus ticketing and smarter counter operations.',contribution:'Co-founder working on strategy, finance and operations.',result:'Passenger and counter-facing platforms are in pilot testing; operator onboarding is in progress.',link:'https://tickydo.com',cta:'Explore Tickydo',flow:['Passengers','Ticketing platform','Bus counters']},
+ ];

@@ -1,3 +1,4 @@
+import {assistantLeadInput,saveAssistantLead} from '../lib/assistant-leads.js';
 import pg from 'pg';
 import { notifyOwnerWhatsApp } from '../lib/whatsapp.js';
 import { isAdmin } from '../lib/auth.js';
@@ -8,9 +9,14 @@ const clean=(v,n=500)=>typeof v==='string'?v.trim().slice(0,n):'';
 export async function POST(request){
  if(!sameOrigin(request))return json({error:'Cross-site request blocked'},403);
  if(Number(request.headers.get('content-length')||0)>7000)return json({error:'Too large'},413);
- let d;try{d=await request.json()}catch{return json({error:'Invalid JSON'},400)}
+ let d;try{const raw=await request.text();if(Buffer.byteLength(raw)>7000)return json({error:'Too large'},413);d=JSON.parse(raw)}catch{return json({error:'Invalid JSON'},400)}
  if(d.website)return json({ok:true});
  if(d.consent!==true)return json({error:'Consent required'},400);
+ if(d.source==='assistant'){
+  try{assistantLeadInput(d)}catch(error){return json({error:error.message},400)}
+  try{const saved=await saveAssistantLead(pool,d);return json({ok:true,id:saved.id,repeated:saved.repeated})}catch(error){return json({error:error.message==='Submission key already used for different details'?error.message:'Could not save enquiry. Please retry or contact Abdul directly.'},error.message==='Submission key already used for different details'?409:503)}
+ }
+
  const name=clean(d.name,120),contact=clean(d.contact,200),organization=clean(d.organization,160),details=clean(d.details,1500),kind=['recruiter','client','collaboration','appointment','other'].includes(d.kind)?d.kind:'other';
  if(!name||contact.length<5||details.length<10)return json({error:'Name, contact and enquiry details are required'},400);
  try{await setup();const saved=await pool.query('INSERT INTO portfolio_leads(name,organization,contact,kind,details) VALUES($1,$2,$3,$4,$5) RETURNING id',[name,organization,contact,kind,details]);await notifyOwnerWhatsApp({id:saved.rows[0].id,kind});return json({ok:true})}catch(e){console.error('Lead storage failed:',e.message);return json({error:'Could not save enquiry. Please email Abdul directly.'},503)}

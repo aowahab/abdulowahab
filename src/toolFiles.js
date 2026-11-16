@@ -1,0 +1,8 @@
+export function downloadFile(bytes,name,type='application/pdf'){const blob=bytes instanceof Blob?bytes:new Blob([bytes],{type});const url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download=name;a.click();setTimeout(()=>URL.revokeObjectURL(url),60000)}
+export function validateFile(file,extension,maxMB=25){if(!file||!file.name.toLowerCase().endsWith(extension)||file.size>maxMB*1024*1024)throw Error(`Choose a ${extension} file up to ${maxMB} MB.`)}
+export function parsePageRange(value,total){
+ if(!value.trim()||value.trim().toLowerCase()==='all')return Array.from({length:total},(_,i)=>i);
+ const result=[];for(const part of value.split(',')){const match=part.trim().match(/^(\d+)(?:\s*-\s*(\d+))?$/);if(!match)throw Error('Use page numbers such as 1,3-5.');const a=Number(match[1]),b=Number(match[2]||a);if(a<1||b<a||b>total)throw Error(`Page numbers must be between 1 and ${total}.`);for(let n=a;n<=b;n++)if(!result.includes(n-1))result.push(n-1)}return result;
+}
+export async function editablePdf(file){validateFile(file,'.pdf');const {PDFDocument}=await import('pdf-lib');let doc;try{doc=await PDFDocument.load(await file.arrayBuffer(),{updateMetadata:false})}catch{throw Error('Use a valid, unlocked PDF. The Unlock tool accepts a password you already know.')}if(doc.getPageCount()>1000)throw Error('Use PDFs with up to 1,000 pages.');return doc}
+export async function embedToolFont(doc){const [{default:fontkit},response]=await Promise.all([import('@pdf-lib/fontkit'),fetch('/fonts/TickySans-Regular.ttf')]);if(!response.ok)throw Error('The editing font could not load. Try again.');doc.registerFontkit(fontkit);return doc.embedFont(await response.arrayBuffer(),{subset:true})}
