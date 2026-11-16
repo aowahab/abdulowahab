@@ -57,7 +57,7 @@ Existing portfolio PHASES.md is a different workstream; do not confuse its compl
 - [ ] P1.2 Verify official current ICAB subjects, syllabus, assessment format, duration, marks and permitted resources per subject/session. Record source URLs, checked dates and effective sessions; resolve conflicting older documents.
 - [x] P1.3 Create versioned level/subject/chapter catalogue and session-specific exam blueprints. Do not assume every PL subject is written; check IT Governance separately.
 - [x] P1.4 Design database migrations: syllabus versions, materials, questions, rubrics, papers, attempts, responses, uploads, marking jobs, feedback and account ownership.
-- [ ] P1.5 Define guest storage and account retention/deletion/export rules. Guest browser-only history is not cross-device persistence.
+- [x] P1.5 Define guest storage and account retention/deletion/export rules. Guest browser-only history is not cross-device persistence.
 - [ ] P1.6 Design private file storage, signed uploads, PDF/DOCX/image extraction, OCR, asynchronous marking and provider integration using existing resources where suitable.
 - [ ] P1.7 Specify file/page limits, AI cost controls, rate limits, failure handling and job retry policy before implementation.
 
@@ -233,3 +233,12 @@ The user approved using the researched syllabus baseline as the working implemen
 - P1.4 is DESIGN completion only: migration not applied to live Neon; no auth, worker or upload route implemented. No deployment.
 - New explicit user requirement: Admin must upload PDF/DOCX/images by level/subject/chapter, save draft, preview and publish. P2.4 includes this and material_assets supports it; upload functionality is not yet delivered.
 - Next: P1.5 guest/account retention, deletion and export policies. P1.6 must inspect private storage and worker capabilities before integration.
+
+### P1.5 policy and validation helpers complete — 2026-11-16
+
+- Added docs/professional-study-privacy.md: optional profiles, guest data boundaries, retention defaults, owner-only export, deletion and guest-to-account transfer contracts.
+- Added shared/study/privacy-policy.js with policy version, deadlines, owner-checked export allowlist and transfer validation. These are pure helpers, not running services.
+- Defaults: guest server records 30 days; local history 90 days best effort; account scripts/OCR 180 days; account results until deletion; abandoned uploads/temporary exports 24 hours; provider backup expiry must be verified before launch.
+- Added privacy tests for cross-owner rejection, private-field omission, premature feedback, consent, active-attempt transfer rejection and local-score provenance.
+- No retention worker, profile UI, export endpoint or deletion endpoint implemented; do not claim data is currently being expired.
+- Next: P1.6 inspect actual private storage, extraction and durable marking capabilities; retain P2.4 Admin-upload requirement. No deployment or live data changes.
