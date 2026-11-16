@@ -1,3 +1,5 @@
+> Current status (2026-11-17): the P2–P4.1 report below is historical. P4–P6 source work now exists; read [the current runtime handoff](professional-study-written-runtime.md) and the canonical checklist for unresolved acceptance gates. DO NOT DEPLOY. Migrations 1–3 remain unapplied to production.
+
 # Professional Study implementation: P2.1–P4.1
 
 Status: source implementation and isolated tests; NOT deployed. Production database migrations have NOT been applied.

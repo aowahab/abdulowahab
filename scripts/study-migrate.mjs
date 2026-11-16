@@ -9,7 +9,7 @@ const client=new pg.Client({connectionString:process.env.DATABASE_URL});await cl
 try{
  const exists=(await client.query("SELECT to_regclass('study.schema_versions') AS name")).rows[0].name;
  let versions=exists?(await client.query('SELECT version FROM study.schema_versions')).rows.map(r=>r.version):[];
- for(const [version,file] of [[1,'001_foundation.sql'],[2,'002_learning_runtime.sql']])if(!versions.includes(version)){await client.query(await readFile(new URL('../migrations/study/'+file,import.meta.url),'utf8'));console.log('Applied Study schema version',version);}
+ for(const [version,file] of [[1,'001_foundation.sql'],[2,'002_learning_runtime.sql'],[3,'003_written_profiles.sql']])if(!versions.includes(version)){await client.query(await readFile(new URL('../migrations/study/'+file,import.meta.url),'utf8'));console.log('Applied Study schema version',version);}
  await seedCatalogue(client);
  if(process.argv.includes('--seed-pilot')){
   // service requires a transaction-capable pool adapter for the one connected client.
