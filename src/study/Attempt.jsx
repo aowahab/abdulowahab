@@ -1,0 +1,4 @@
+import {lazy,Suspense,useEffect,useState} from 'react';
+import {studyApi} from './api.js';
+const Mcq=lazy(()=>import('./Exam.jsx')),Written=lazy(()=>import('./WrittenExam.jsx'));
+export default function Attempt({id,onClose}){const [format,setFormat]=useState(''),[error,setError]=useState('');useEffect(()=>{let live=true;setFormat('');studyApi('attempt',undefined,'&id='+id).then(a=>{if(live)setFormat(a.format||'mcq')}).catch(e=>{if(live)setError(e.message)});return()=>{live=false}},[id]);if(!format)return <div className="study-card"><p role={error?'alert':'status'}>{error||'Loading saved attempt…'}</p><button onClick={onClose}>Back</button></div>;return <Suspense fallback={<p>Opening exam…</p>}>{format==='mcq'?<Mcq id={id} onClose={onClose}/>:<Written id={id} onClose={onClose}/>}</Suspense>}

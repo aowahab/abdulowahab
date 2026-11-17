@@ -1,0 +1,5 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import {generateKeyPair,SignJWT,exportJWK,createLocalJWKSet} from 'jose';
+import {verifyAccountToken} from '../lib/study/identity.js';
+test('Study verifies signed account identity, issuer, expiry and required claims',async()=>{const {publicKey,privateKey}=await generateKeyPair('EdDSA'),jwk=await exportJWK(publicKey);jwk.kid='fixture';const keys=createLocalJWKSet({keys:[jwk]}),issuer='https://auth.example.invalid';const sign=(claims={})=>new SignJWT({sub:'account-user',iat:Math.floor(Date.now()/1000),exp:Math.floor(Date.now()/1000)+300,iss:issuer,...claims}).setProtectedHeader({alg:'EdDSA',kid:'fixture'}).sign(privateKey);assert.equal(await verifyAccountToken(await sign(),keys,issuer),'neon:'+issuer+':account-user');await assert.rejects(()=>sign({iss:'https://foreign.invalid'}).then(token=>verifyAccountToken(token,keys,issuer)));await assert.rejects(()=>sign({exp:1}).then(token=>verifyAccountToken(token,keys,issuer)));await assert.rejects(()=>sign({sub:''}).then(token=>verifyAccountToken(token,keys,issuer)));await assert.rejects(()=>verifyAccountToken('fake.bearer.token',keys,issuer));});

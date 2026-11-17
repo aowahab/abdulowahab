@@ -1151,3 +1151,10 @@ html[data-active-page] .content-wrap>.section>.section-heading h2{margin:6px 0 0
 .assistant-context-action{display:block;width:fit-content;margin-top:12px;padding:10px 14px;border:1px solid #95b7a3;border-radius:9px;background:#e5efdf;color:#18344e;font:inherit;font-size:12px;font-weight:650;cursor:pointer}.assistant-context-action:hover{background:#d7e7cf}
 
 .assistant-enquiry{margin-top:14px;padding-top:14px;border-top:1px solid #c5d9bf}.assistant-enquiry>strong{font-size:13px}.assistant-enquiry-actions{display:flex;flex-wrap:wrap;gap:7px;margin-top:9px}.assistant-enquiry button{font:inherit;font-size:12px;padding:9px 12px;border:1px solid #9db79c;border-radius:8px;color:#18344e;background:#e5efdf;cursor:pointer}.assistant-enquiry button:disabled{opacity:.5;cursor:default}.assistant-enquiry form{display:grid;gap:11px;font-size:12px}.assistant-enquiry form p{margin:8px 0 0}.assistant-enquiry label{display:grid;gap:5px}.assistant-enquiry input,.assistant-enquiry textarea,.assistant-enquiry select{font:inherit;font-size:13px;border:1px solid #a9c2a6;border-radius:7px;background:#fff;color:#18344e;padding:10px;width:100%;min-width:0}.assistant-enquiry .assistant-enquiry-consent{display:flex;align-items:start;gap:8px;line-height:1.6}.assistant-enquiry-consent input{width:16px;height:16px;flex-shrink:0;margin-top:3px}
+
+/* Professional Study is a separate destination; retain the five-item mobile bar on every page. */
+html[data-active-page=profile] #main .content-wrap>#study{display:none!important}
+html[data-active-page=study] #main .hero,html[data-active-page=study] #main .reference-breadcrumb,html[data-active-page=study] #main .reference-stats{display:none!important}
+html[data-active-page=study] #main .content-wrap>.section:not(#study){display:none!important}
+html[data-active-page=study] #main .content-wrap>#study{display:block!important}
+@media(max-width:900px){html[data-active-page] .mobile-bottom-nav{grid-template-columns:repeat(5,minmax(0,1fr))}}

@@ -11,8 +11,8 @@ test('all five portfolio routes preserve SPA rewrites',()=>{
  for(const path of ['/feed','/profile','/consultation','/workstation','/appointment'])
   assert.ok(routes.rewrites.some(r=>r.source===path&&r.destination==='/'),path);
 });
-test('mobile navigation has four destinations and preserves accessible current state',()=>{
- assert.match(main,/mobilePages=\['feed','profile','consultation','workstation'\]/);
+test('mobile navigation includes Study and preserves portfolio destinations and preserves accessible current state',()=>{
+ assert.match(main,/mobilePages=\['feed','profile','consultation','workstation','study'\]/);
  assert.match(main,/aria-label="Mobile quick navigation"/);
  assert.match(main,/aria-current=\{activePage===page\?'page':undefined\}/);
 });
