@@ -19,6 +19,12 @@ test('Study UI: browse levels, take MCQ, review explanations, and edit Admin mat
  const {default:Study}=await vite.ssrLoadModule('/src/study/Study.jsx');
  render(React.createElement(Study));
  await screen.findByText('Reasonable assurance: a clear starting point');
+ await screen.findByRole('heading',{name:'Choose your next step'});
+ assert.match(screen.getByText(/published materials/).textContent,/published materials/);
+ await user.click(screen.getByRole('button',{name:/Choose an exam paper/}));
+ await screen.findByRole('heading',{name:'Exam practice'});
+ await user.click(screen.getByRole('button',{name:/Browse Certificate lessons/}));
+ await screen.findByText('Reasonable assurance: a clear starting point');
  await user.click(screen.getByRole('button',{name:/PL Professional/}));
  await screen.findByRole('heading',{name:'Audit and Assurance'});
  await user.click(screen.getByRole('button',{name:/CL Certificate/}));
@@ -60,3 +66,4 @@ test('Study UI: browse levels, take MCQ, review explanations, and edit Admin mat
  delete globalThis.IS_REACT_ACT_ENVIRONMENT;
  }
 });
+
