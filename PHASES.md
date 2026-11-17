@@ -75,3 +75,11 @@ Production was updated on 2026-11-14 to deployment dpl_93gWuy7KFkuSXfg7TTbUBosz3
 - Regression coverage added for unauthenticated malformed upload requests, cross-site rejection, and static bounds/error checks.
 - Implementation commit 02f962f4; test commit 141af920. Latest CI must pass before release.
 - Authenticated Blob upload integration and browser testing remain open. Preserve the Facebook-style photo grid and do not deploy before release gates pass.
+
+## Visitor analytics origin hardening (2026-11-17)
+
+- Verified branch head `b619154c` passed GitHub Actions baseline CI before changes.
+- Traffic POST now rejects malformed or cross-origin Origin headers (HTTP 403), reducing third-party visitor-count manipulation. Same-origin requests retain existing visitor-token validation.
+- Added executable regression tests for foreign Origin, malformed Origin and same-origin invalid visitor session.
+- Implementation commit `19d7196c`; regression commit `c0466dff`. Check CI for the latest branch head before release.
+- This does **not** replace actual Neon two-minute presence expiry tests, rate limiting, browser visual screenshots with real feed media, authenticated admin/upload, provider AI, appointment delivery, Workstation export and accessibility tests. The release gate remains closed. No deployment performed.
