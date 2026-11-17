@@ -1158,3 +1158,5 @@ html[data-active-page=study] #main .hero,html[data-active-page=study] #main .ref
 html[data-active-page=study] #main .content-wrap>.section:not(#study){display:none!important}
 html[data-active-page=study] #main .content-wrap>#study{display:block!important}
 @media(max-width:900px){html[data-active-page] .mobile-bottom-nav{grid-template-columns:repeat(5,minmax(0,1fr))}}
+
+.project-screenshot{display:block;width:100%;height:auto;border:1px solid #c6d6c1;border-radius:10px;margin:18px 0}

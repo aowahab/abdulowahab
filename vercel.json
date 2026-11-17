@@ -50,10 +50,6 @@
       "destination": "/"
     },
     {
-      "source": "/erp-preview",
-      "destination": "/"
-    },
-    {
       "source": "/tickytools",
       "destination": "/"
     }

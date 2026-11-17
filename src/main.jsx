@@ -27,7 +27,13 @@ const projects = [
  {title:'Audit workflows',tag:'Professional practice',body:'Evidence-based audit testing, reconciliations, financial reporting and structured documentation across diverse industries.'},
 ];
 function LinkText({text=''}) {
- return text.split(/(https?:\/\/[^\s]+)/g).map((part,i)=>/^https?:\/\//.test(part)?<a key={i} href={part} target="_blank" rel="noopener noreferrer">{part}</a>:part);
+ return text.split(/(\[[^\]]+\]\(https?:\/\/[^\s)]+\)|https?:\/\/[^\s<>]+)/g).map((part,i)=>{
+  const markdown=part.match(/^\[([^\]]+)\]\((https?:\/\/[^\s)]+)\)$/);
+  if(markdown)return <a key={i} href={markdown[2]} target="_blank" rel="noopener noreferrer">{markdown[1]}</a>;
+  if(!/^https?:\/\//.test(part))return part;
+  const url=part.replace(/[),.;!?]+$/,'');
+  return <React.Fragment key={i}><a href={url} target="_blank" rel="noopener noreferrer">{url}</a>{part.slice(url.length)}</React.Fragment>;
+ });
 }
 function RichText({body=''}) {
  return body.split(/\n\s*\n/).filter(Boolean).map((block,i)=>{
@@ -122,7 +128,7 @@ function VisitorTraffic(){
 }
 function SelectedProjects({cases=PROJECTS}){
 
- return <div className="case-studies">{publicContentOnly(cases).map((p,i)=><article className="case-study" key={p.title}><span className="eyebrow">0{i+1} / {p.tag}</span><h3>{p.title}</h3><ol className="project-flow" aria-label={p.title+' workflow'}>{p.flow.map(step=><li key={step}>{step}</li>)}</ol><p className="diagram-caption">Illustrative workflow</p><dl><div><dt>Purpose</dt><dd>{p.problem}</dd></div><div><dt>Contribution</dt><dd>{p.contribution}</dd></div><div><dt>Current state</dt><dd>{p.result}</dd></div></dl><a className="hub-link" href={p.link} {...(p.link.startsWith('https:')?{target:'_blank',rel:'noopener noreferrer'}:{})}>{p.cta} ↗</a>{i===0&&<p className="muted-note">Business records require sign-in. <a href="/erp-preview">See application screenshots</a> before opening the workspace.</p>}</article>)}</div>;
+ return <div className="case-studies">{publicContentOnly(cases).map((p,i)=><article className="case-study" key={p.title}><span className="eyebrow">0{i+1} / {p.tag}</span><h3>{p.title}</h3>{i===0&&<a href="/erp-preview" aria-label="View Tickydo ERP screenshots"><img className="project-screenshot" src="/previews/erp-dashboard.png" alt="Tickydo ERP dashboard showing the accounting workspace" loading="lazy"/></a>}<ol className="project-flow" aria-label={p.title+' workflow'}>{p.flow.map(step=><li key={step}>{step}</li>)}</ol><p className="diagram-caption">Illustrative workflow</p><dl><div><dt>Purpose</dt><dd>{p.problem}</dd></div><div><dt>Contribution</dt><dd>{p.contribution}</dd></div><div><dt>Current state</dt><dd>{p.result}</dd></div></dl><a className="hub-link" href={p.link} {...(p.link.startsWith('https:')?{target:'_blank',rel:'noopener noreferrer'}:{})}>{p.cta} ↗</a>{i===0&&<p className="muted-note">Business records require sign-in. <a href="/erp-preview">See application screenshots</a> before opening the workspace.</p>}</article>)}</div>;
 }
 function App(){
  const mobilePages=['feed','profile','consultation','workstation','study'];
@@ -159,7 +165,7 @@ function App(){
  <div className="content-wrap">
  <Section id="career" eyebrow="CAREER" title="Experiences"><CareerTimeline/><h3 className="subsection-title">Industry-wise audit exposure</h3><Engagements/></Section>
  <Section id="expertise" eyebrow="SKILLS" title="Expertise & professional development"><TrainingCards/></Section>
- {(content.sections||[]).map((s,i)=><Section key={s.id||i} id={s.id||'section-'+i} eyebrow={String(i+1).padStart(2,'0')} title={s.title}><RichText body={s.body||''}/>{s.id==='projects'&&<SelectedProjects cases={content.projects||PROJECTS}/>}</Section>)}
+ {(content.sections||[]).filter(s=>s.id!=='qualification'||!ids.has('education')).map((s,i)=><Section key={s.id||i} id={s.id||'section-'+i} eyebrow={String(i+1).padStart(2,'0')} title={s.title}><RichText body={s.body||''}/>{s.id==='projects'&&<SelectedProjects cases={content.projects||PROJECTS}/>}</Section>)}
  {!ids.has('experience')&&<Section id="experience" eyebrow="EXPERTISE" title="Professional experience"><p>Working across statutory and group audit engagements at Deloitte Bangladesh, with exposure to a range of sectors and financial statement areas.</p><dl className="detail-list">{experience.map(([a,b])=><div key={a}><dt>{a}</dt><dd>{b}</dd></div>)}</dl></Section>}
  {!ids.has('projects')&&<Section id="projects" eyebrow="SELECTED WORK" title="Projects & ventures"><div className="project-grid">{projects.map((p,i)=><article className="project-card" key={p.title}><span className="project-number">0{i+1} / {p.tag}</span><h3>{p.title}</h3><p>{p.body}</p>{p.url&&<a href={p.url} target="_blank" rel="noopener noreferrer">{p.cta} ↗</a>}</article>)}</div></Section>}
  {!ids.has('education')&&<Section id="education" eyebrow="BACKGROUND" title="Education & development"><p>BBA in Accounting & Information Systems from Jagannath University, Dhaka. Pursuing Chartered Accountancy at ICAB Professional Level.</p></Section>}
@@ -177,7 +183,7 @@ function App(){
    <ContactRequest initialMeeting={window.location.pathname==='/appointment'||window.location.hash==='#appointment'}/>
   </div>
  </Section>
- <Section id="study" eyebrow="STUDY" title="Professional Study">{activePage==='study'&&<Suspense fallback={<p role="status">Loading Professional Study…</p>}><ProfessionalStudy/></Suspense>}</Section>
+ <Section id="study" eyebrow="STUDY" title="Professional Study">{activePage!=='study'&&<><p>Explore CA lessons, worked examples and practice questions across Certificate, Professional and Advanced levels.</p><a className="button primary" href="/study">Explore Study ↗</a></>}{activePage==='study'&&<Suspense fallback={<p role="status">Loading Professional Study…</p>}><ProfessionalStudy/></Suspense>}</Section>
  <Section id="workstation" eyebrow="04 / TOOLS" title="TickyTools">
   {activePage==='workstation'&&<Suspense fallback={<p role="status">Loading TickyTools…</p>}><TickyTools/></Suspense>}
  </Section>
@@ -185,9 +191,9 @@ function App(){
  </div></main>{!['workstation','study'].includes(activePage)&&<PortfolioAI/>}<nav className="mobile-bottom-nav" aria-label="Mobile quick navigation">{mobileDestinations.map(([label,page])=><a key={page} href={page==='profile'?'/':page==='workstation'?'/tickytools':page==='consultation'?'/contact':'/'+page} className={activePage===page?'is-active':''} aria-current={activePage===page?'page':undefined} onClick={e=>mobileNavigate(e,page)}><span className="bottom-nav-icon" aria-hidden="true">{({feed:'▣',profile:'♙',consultation:'✉',workstation:'▤',study:'▥'})[page]}</span><span>{label}</span></a>)}</nav><a className="back-to-top" href="#top" aria-label="Back to top">↑</a><footer className="footer" aria-label="Site footer">
  <div className="footer-main">
   <div className="footer-intro"><a className="footer-identity" href="#top"><span className="footer-mark">{(content.name||'Abdul Owahab').trim().split(/\s+/).map(x=>x[0]).slice(0,2).join('').toUpperCase()}</span><span>{content.name||'Abdul Owahab'}</span></a><p>Audit &amp; Assurance professional, Chartered Accountancy student and technology co-founder. Grounded in accounting, assurance, practical innovation and meaningful collaboration.</p><span className="footer-location">Dhaka, Bangladesh</span></div>
-  <div className="footer-column"><h3>Explore</h3><a href="#about">About</a><a href="#career">Experience</a><a href="#expertise">Expertise</a><a href="#projects">Projects</a><a href="#education">Education</a><a href="#updates">News Feed</a></div>
+  <div className="footer-column"><h3>Explore</h3><a href="#about">About</a><a href="#career">Experience</a><a href="#expertise">Expertise</a><a href="#projects">Projects</a><a href="#education">Education</a><a href="/feed">News Feed</a></div>
   <div className="footer-column"><h3>Projects</h3><a href="https://tickydo.com" target="_blank" rel="noopener noreferrer">Tickydo Ticketing ↗</a><a href="/erp/">Tickydo ERP ↗</a><a href="#projects">Other projects</a><a href="/admin">Admin login</a></div>
-  <div className="footer-column"><h3>Connect</h3><a href="mailto:abdulowahab.jnu@gmail.com">Email me ↗</a><a href="https://www.linkedin.com/in/abdulowahab/" target="_blank" rel="noopener noreferrer">LinkedIn ↗</a><a href="#consultation">Contact me</a></div>
+  <div className="footer-column"><h3>Connect</h3><a href="mailto:abdulowahab.jnu@gmail.com">Email me ↗</a><a href="https://www.linkedin.com/in/abdulowahab/" target="_blank" rel="noopener noreferrer">LinkedIn ↗</a><a href="/contact">Contact me</a></div>
  </div>
  <div className="footer-bottom"><span>© {new Date().getFullYear()} {content.name||'Abdul Owahab'}. All rights reserved.</span>{activePage!=='workstation'?<VisitorTraffic/>:<span>Local file processing · No document uploads</span>}</div>
  </footer></>

@@ -1,0 +1,7 @@
+User-agent: *
+Allow: /
+Disallow: /admin
+Disallow: /erp/
+Disallow: /api/
+
+Sitemap: https://aowahab.vercel.app/sitemap.xml
