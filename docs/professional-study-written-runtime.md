@@ -1,3 +1,5 @@
+> Release update: the user authorized deployment on 2026-11-17. Study schema/pilot and the gated foundation are now deployed; read [the release record](professional-study-release-20261117.md). Historical pre-release statements below do not override that instruction. Remaining private storage, account, calibration and worker/device gates still apply.
+
 # Written practice, marking and optional profiles — handoff
 
 Updated: 2026-11-17, Asia/Dhaka. Branch: feature/study-catalogue-p13; draft PR #10.

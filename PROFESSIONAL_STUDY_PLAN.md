@@ -2,9 +2,9 @@
 
 Last updated: 2026-11-17 (Asia/Dhaka)
 Repository: aowahab/abdulowahab
-Canonical checklist: this file on feature/study-catalogue-p13 / draft PR #10; merge only after release approval.
+Canonical checklist: this file on main. PR #10 was merged for the user-authorized 2026-11-17 release.
 Scope: a separate Professional Study section within the existing portfolio, with Study, Exam and My Progress.
-Status: P2–P6 source implementation and isolated tests advanced; connected-service, calibration and device acceptance remain OPEN. DO NOT DEPLOY.
+Status: Study/MCQ foundation released on 2026-11-17. Written uploads, real account verification, marking calibration and device acceptance remain OPEN; this is not full P1–P7 completion.
 Owner: Codex. Next task: verify connected private storage, real optional login and worker operations; see latest handoff.
 Existing portfolio PHASES.md is a different workstream; do not confuse its completion with this plan.
 
@@ -20,7 +20,7 @@ Existing portfolio PHASES.md is a different workstream; do not confuse its compl
 - Profile is optional. Guests can study and sit exams; account users can retain private history across devices.
 - AI marking is practice assessment, not official ICAB grading. Unreadable handwriting requires review, not invented interpretation.
 - Separate Study practice mode from Exam mode; exam answers stay hidden until submission.
-- Preserve existing live portfolio behavior. Latest user instruction: do not deploy. Earlier deployment permission is superseded.
+- Preserve existing live portfolio behavior. User explicitly authorized deployment on 2026-11-17. This authorizes the recorded release, not an automatic deployment schedule.
 
 ## How to use this checklist
 
@@ -29,7 +29,7 @@ Existing portfolio PHASES.md is a different workstream; do not confuse its compl
 3. Work on a focused branch from current main. Keep secrets and student scripts out of Git.
 4. Mark an item [x] only after its acceptance evidence is recorded. Partial or blocked work stays [ ].
 5. Record tests, preview URL if available, commit, limitations and exact next task before handing over.
-6. Recheck current deployment and main before any release. Deployment requires a new explicit user instruction; current work stays on the feature branch.
+6. Recheck current deployment and main before any release. The 2026-11-17 release was explicitly authorized. Verify each later release against the current user instruction.
 7. Keep this single document current; link other technical documents rather than creating conflicting checklists.
 
 ## Phase overview
@@ -39,7 +39,7 @@ Existing portfolio PHASES.md is a different workstream; do not confuse its compl
 | P0 | Scope and handoff register | None | Plan recorded |
 | P1 | Verified syllabus and architecture | P0 | Baseline complete; official session gaps open |
 | P2 | Study section and content management | P1 | Source implemented; real private upload/visual gates open |
-| P3 | Timed MCQ exams and instant feedback | P1, P2 | Implemented and isolated flow verified |
+| P3 | Timed MCQ exams and instant feedback | P1, P2 | Released; real connected desktop MCQ flow verified |
 | P4 | Written exams and script submission | P1, P2 | Implemented; real storage acceptance open |
 | P5 | Written marking and learning feedback | P4 | Worker/review implemented; live AI/calibration open |
 | P6 | Optional profiles and progress | P3, P5 | Source implemented; live auth/scheduler acceptance open |
@@ -140,8 +140,8 @@ Evidence / blockers: none yet.
 - [ ] P7.4 Test poor network, interrupted uploads, provider rate limits/timeouts, OCR failures and background job recovery.
 - [x] P7.5 Run existing portfolio regression tests and production build; verify Admin, Feed, Workstation, AI and Contact remain functional.
 - [ ] P7.6 Validate migration backup/rollback, private storage, abuse limits, operational logs and cost controls without logging scripts or secrets.
-- [ ] P7.7 Prepare tested preview, known limitations, exact release SHA and previous production rollback target.
-- [ ] P7.8 HOLD — do not deploy until the user explicitly asks; then verify domain mapping, routes, APIs and private file access.
+- [x] P7.7 Prepare tested preview, known limitations, exact release SHA and previous production rollback target. See the 2026-11-17 release record; this applies to the gated foundation release.
+- [x] P7.8 User-authorized foundation release deployed on 2026-11-17; domain/routes/public APIs and anonymous access denial verified. Private upload and written-marking acceptance remain separately OPEN.
 - [ ] P7.9 Record release evidence and maintenance ownership. Planning or passing static tests alone does not mean the product is complete.
 
 Acceptance: complete flows pass with real configured services; limitations documented; user-authorized release verified.
@@ -286,3 +286,12 @@ The user approved using the researched syllabus baseline as the working implemen
 - Next: connected-store upload/privacy verification, real Neon login/two-device checks, install and test worker/retention schedules, human calibration, browser/mobile/accessibility checks. These acceptance gates cannot be marked complete from source or fixtures alone.
 
 - Final verification: 144 automated tests passed, no skips/failures; production build passed; git diff --check passed. Connected services, calibration and browser/device acceptance remain open. Current operational handoff: [written runtime/setup](docs/professional-study-written-runtime.md).
+
+### User-authorized foundation release — 2026-11-17
+
+- New instruction: “deploy koro”; supersedes the earlier hold for this release. PR #10 merged into main. This is a gated foundation release, not completion of every phase.
+- Full release/rollback/verification record: [2026-11-17 release](docs/professional-study-release-20261117.md). Source f001ebdc38756c89d6b2ee26693e301620c2192f includes a five-column navigation correction found during desktop verification.
+- Study migrations 1–3 applied and original pilot seeded through a one-off Vercel build command, using the existing configured database. No credentials were retrieved or exposed. Later production builds use npm run build only; no permanent build-time migration was added. Existing non-Study tables were not migrated.
+- Real connected desktop flow: material browsing, MCQ start, answer save, flag, leave/resume, submit, exact 1/3 result, explanations and guest progress. Production APIs returned 13 materials and 10 labelled pilot papers; anonymous Admin/history returned 401. Missing private storage rejected written start BEFORE its timer could begin.
+- Written private store remains unconnected; AI calibration, optional account/JWKS verification, durable marking/retention schedules, full syllabus/session papers and iPhone Safari/Android acceptance remain OPEN. No token, provider-budget flag or calibration flag was fabricated to enable them.
+- Exact next work: connect and verify the existing private store, real optional login and scheduled operations; obtain calibration scripts; perform mobile/device acceptance. Recheck this record and live Vercel metadata before another release.
