@@ -11,6 +11,14 @@ function database(){
 }
 const setup=async db=>db.query('CREATE TABLE IF NOT EXISTS portfolio_visitor_presence (visitor_id CHAR(64) PRIMARY KEY, first_seen TIMESTAMPTZ NOT NULL DEFAULT NOW(), last_seen TIMESTAMPTZ NOT NULL DEFAULT NOW())');
 export async function POST(request){
+ // Prevent third-party pages from inflating visitor statistics via cross-origin POSTs.
+ const origin=request.headers.get('origin');
+ if(origin){
+  let originHost;
+  try{originHost=new URL(origin).host.toLowerCase()}catch{return json({error:'Invalid origin'},403)}
+  const requestHost=(request.headers.get('x-forwarded-host')||request.headers.get('host')||new URL(request.url).host).toLowerCase();
+  if(originHost!==requestHost)return json({error:'Cross-origin request denied'},403);
+ }
  if(Number(request.headers.get('content-length')||0)>512)return json({error:'Request too large'},413);
  let body;
  try{const raw=await request.text();if(raw.length>512)return json({error:'Request too large'},413);body=JSON.parse(raw)}catch{return json({error:'Invalid request'},400)}
