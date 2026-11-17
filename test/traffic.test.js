@@ -30,3 +30,15 @@ test('traffic endpoint rejects malformed sessions and oversized payloads before 
  const oversized=await POST(new Request('http://localhost/api/traffic',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({visitorId:'x'.repeat(600)})}));
  assert.equal(oversized.status,413);
 });
+
+test('traffic endpoint rejects third-party origins and accepts same-origin validation',async()=>{
+ const {POST}=await import('../api/traffic.js');
+ const token='a'.repeat(24);
+ const cross=await POST(new Request('https://aowahab.vercel.app/api/traffic',{method:'POST',headers:{origin:'https://untrusted.example','content-type':'application/json'},body:JSON.stringify({visitorId:token})}));
+ assert.equal(cross.status,403);
+ assert.equal((await cross.json()).error,'Cross-origin request denied');
+ const malformed=await POST(new Request('https://aowahab.vercel.app/api/traffic',{method:'POST',headers:{origin:'not-a-url','content-type':'application/json'},body:JSON.stringify({visitorId:token})}));
+ assert.equal(malformed.status,403);
+ const same=await POST(new Request('https://aowahab.vercel.app/api/traffic',{method:'POST',headers:{origin:'https://aowahab.vercel.app','content-type':'application/json'},body:JSON.stringify({visitorId:'invalid'})}));
+ assert.equal(same.status,400);
+});
