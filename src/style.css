@@ -282,7 +282,7 @@ html[data-theme=light] .section-content .secondary{color:#142e4a}
 
 /* Restore the original mobile quick-action toolbar while retaining the side drawer */
 @media(max-width:720px){
- .mobile-bottom-nav{display:grid!important;grid-template-columns:repeat(4,minmax(0,1fr));align-items:center;justify-content:space-around;gap:2px;position:fixed;bottom:0;left:0;right:0;z-index:28;padding:9px 8px max(12px,env(safe-area-inset-bottom));background:#fff;border-top:1px solid #dce2e9;box-shadow:0 -5px 22px #102b491a}
+ .mobile-bottom-nav{display:grid!important;grid-template-columns:repeat(5,minmax(0,1fr));align-items:center;justify-content:space-around;gap:2px;position:fixed;bottom:0;left:0;right:0;z-index:28;padding:9px 8px max(12px,env(safe-area-inset-bottom));background:#fff;border-top:1px solid #dce2e9;box-shadow:0 -5px 22px #102b491a}
  .mobile-bottom-nav a{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;padding:4px 1px;text-decoration:none;color:#102b49;min-width:0;font-size:11px;font-weight:650;border-radius:8px}
  .mobile-bottom-nav a:focus-visible,.mobile-bottom-nav a:hover{background:#eef5fb;color:#0c518c}
  .mobile-bottom-nav .bottom-nav-icon{font-size:21px;line-height:1.1}
@@ -870,7 +870,7 @@ html[data-active-page] .content-wrap>.section>.section-heading h2{
 /* One shared enquiry/meeting destination in the four-item mobile navigation. */
 .meeting-option{display:flex;align-items:center;gap:10px;margin:0 0 22px;line-height:1.5;font-size:14px;font-weight:650}
 .meeting-option input{width:18px;height:18px;flex:0 0 18px}
-@media(max-width:900px){html[data-active-page] .mobile-bottom-nav{grid-template-columns:repeat(4,minmax(0,1fr))}html[data-active-page] .mobile-bottom-nav a{flex:1;min-width:0}}
+@media(max-width:900px){html[data-active-page] .mobile-bottom-nav{grid-template-columns:repeat(5,minmax(0,1fr))}html[data-active-page] .mobile-bottom-nav a{flex:1;min-width:0}}
 
 /* Use the desktop viewport instead of nesting narrow, centered containers. */
 @media(min-width:901px){
@@ -905,12 +905,12 @@ html[data-active-page] .content-wrap>.section>.section-heading h2{
  html[data-theme=light] .nav-links:not(.open){display:none;visibility:hidden}
 }
 
-/* Four desktop buttons fill the right-aligned navigation without empty grid slots. */
+/* Five destinations share one desktop row, including Professional Study. */
 @media(min-width:1061px){
  html[data-theme=light] .nav{padding-inline:clamp(24px,2.5vw,48px)}
  html[data-theme=light] .nav-links{
   display:grid;
-  grid-template-columns:repeat(4,minmax(0,1fr));
+  grid-template-columns:repeat(5,minmax(0,1fr));
   width:min(56vw,640px);
   margin-left:auto;
   justify-content:end;
@@ -1113,7 +1113,7 @@ html[data-theme=light] .contact-request .contact-form-intro h3{color:#18344e}htm
 @media(max-width:600px){.official-resources{padding:18px}.official-resource-groups{grid-template-columns:1fr;gap:10px}.official-resources-heading{flex-direction:column;gap:0}}
 /* Floating pill navigation, retaining the original icons and visible names. */
 @media(max-width:900px){
- html[data-active-page] .mobile-bottom-nav{display:grid!important;grid-template-columns:repeat(4,minmax(0,1fr));position:fixed;left:50%;right:auto;bottom:calc(12px + env(safe-area-inset-bottom));transform:translateX(-50%);width:calc(100% - 24px);max-width:520px;padding:5px;gap:3px;background:#f2f6ef!important;border:1px solid #c9d9c8;border-radius:999px;box-shadow:0 8px 28px #18344e18,inset 0 1px 1px #ffffff90!important;backdrop-filter:blur(22px);-webkit-backdrop-filter:blur(22px)}
+ html[data-active-page] .mobile-bottom-nav{display:grid!important;grid-template-columns:repeat(5,minmax(0,1fr));position:fixed;left:50%;right:auto;bottom:calc(12px + env(safe-area-inset-bottom));transform:translateX(-50%);width:calc(100% - 24px);max-width:520px;padding:5px;gap:3px;background:#f2f6ef!important;border:1px solid #c9d9c8;border-radius:999px;box-shadow:0 8px 28px #18344e18,inset 0 1px 1px #ffffff90!important;backdrop-filter:blur(22px);-webkit-backdrop-filter:blur(22px)}
  html[data-active-page] .mobile-bottom-nav a{position:relative;min-height:48px;gap:2px;padding:4px 2px;border:0!important;border-radius:999px;background:transparent!important;color:#1b2b43!important;box-shadow:none!important;transition:background .18s ease}
  html[data-active-page] .mobile-bottom-nav a.is-active{background:#e6f1fb!important;color:#176587!important;font-weight:800}
  html[data-active-page] .mobile-bottom-nav a:hover{background:#e8efe5!important}
