@@ -10,6 +10,12 @@ export async function GET(request) {
     content = await readContent();
   } catch (error) {
     console.error('content read failed:', error);
+    if (process.env.PORTFOLIO_CONTENT_BACKEND === 'neon') {
+      return new Response(JSON.stringify({ error: 'Portfolio content temporarily unavailable.' }), {
+        status: 503,
+        headers: { 'content-type': 'application/json; charset=utf-8', 'cache-control': 'no-store' },
+      });
+    }
     content = DEFAULT_CONTENT;
   }
   return new Response(JSON.stringify(publicPortfolioContent(content)), {
