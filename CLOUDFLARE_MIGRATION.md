@@ -17,7 +17,7 @@ Target:
 ## Migration gates
 - [x] Identify repositories and live route ownership.
 - [x] Create separate migration branch and Cloudflare static-assets configuration.
-- [ ] Inventory Vercel environment variable names and required secrets without exposing values in commits.
+- [x] Inventory Vercel environment variable names and required secrets without exposing values in commits.
 - [ ] Replace Vercel Blob read/write/upload with Cloudflare R2 (including migrating existing objects and URL references).
 - [ ] Port all Vercel Functions to Cloudflare Worker-compatible handlers; adapt Node-only dependencies and ERP router.
 - [ ] Reconcile Vercel rewrites and admin.html entrypoint with Cloudflare asset routing.
@@ -31,3 +31,13 @@ Target:
 
 ## Safety
 Do not point the apex at a static-only Worker: it would break portfolio APIs. Do not remove the existing NUFHAS wildcard route until subdomain and mail dependencies are assessed. Do not copy secret values into GitHub.
+
+## Vercel configuration inventory (names only, no secret values)
+- AI: `GROQ_API_KEY`
+- Authentication: `ADMIN_PASSWORD`, `APP_PASSWORD`, `SESSION_SECRET`, `VITE_NEON_AUTH_URL`, `NEON_AUTH_BASE_URL`
+- Database: `DATABASE_URL`, `POSTGRES_URL`, `POSTGRES_PRISMA_URL`, `DATABASE_URL_UNPOOLED`, related PostgreSQL host/user/password settings
+- Realtime: `NEON_REALTIME_URL`, `NEON_REALTIME_SECRET`
+- Files: `BLOB_READ_WRITE_TOKEN` (Vercel-specific; requires R2 migration)
+- WhatsApp: `WHATSAPP_PHONE_NUMBER_ID`, `WHATSAPP_WABA_ID`, `WHATSAPP_ACCESS_TOKEN`
+
+Do not commit secret values, blindly copy browser-exposed variables, or deploy static-only assets to the production apex. A Cloudflare preview must demonstrate functional parity first.
