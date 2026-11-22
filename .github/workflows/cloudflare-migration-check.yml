@@ -1,0 +1,32 @@
+name: Cloudflare migration checks
+
+on:
+  push:
+    branches: [cloudflare-migration]
+  pull_request:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+      - run: npm ci
+      - run: npm test
+      - run: npm run build
+      - name: Check Cloudflare static asset configuration
+        run: |
+          node --input-type=module <<'EOF'
+          import { readFileSync, existsSync } from 'node:fs';
+          const config = JSON.parse(readFileSync('wrangler.jsonc','utf8'));
+          if (config.assets?.directory !== './dist') throw Error('Expected dist assets');
+          if (!existsSync('dist/index.html') || !existsSync('dist/admin.html')) throw Error('Missing HTML entrypoints');
+          console.log('Static asset build is ready for isolated preview, NOT production migration.');
+          EOF
