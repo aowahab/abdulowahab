@@ -1,5 +1,5 @@
-import { readContent } from '../lib/store.js';
-import { DEFAULT_CONTENT, publicPortfolioContent } from '../lib/portfolio-content.js';
+import { PORTFOLIO_SEED, readContent } from '../lib/store.js';
+import { publicPortfolioContent } from '../lib/portfolio-content.js';
 
 // Public: the website reads its content from here.
 export async function GET(request) {
@@ -10,7 +10,7 @@ export async function GET(request) {
     content = await readContent();
   } catch (error) {
     console.error('content read failed:', error);
-    content = DEFAULT_CONTENT;
+    content = PORTFOLIO_SEED;
   }
   return new Response(JSON.stringify(publicPortfolioContent(content)), {
     headers: {

@@ -1,0 +1,141 @@
+{
+  "name": "Abdul Owahab",
+  "avatarUrl": "/portfolio-media/profile-1794661016077-OYdjS8mBWHhiI117ElR7tODD030rA6.jpg",
+  "facts": [
+    {
+      "label": "Role",
+      "value": "Senior Associate, Audit & Assurance"
+    },
+    {
+      "label": "Firm",
+      "value": "Deloitte Bangladesh"
+    },
+    {
+      "label": "Based in",
+      "value": "Dhaka, Bangladesh"
+    },
+    {
+      "label": "Studying",
+      "value": "Chartered Accountancy, ICAB Professional Level"
+    }
+  ],
+  "sections": [
+    {
+      "id": "about",
+      "title": "About",
+      "body": "I work in audit and assurance in Dhaka, where I examine evidence, trace financial information to source documents, and turn findings into clear, well-supported conclusions. The work has shaped how I approach problems: ask thoughtful questions, pay attention to detail, and let the evidence guide the answer.\n\nAlongside my professional work, I am pursuing the Chartered Accountancy qualification with the Institute of Chartered Accountants of Bangladesh (ICAB). I am also a co-founder of a technology business, exploring a different side of problem-solving through building and entrepreneurship.\n\nAcross audit, study, and business, the common thread is curiosity and a habit of checking that things add up. I am interested in how sound financial judgment and technology can help businesses make better decisions."
+    },
+    {
+      "id": "experience",
+      "title": "Professional Experience",
+      "body": "- Audit execution: Contributing to engagement planning, fieldwork, and reporting, with clear documentation of procedures, evidence, and conclusions.\n- Financial statement auditing: Testing revenue, receivables, inventory, payroll, payables, operating expenses, and equity.\n- Evidence & analysis: Tracing balances to supporting records, analysing financial data, and investigating discrepancies.\n- Reporting & compliance: Reviewing accounting treatments and disclosures against applicable standards and regulatory requirements.\n- Audit technology: Using Deloitte Omnia, Levvia, and advanced Excel for audit testing, data analysis, and documentation."
+    },
+    {
+      "id": "practice",
+      "title": "What I work on",
+      "body": "- Audit & assurance: Planning and carrying out audit engagements, evaluating evidence, and reporting findings with clear documentation that another reviewer can follow.\n- Regulatory compliance: Assessing compliance with Bangladeshi laws and regulations, including requirements for NGOs and foreign donations.\n- Financial reporting: Applying accounting standards and company law to assess financial balances, presentation, and disclosures.\n- Data analytics & AI: Using data tools and AI to expand audit testing, identify unusual patterns, and reduce repetitive work.\n- Internal controls & risk: Reviewing business processes, identifying control gaps, and recommending practical improvements.\n- Financial analysis: Analysing balances, transactions, and trends to understand business performance and investigate inconsistencies.\n- Technology & entrepreneurship: Co-founding a technology business and contributing to business planning, operations, and problem-solving."
+    },
+    {
+      "id": "education",
+      "title": "Education & Professional Development",
+      "body": "- Academic education: BBA in Accounting & Information Systems (AIS) from Jagannath University.\n- Professional qualification: Pursuing Chartered Accountancy with the Institute of Chartered Accountants of Bangladesh (ICAB), currently at the Professional Level.\n- Professional development: Building knowledge in financial reporting, assurance, and data analytics, with an interest in responsible AI and technology adoption in accounting and audit."
+    },
+    {
+      "id": "projects",
+      "title": "Projects & Entrepreneurship",
+      "body": "- Tickydo Ticketing: Co-founder of a digital ticketing and smart bus-counter platform, currently in pilot operations. [tickydo.com](https://tickydo.com)\n- Tickydo ERP: Developing finance and accounting software for maintaining accounting records, managing the general ledger, and preparing financial reports."
+    },
+    {
+      "id": "qualification",
+      "title": "Qualification",
+      "body": "- Professional qualification: Pursuing Chartered Accountancy with the Institute of Chartered Accountants of Bangladesh (ICAB), currently at the Professional Level."
+    }
+  ],
+  "posts": [
+    {
+      "id": "6xujq4kw",
+      "title": "",
+      "body": "",
+      "date": "2026-11-14T04:26:43.958Z",
+      "media": [
+        {
+          "url": "/portfolio-media/IMG_1500-eevGmx0XQZdsmohrWRFyJvCGVdTbBQ.jpeg",
+          "name": "IMG_1500.jpeg",
+          "type": "image/jpeg",
+          "size": 3948941
+        }
+      ]
+    },
+    {
+      "id": "0gj26jwg",
+      "title": "",
+      "body": "",
+      "date": "2026-11-13T21:39:52.032Z",
+      "media": [
+        {
+          "url": "/portfolio-media/IMG_1484-6UIdjw5qoAXhcwSmIxyvSGDJWm2WYZ.jpeg",
+          "name": "IMG_1484.jpeg",
+          "type": "image/jpeg",
+          "size": 1497083
+        }
+      ]
+    },
+    {
+      "id": "jxb5ndhe",
+      "title": "",
+      "body": "",
+      "date": "2026-11-12T21:55:00.000Z",
+      "media": [
+        {
+          "url": "/portfolio-media/IMG_1333-fNFNHsxzxe1nUfdsfNJQLyYxmvcr33.jpeg",
+          "name": "IMG_1333.jpeg",
+          "type": "image/jpeg",
+          "size": 178896
+        }
+      ]
+    }
+  ],
+  "social": {
+    "facebook": "https://facebook.com/aowahab",
+    "messenger": "",
+    "instagram": ""
+  },
+  "updatedAt": "2026-11-14T12:57:01.810Z",
+  "profile": {
+    "headline": "Audit & Assurance Professional · Technology Co-founder",
+    "intro": "I work in audit and assurance at Deloitte Bangladesh and build practical technology projects. Accounting & Information Systems graduate, currently studying at ICAB Professional Level.",
+    "location": "Dhaka, Bangladesh",
+    "cvUrl": "",
+    "cvUpdated": "November 2026"
+  },
+  "projects": [
+    {
+      "title": "Tickydo ERP",
+      "tag": "Accounting application",
+      "problem": "Bring double-entry records and financial reports into one application.",
+      "contribution": "Accounting workflows for a chart of accounts, balanced journals, reversals and period locking.",
+      "result": "Implemented trial balance, general ledger, income statement and balance sheet. PostgreSQL support for deployment and SQLite for local development.",
+      "link": "/erp/",
+      "cta": "Open application",
+      "flow": [
+        "Journal entries",
+        "Double-entry validation",
+        "Financial reports"
+      ]
+    },
+    {
+      "title": "Tickydo Ticketing",
+      "tag": "Co-founder · Pilot operations",
+      "problem": "Support digital bus ticketing and smarter counter operations.",
+      "contribution": "Co-founder working on strategy, finance and operations.",
+      "result": "Passenger and counter-facing platforms are in pilot testing; operator onboarding is in progress.",
+      "link": "https://tickydo.com/",
+      "cta": "Explore Tickydo",
+      "flow": [
+        "Passengers",
+        "Ticketing platform",
+        "Bus counters"
+      ]
+    }
+  ]
+}
